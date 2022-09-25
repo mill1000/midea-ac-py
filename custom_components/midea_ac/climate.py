@@ -77,7 +77,7 @@ class MideaClimateACDevice(ClimateEntity):
             CONF_KEEP_LAST_KNOWN_ONLINE_STATE)
 
         # Display on the AC should use the same unit as homeassistant
-        self._device.fahrenheit = (
+        self._device.fahrenheit_unit = (
             hass.config.units.temperature_unit == TEMP_FAHRENHEIT)
 
         self._target_temperature_step = options.get(CONF_TEMP_STEP)
