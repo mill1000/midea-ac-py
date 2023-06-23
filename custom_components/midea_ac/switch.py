@@ -74,6 +74,10 @@ class MideaDisplaySwitch(SwitchEntity, RestoreEntity):
         }
 
     @property
+    def entity_category(self) -> dict:
+        return EntityCategory.CONFIG
+
+    @property
     def name(self) -> str:
         return f"{DOMAIN}_display_{self._device.id}"
 
