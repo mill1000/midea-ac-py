@@ -47,7 +47,7 @@ class MideaDisplaySwitch(SwitchEntity, RestoreEntity):
 
     async def _toggle_display(self) -> None:
         await self.hass.async_add_executor_job(self._device.toggle_display)
-        await self.async_update_ha_state()
+        self.async_write_ha_state()
         self._on = not self._on
 
     async def async_added_to_hass(self) -> None:
