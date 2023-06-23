@@ -119,7 +119,7 @@ class MideaClimateACDevice(ClimateEntity):
                                self.hass.config.units.temperature_unit == TEMP_FAHRENHEIT)
 
         await self.hass.async_add_executor_job(self._device.apply)
-        await self.async_update_ha_state()
+        self.async_write_ha_state()
         self._changed = False
 
     async def async_update(self) -> None:
