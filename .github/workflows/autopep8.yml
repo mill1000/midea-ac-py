@@ -1,9 +1,9 @@
-name: Check PEP8 Compliance
+name: Check autopep8
 
 on: [push]
 
 jobs:
-  check-pep8:
+  check-autopep8:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -13,8 +13,8 @@ jobs:
     - uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip
+        key: ${{ runner.os }}-pip-autopep8
     - run: |
         python -m pip install --upgrade pip
-        pip install pycodestyle
-    - run: pycodestyle --show-source $(git ls-files '*.py')
+        pip install autopep8
+    - run: autopep8 --diff --exit-code $(git ls-files '*.py')
