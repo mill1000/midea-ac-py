@@ -11,7 +11,7 @@ from msmart.device import AirConditioner as AC
 
 from . import helpers
 # Local constants
-from .const import CONF_KEY, DOMAIN
+from .const import CONF_KEY, CONF_MAX_CONNECTION_LIFETIME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,6 +50,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
                 return False
 
         hass.data[DOMAIN][id] = device
+
+    # Configure the connection lifetime
+    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
+    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
+        _LOGGER.info(
+            "Setting maximum connection lifetime to %s seconds.", lifetime)
+        device.set_max_connection_lifetime(lifetime)
 
     # Query device capabilities
     if helpers.method_exists(device, "get_capabilities"):

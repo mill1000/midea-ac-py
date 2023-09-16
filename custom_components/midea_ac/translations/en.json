@@ -50,11 +50,13 @@
           "use_fan_only_workaround": "Use Fan-only Workaround",
           "keep_last_known_online_state": "Keep Last Known State",
           "show_all_presets": "Show All Presets",
-          "additional_operation_modes": "Additional Operation Modes"
+          "additional_operation_modes": "Additional Operation Modes",
+          "max_connection_lifetime": "Maximum Connection Lifetime"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
-          "additional_operation_modes": "Specify additional operational modes"
+          "additional_operation_modes": "Specify additional operational modes",
+          "max_connection_lifetime": "Maximum time in seconds a connection will be used (30 second minimum)"
         }
       }
     }

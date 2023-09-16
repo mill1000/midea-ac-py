@@ -17,8 +17,8 @@ from msmart.discover import Discover
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_INCLUDE_OFF_AS_STATE,
                     CONF_KEEP_LAST_KNOWN_ONLINE_STATE, CONF_KEY,
-                    CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
+                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
 
 _DEFAULT_OPTIONS = {
     CONF_BEEP: True,
@@ -28,6 +28,7 @@ _DEFAULT_OPTIONS = {
     CONF_KEEP_LAST_KNOWN_ONLINE_STATE: False,
     CONF_SHOW_ALL_PRESETS: False,
     CONF_ADDITIONAL_OPERATION_MODES: None,
+    CONF_MAX_CONNECTION_LIFETIME: None,
 }
 
 
@@ -234,6 +235,8 @@ class MideaOptionsFlow(OptionsFlow):
                          default=options.get(CONF_SHOW_ALL_PRESETS, False)): cv.boolean,
             vol.Optional(CONF_ADDITIONAL_OPERATION_MODES,
                          description={"suggested_value": options.get(CONF_ADDITIONAL_OPERATION_MODES, None)}): cv.string,
+            vol.Optional(CONF_MAX_CONNECTION_LIFETIME,
+                         description={"suggested_value": options.get(CONF_MAX_CONNECTION_LIFETIME, None)}): vol.All(vol.Coerce(int), vol.Range(min=30)),
         })
 
         return self.async_show_form(step_id="init", data_schema=data_schema)
