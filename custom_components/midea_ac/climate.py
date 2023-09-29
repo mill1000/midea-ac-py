@@ -121,8 +121,16 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
                 _LOGGER.info(f"Adding additional mode '{mode}'.")
                 self._hvac_modes.append(mode)
 
-        # Convert Midea fan speeds to strings
-        self._fan_modes = [m.name.capitalize() for m in AC.FanSpeed.list()]
+        # Fetch supported fan speeds
+        supported_fan_speeds = getattr(
+            self._device, "supported_fan_speeds", AC.FanSpeed.list())
+
+        # Convert Midea swing modes to strings
+        self._fan_modes = [m.name.capitalize()
+                           for m in supported_fan_speeds]
+
+        # if getattr(self._device, "supports_custom_fan_speed", False):
+        #     supported_fan_speeds.append("CUSTOM")
 
         # Fetch supported swing modes
         supported_swing_modes = getattr(
@@ -255,7 +263,13 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def fan_mode(self) -> str:
         """Return the current fan speed mode."""
-        return self._device.fan_speed.name.capitalize()
+        fan_speed = self._device.fan_speed
+        _LOGGER.info("Got fan mode %s", fan_speed)
+        if isinstance(fan_speed, AC.FanSpeed):
+            fan_speed = fan_speed.name
+        else:
+            fan_speed = "Custom"
+        return fan_speed.capitalize()
 
     async def async_set_fan_mode(self, fan_mode) -> None:
         """Set the fan mode."""
