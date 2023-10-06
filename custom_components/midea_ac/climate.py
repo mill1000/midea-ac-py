@@ -279,11 +279,6 @@ class MideaClimateACDevice(ClimateEntity):
         """Return the current swing mode."""
         return self._device.swing_mode.name.capitalize()
 
-    @property
-    def is_on(self) -> bool:
-        """Check if the device is on."""
-        return self._device.power_state
-
     async def async_set_temperature(self, **kwargs) -> None:
         """Set a new target temperatures."""
         if (temperature := kwargs.get(ATTR_TEMPERATURE)) is None:
@@ -384,18 +379,6 @@ class MideaClimateACDevice(ClimateEntity):
             return PRESET_SLEEP
         else:
             return PRESET_NONE
-
-    async def async_turn_on(self) -> None:
-        """Turn on."""
-        self._device.power_state = True
-        self._changed = True
-        await self.apply_changes()
-
-    async def async_turn_off(self) -> None:
-        """Turn off."""
-        self._device.power_state = False
-        self._changed = True
-        await self.apply_changes()
 
     @ property
     def min_temp(self) -> float:
