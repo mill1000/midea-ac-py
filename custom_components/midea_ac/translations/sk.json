@@ -14,7 +14,6 @@
           "temp_step": "Teplotný krok",
           "include_off_as_state": "Zhrnúť \"Off\" stav",
           "use_fan_only_workaround": "Použite alternatívne riešenie pre ventilátor",
-          "keep_last_known_online_state": "Zachovať posledný známy stav",
           "additional_operation_modes": "Ďalšie prevádzkové režimy"
         },
         "data_description": {
@@ -41,7 +40,6 @@
           "temp_step": "Teplotný krok",
           "include_off_as_state": "Zhrnúť \"Off\" stav",
           "use_fan_only_workaround": "Použite alternatívne riešenie pre ventilátor",
-          "keep_last_known_online_state": "Zachovať posledný známy stav",
           "additional_operation_modes": "Ďalšie prevádzkové režimy"
         },
         "data_description": {

@@ -48,7 +48,6 @@
           "temp_step": "Temperature Step",
           "include_off_as_state": "Include \"Off\" State",
           "use_fan_only_workaround": "Use Fan-only Workaround",
-          "keep_last_known_online_state": "Keep Last Known State",
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
           "max_connection_lifetime": "Maximum Connection Lifetime"

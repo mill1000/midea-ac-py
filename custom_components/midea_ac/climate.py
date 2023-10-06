@@ -23,8 +23,7 @@ from msmart.device import AirConditioner as AC
 from . import helpers
 # Local constants
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
-                    CONF_INCLUDE_OFF_AS_STATE,
-                    CONF_KEEP_LAST_KNOWN_ONLINE_STATE, CONF_SHOW_ALL_PRESETS,
+                    CONF_INCLUDE_OFF_AS_STATE, CONF_SHOW_ALL_PRESETS,
                     CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
 
 _LOGGER = logging.getLogger(__name__)
@@ -75,7 +74,7 @@ async def async_setup_entry(
 class MideaClimateACDevice(ClimateEntity):
     """Climate entity for Midea AC device."""
 
-    def __init__(self, hass, device, options: dict) -> None:
+    def __init__(self, hass, device: AC, options: dict) -> None:
         """Initialize the climate device."""
 
         self.hass = hass
@@ -83,8 +82,6 @@ class MideaClimateACDevice(ClimateEntity):
 
         # Apply options
         self._device.beep = options.get(CONF_BEEP)
-        self._device.keep_last_known_online_state = options.get(
-            CONF_KEEP_LAST_KNOWN_ONLINE_STATE)
 
         self._target_temperature_step = options.get(CONF_TEMP_STEP)
         self._include_off_as_state = options.get(CONF_INCLUDE_OFF_AS_STATE)
