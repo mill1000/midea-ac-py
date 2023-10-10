@@ -60,6 +60,11 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
         return f"{self._device.id}-fan_speed"
 
     @property
+    def available(self) -> bool:
+        """Check device availability."""
+        return self._device.online and self._device.power_state
+
+    @property
     def native_unit_of_measurement(self) -> str:
         return PERCENTAGE
 
