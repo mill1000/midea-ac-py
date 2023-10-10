@@ -6,6 +6,7 @@ import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
+from homeassistant.helpers.debounce import Debouncer
 from msmart.device import AirConditioner as AC
 
 from .const import DOMAIN
@@ -22,6 +23,12 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
             _LOGGER,
             name=DOMAIN,
             update_interval=datetime.timedelta(seconds=15),
+            request_refresh_debouncer = Debouncer(
+                hass,
+                _LOGGER,
+                cooldown=1,
+                immediate=True,
+            )
         )
 
         self._device = device
