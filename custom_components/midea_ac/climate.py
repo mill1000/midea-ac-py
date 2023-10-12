@@ -26,6 +26,8 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+_FAN_CUSTOM = "Custom"
+
 # Dictionaries to convert from Midea mode to HA mode
 _OPERATIONAL_MODE_TO_HVAC_MODE: dict[AC.OperationalMode, HVACMode] = {
     AC.OperationalMode.AUTO: HVACMode.AUTO,
@@ -128,9 +130,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Convert Midea swing modes to strings
         self._fan_modes = [m.name.capitalize()
                            for m in supported_fan_speeds]
-        
-        if getattr(self._device, "supports_custom_fan_speed", False):
-            self._fan_modes.append("Custom")
 
         # Fetch supported swing modes
         supported_swing_modes = getattr(
@@ -258,33 +257,41 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def fan_modes(self) -> list:
         """Return the supported fan modes."""
+
+        # Add "Custom" to the list if a device supports custom fan speeds, and is using a custom speed
+        if (getattr(self._device, "supports_custom_fan_speed", False)
+                and isinstance(self._device.fan_speed, int)):
+            return [_FAN_CUSTOM] + self._fan_modes
+
         return self._fan_modes
 
     @property
-    def fan_mode(self) -> str | None:
+    def fan_mode(self) -> str:
         """Return the current fan speed mode."""
         fan_speed = self._device.fan_speed
+
         _LOGGER.info("Got fan mode %s", fan_speed)
         _LOGGER.info("Got fan mode type %s", type(fan_speed))
+
         if isinstance(fan_speed, AC.FanSpeed):
             return fan_speed.name.capitalize()
         elif isinstance(fan_speed, int):
-            return "Custom"
-        
-        _LOGGER.info("Return fan mode none")
-        return None
+            return _FAN_CUSTOM
+
+        # Never expect to get here
+        assert False, "fan_mode is neither int or AC.FanSpeed"
 
     async def async_set_fan_mode(self, fan_mode) -> None:
         """Set the fan mode."""
+
         _LOGGER.info("Set fan mode %s", fan_mode)
         _LOGGER.info("Set fan mode type %s", type(fan_mode))
-        if fan_mode == "Custom":
-            return
-        try:
-            self._device.fan_speed  = AC.FanSpeed[fan_mode.upper()]
-        except KeyError:
-            self._device.fan_speed = int(fan_mode)
 
+        # Don't override custom fan speeds
+        if fan_mode == _FAN_CUSTOM:
+            return
+
+        self._device.fan_speed = AC.FanSpeed.get_from_name(fan_mode.upper())
         await self._apply()
 
     @property
