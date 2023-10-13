@@ -270,9 +270,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Return the current fan speed mode."""
         fan_speed = self._device.fan_speed
 
-        _LOGGER.info("Got fan mode %s", fan_speed)
-        _LOGGER.info("Got fan mode type %s", type(fan_speed))
-
         if isinstance(fan_speed, AC.FanSpeed):
             return fan_speed.name.capitalize()
         elif isinstance(fan_speed, int):
@@ -283,9 +280,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
     async def async_set_fan_mode(self, fan_mode) -> None:
         """Set the fan mode."""
-
-        _LOGGER.info("Set fan mode %s", fan_mode)
-        _LOGGER.info("Set fan mode type %s", type(fan_mode))
 
         # Don't override custom fan speeds
         if fan_mode == _FAN_CUSTOM:

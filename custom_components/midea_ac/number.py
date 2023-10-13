@@ -84,14 +84,12 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
         if isinstance(speed, AC.FanSpeed):
             speed = speed.value
 
-        _LOGGER.info("Got value %s.", speed)
         return speed
 
     async def async_set_native_value(self, value: float) -> None:
         """Set a new fan speed value."""
 
         self._device.fan_speed = value
-        _LOGGER.info("Set value %s.", value)
 
         # Apply via the coordinator
         await self.coordinator.apply()
