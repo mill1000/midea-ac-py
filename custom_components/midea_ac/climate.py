@@ -260,7 +260,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         # Add "Custom" to the list if a device supports custom fan speeds, and is using a custom speed
         if (getattr(self._device, "supports_custom_fan_speed", False)
-                and isinstance(self._device.fan_speed, int)):
+                and not isinstance(self._device.fan_speed, AC.FanSpeed)):
             return [_FAN_CUSTOM] + self._fan_modes
 
         return self._fan_modes
