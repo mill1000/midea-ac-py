@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 
+import voluptuous as vol
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
                                                     PRESET_ECO, PRESET_NONE,
@@ -15,6 +16,8 @@ from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS, TEMP_FAHRENHEIT
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 
@@ -45,6 +48,11 @@ _HVAC_MODE_TO_OPERATIONAL_MODE: dict[HVACMode, AC.OperationalMode] = {
     HVACMode.AUTO: AC.OperationalMode.AUTO,
 }
 
+_SERVICE_SET_FOLLOW_ME = "set_follow_me"
+_SERVICE_SET_FOLLOW_ME_SCHEMA = {
+    vol.Required("enable"): cv.bool,
+}
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -61,6 +69,14 @@ async def async_setup_entry(
     add_entities([
         MideaClimateACDevice(hass, coordinator, config_entry.options)
     ])
+
+    # Add a service to control 'follow me' function.
+    platform = entity_platform.async_get_current_platform()
+    platform .async_register_entity_service(
+        _SERVICE_SET_FOLLOW_ME,
+        _SERVICE_SET_FOLLOW_ME_SCHEMA,
+        "async_set_follow_me",
+    )
 
 
 class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
@@ -160,6 +176,11 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             self._device, "min_target_temperature", 16)
         self._max_temperature = getattr(
             self._device, "max_target_temperature", 30)
+
+    async def async_set_follow_me(self, enable) -> None:
+        """Set 'follow me' mode."""
+        self._device.follow_me = enable
+        await self._apply()
 
     async def _apply(self) -> None:
         """Apply changes to the device."""
