@@ -1,0 +1,10 @@
+set_follow_me:
+  target:
+    entity:
+      integration: midea_ac
+      domain: climate
+  fields:
+    enable:
+      required: true
+      selector:
+        boolean:
