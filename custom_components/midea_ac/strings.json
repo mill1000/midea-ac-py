@@ -59,5 +59,19 @@
         }
       }
     }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Set follow me",
+      "description": "Set the follow me function.",
+      "fields": {
+        "fields": {
+          "enabled": {
+            "name": "Enabled",
+            "description": "Whether follow me should be enabled."
+          }
+        }
+      }
+    }
   }
 }
