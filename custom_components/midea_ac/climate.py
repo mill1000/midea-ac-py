@@ -14,7 +14,8 @@ from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
                                                     SUPPORT_TARGET_TEMPERATURE,
                                                     HVACMode)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS, TEMP_FAHRENHEIT
+from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED, TEMP_CELSIUS,
+                                 TEMP_FAHRENHEIT)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_platform
@@ -48,9 +49,10 @@ _HVAC_MODE_TO_OPERATIONAL_MODE: dict[HVACMode, AC.OperationalMode] = {
     HVACMode.AUTO: AC.OperationalMode.AUTO,
 }
 
+_ATTR_FOLLOW_ME = "follow_me"
 _SERVICE_SET_FOLLOW_ME = "set_follow_me"
 _SERVICE_SET_FOLLOW_ME_SCHEMA = {
-    vol.Required("enable"): cv.bool,
+    vol.Required(CONF_ENABLED): cv.bool,
 }
 
 
@@ -177,11 +179,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         self._max_temperature = getattr(
             self._device, "max_target_temperature", 30)
 
-    async def async_set_follow_me(self, enable) -> None:
-        """Set 'follow me' mode."""
-        self._device.follow_me = enable
-        await self._apply()
-
     async def _apply(self) -> None:
         """Apply changes to the device."""
 
@@ -222,6 +219,11 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     def should_poll(self) -> bool:
         """Poll the appliance for changes, there is no notification capability in the Midea API"""
         return not self._use_fan_only_workaround
+
+    async def async_set_follow_me(self, enabled) -> None:
+        """Set 'follow me' mode."""
+        self._device.follow_me = enabled
+        await self._apply()
 
     @property
     def supported_features(self) -> int:
