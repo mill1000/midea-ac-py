@@ -220,6 +220,18 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Poll the appliance for changes, there is no notification capability in the Midea API"""
         return not self._use_fan_only_workaround
 
+    @property
+    def extra_state_attributes(self) -> dict[str, str]:
+        """Return device specific state attributes."""
+
+        state_attributes = {}
+
+        if hasattr(self._device, "follow_me"):
+            state_attributes[_ATTR_FOLLOW_ME] = getattr(
+                self._device, "follow_me")
+
+        return state_attributes
+
     async def async_set_follow_me(self, enabled) -> None:
         """Set 'follow me' mode."""
         self._device.follow_me = enabled
