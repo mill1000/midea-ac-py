@@ -49,12 +49,6 @@ _HVAC_MODE_TO_OPERATIONAL_MODE: dict[HVACMode, AC.OperationalMode] = {
     HVACMode.AUTO: AC.OperationalMode.AUTO,
 }
 
-_ATTR_FOLLOW_ME = "follow_me"
-_SERVICE_SET_FOLLOW_ME = "set_follow_me"
-_SERVICE_SET_FOLLOW_ME_SCHEMA = {
-    vol.Required(CONF_ENABLED): cv.boolean,
-}
-
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -76,8 +70,10 @@ async def async_setup_entry(
     if helpers.property_exists(coordinator.device, "follow_me"):
         platform = entity_platform.async_get_current_platform()
         platform .async_register_entity_service(
-            _SERVICE_SET_FOLLOW_ME,
-            _SERVICE_SET_FOLLOW_ME_SCHEMA,
+            "set_follow_me",
+            {
+                vol.Required(CONF_ENABLED): cv.boolean,
+            },
             "async_set_follow_me",
         )
 
@@ -227,7 +223,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         state_attributes = {}
 
         if hasattr(self._device, "follow_me"):
-            state_attributes[_ATTR_FOLLOW_ME] = getattr(
+            state_attributes["follow_me"] = getattr(
                 self._device, "follow_me")
 
         return state_attributes
