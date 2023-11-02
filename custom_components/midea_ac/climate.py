@@ -72,13 +72,14 @@ async def async_setup_entry(
         MideaClimateACDevice(hass, coordinator, config_entry.options)
     ])
 
-    # Add a service to control 'follow me' function.
-    platform = entity_platform.async_get_current_platform()
-    platform .async_register_entity_service(
-        _SERVICE_SET_FOLLOW_ME,
-        _SERVICE_SET_FOLLOW_ME_SCHEMA,
-        "async_set_follow_me",
-    )
+    # Add a service to control 'follow me' function
+    if helpers.property_exists(coordinator.device, "follow_me"):
+        platform = entity_platform.async_get_current_platform()
+        platform .async_register_entity_service(
+            _SERVICE_SET_FOLLOW_ME,
+            _SERVICE_SET_FOLLOW_ME_SCHEMA,
+            "async_set_follow_me",
+        )
 
 
 class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
@@ -223,7 +224,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def extra_state_attributes(self) -> dict[str, str]:
         """Return device specific state attributes."""
-
         state_attributes = {}
 
         if hasattr(self._device, "follow_me"):
@@ -232,7 +232,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         return state_attributes
 
-    async def async_set_follow_me(self, enabled) -> None:
+    async def async_set_follow_me(self, enabled: bool) -> None:
         """Set 'follow me' mode."""
         self._device.follow_me = enabled
         await self._apply()
