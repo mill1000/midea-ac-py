@@ -52,7 +52,7 @@ _HVAC_MODE_TO_OPERATIONAL_MODE: dict[HVACMode, AC.OperationalMode] = {
 _ATTR_FOLLOW_ME = "follow_me"
 _SERVICE_SET_FOLLOW_ME = "set_follow_me"
 _SERVICE_SET_FOLLOW_ME_SCHEMA = {
-    vol.Required(CONF_ENABLED): cv.bool,
+    vol.Required(CONF_ENABLED): cv.boolean,
 }
 
 
