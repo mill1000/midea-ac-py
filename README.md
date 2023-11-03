@@ -68,7 +68,6 @@ Name | Default | Description
 :--- | :--- | :--- 
 **Beep** | True | Enable beep on setting changes.
 **Temperature Step** | 1.0 | Step size for temperature set point.
-**Include "Off" State** | True | Include "Off" as a valid device state.
 **Use Fan-only Workaround** | False | Enable this option if device updates cause the device to turn on and switch to fan-only.
 **Show All Presets** | False | Show all presets regardless of device's reported capabilities.
 **Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.

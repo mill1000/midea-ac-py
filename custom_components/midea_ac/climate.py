@@ -24,8 +24,8 @@ from msmart.device import AirConditioner as AC
 
 from . import helpers
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
-                    CONF_INCLUDE_OFF_AS_STATE, CONF_SHOW_ALL_PRESETS,
-                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
+                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -94,7 +94,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Apply options
         self._device.beep = options.get(CONF_BEEP, False)
         self._target_temperature_step = options.get(CONF_TEMP_STEP)
-        self._include_off_as_state = options.get(CONF_INCLUDE_OFF_AS_STATE)
         self._use_fan_only_workaround = options.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)
 
@@ -131,10 +130,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Convert from Midea operational modes to HA HVAC mode
         self._hvac_modes = [_OPERATIONAL_MODE_TO_HVAC_MODE[m]
                             for m in supported_op_modes]
-
-        # Include off mode if requested
-        if self._include_off_as_state:
-            self._hvac_modes.append(HVACMode.OFF)
+        self._hvac_modes.append(HVACMode.OFF)
 
         # Append additional operation modes as needed
         additional_modes = options.get(CONF_ADDITIONAL_OPERATION_MODES) or ""
@@ -336,18 +332,17 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def hvac_mode(self) -> HVACMode:
         """Return current HVAC mode."""
-        if self._include_off_as_state and not self._device.power_state:
+        if not self._device.power_state:
             return HVACMode.OFF
 
         return _OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
-        if self._include_off_as_state and hvac_mode == HVACMode.OFF:
+        if hvac_mode == HVACMode.OFF:
             self._device.power_state = False
         else:
-            if self._include_off_as_state:
-                self._device.power_state = True
+            self._device.power_state = True
 
             self._device.operational_mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
                 hvac_mode, self._device.operational_mode)

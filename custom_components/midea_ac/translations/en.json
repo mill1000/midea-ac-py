@@ -46,7 +46,6 @@
         "data": {
           "prompt_tone": "Enable Beep",
           "temp_step": "Temperature Step",
-          "include_off_as_state": "Include \"Off\" State",
           "use_fan_only_workaround": "Use Fan-only Workaround",
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
