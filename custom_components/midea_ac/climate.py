@@ -8,10 +8,7 @@ from homeassistant.components.climate import ClimateEntity
 from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
                                                     PRESET_ECO, PRESET_NONE,
                                                     PRESET_SLEEP,
-                                                    SUPPORT_FAN_MODE,
-                                                    SUPPORT_PRESET_MODE,
-                                                    SUPPORT_SWING_MODE,
-                                                    SUPPORT_TARGET_TEMPERATURE,
+                                                    ClimateEntityFeature,
                                                     HVACMode)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED, TEMP_CELSIUS,
@@ -101,7 +98,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         # Setup default supported features
         self._supported_features = (
-            SUPPORT_TARGET_TEMPERATURE | SUPPORT_FAN_MODE | SUPPORT_PRESET_MODE)
+            ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.PRESET_MODE)
 
         # Setup supported presets
         if options.get(CONF_SHOW_ALL_PRESETS):
@@ -155,7 +152,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         # If device supports any swing mode, add it to supported features
         if supported_swing_modes != [AC.SwingMode.OFF]:
-            self._supported_features |= SUPPORT_SWING_MODE
+            self._supported_features |= ClimateEntityFeature.SWING_MODE
 
         # Convert Midea swing modes to strings
         self._swing_modes = [m.name.lower()
