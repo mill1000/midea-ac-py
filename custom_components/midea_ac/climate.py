@@ -79,6 +79,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     """Climate entity for Midea AC device."""
 
     _attr_translation_key = DOMAIN
+    _enable_turn_on_off_backwards_compatibility = False
 
     def __init__(self,
                  hass: HomeAssistant,
@@ -98,7 +99,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         # Setup default supported features
         self._supported_features = (
-            ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.FAN_MODE | ClimateEntityFeature.PRESET_MODE)
+            ClimateEntityFeature.TARGET_TEMPERATURE |
+            ClimateEntityFeature.FAN_MODE |
+            ClimateEntityFeature.PRESET_MODE |
+            ClimateEntityFeature.TURN_OFF |
+            ClimateEntityFeature.TURN_ON
+        )
 
         # Setup supported presets
         if options.get(CONF_SHOW_ALL_PRESETS):
