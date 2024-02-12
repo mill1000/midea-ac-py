@@ -101,10 +101,15 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         self._supported_features = (
             ClimateEntityFeature.TARGET_TEMPERATURE |
             ClimateEntityFeature.FAN_MODE |
-            ClimateEntityFeature.PRESET_MODE |
-            ClimateEntityFeature.TURN_OFF |
-            ClimateEntityFeature.TURN_ON
+            ClimateEntityFeature.PRESET_MODE
         )
+
+        # Attempt to add new TURN_OFF/TURN_ON features in HA 2024.2
+        try:
+            self._supported_features |= ClimateEntityFeature.TURN_OFF
+            self._supported_features |= ClimateEntityFeature.TURN_ON
+        except AttributeError:
+            pass
 
         # Setup supported presets
         if options.get(CONF_SHOW_ALL_PRESETS):
