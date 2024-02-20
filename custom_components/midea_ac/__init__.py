@@ -38,7 +38,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     if token and key:
         success = await device.authenticate(token, key)
         if not success:
-            raise ConfigEntryAuthFailed(
+            raise ConfigEntryNotReady(
                 "Failed to authenticate with device.")
 
     # Configure the connection lifetime
