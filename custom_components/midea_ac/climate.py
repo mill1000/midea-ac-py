@@ -426,3 +426,15 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             self._device.sleep_mode = True
 
         await self._apply()
+
+    async def async_turn_off(self) -> None:
+        """Turn the device off."""
+
+        self._device.power_state = False
+        await self._apply()
+
+    async def async_turn_on(self) -> None:
+        """Turn the device on."""
+
+        self._device.power_state = True
+        await self._apply()
