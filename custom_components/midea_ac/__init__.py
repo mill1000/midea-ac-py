@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from msmart import __version__ as MSMART_VERISON
 from msmart.device import AirConditioner as AC
+from msmart.lan import AuthenticationError
 
 from . import helpers
 from .const import CONF_KEY, CONF_MAX_CONNECTION_LIFETIME, DOMAIN
@@ -36,10 +37,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     token = config_entry.data[CONF_TOKEN]
     key = config_entry.data[CONF_KEY]
     if token and key:
-        success = await device.authenticate(token, key)
-        if not success:
+        try:
+            await device.authenticate(token, key)
+        except AuthenticationError as e:
             raise ConfigEntryNotReady(
-                "Failed to authenticate with device.")
+                "Failed to authenticate with device.") from e
 
     # Configure the connection lifetime
     lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)

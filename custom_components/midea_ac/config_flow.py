@@ -12,6 +12,7 @@ from homeassistant.data_entry_flow import FlowResult
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.discover import Discover
+from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
@@ -176,7 +177,11 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         token = config.get(CONF_TOKEN)
         key = config.get(CONF_KEY)
         if token and key:
-            success = await device.authenticate(token, key)
+            try:
+                await device.authenticate(token, key)
+                success = True
+            except AuthenticationError:
+                success = False
         else:
             await device.refresh()
             success = device.online
