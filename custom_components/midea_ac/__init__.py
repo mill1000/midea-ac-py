@@ -71,6 +71,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         hass.config_entries.async_forward_entry_setup(config_entry, "switch"))
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(config_entry, "number"))
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setup(config_entry, "select"))
 
     # Reload entry when its updated
     config_entry.async_on_unload(
