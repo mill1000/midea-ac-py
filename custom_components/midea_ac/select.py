@@ -35,12 +35,14 @@ async def async_setup_entry(
     if getattr(coordinator.device, "supports_vertical_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
                                     "vertical_swing_angle",
-                                    AC.SwingAngle))
+                                    AC.SwingAngle,
+                                    "swing_angle"))
 
     if getattr(coordinator.device, "supports_horizontal_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
                                     "horizontal_swing_angle",
-                                    AC.SwingAngle))
+                                    AC.SwingAngle,
+                                    "swing_angle"))
     add_entities(entities)
 
 
@@ -50,11 +52,13 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 enum_class: IntEnumHelper) -> None:
+                 enum_class: IntEnumHelper,
+                 translation_key = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
         self._enum_class = enum_class
+        self._attr_translation_key = translation_key
         self._name = prop.replace("_", " ").capitalize()
 
     @property

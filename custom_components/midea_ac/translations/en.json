@@ -95,6 +95,18 @@
           }
         }
       }
+    },
+    "select": {
+      "swing_angle": {
+        "state": {
+          "off": "Off",
+          "pos_1": "Position 1",
+          "pos_2": "Position 2",
+          "pos_3": "Position 3",
+          "pos_4": "Position 4",
+          "pos_5": "Position 5"
+        }
+      }
     }
   }
 }
