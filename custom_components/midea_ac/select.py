@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-
 from typing import List
 
 from homeassistant.components.select import SelectEntity
@@ -34,15 +33,15 @@ async def async_setup_entry(
     entities = []
     if getattr(coordinator.device, "supports_vertical_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
-                                    "vertical_swing_angle",
-                                    AC.SwingAngle,
-                                    "swing_angle"))
+                                        "vertical_swing_angle",
+                                        AC.SwingAngle,
+                                        "swing_angle"))
 
     if getattr(coordinator.device, "supports_horizontal_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
-                                    "horizontal_swing_angle",
-                                    AC.SwingAngle,
-                                    "swing_angle"))
+                                        "horizontal_swing_angle",
+                                        AC.SwingAngle,
+                                        "swing_angle"))
     add_entities(entities)
 
 
@@ -53,7 +52,7 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
                  enum_class: MideaIntEnum,
-                 translation_key = None) -> None:
+                 translation_key=None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
@@ -102,9 +101,9 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        
-        setattr(self._device, self._prop, self._enum_class.get_from_name(option.upper()))
-        
+
+        setattr(self._device, self._prop,
+                self._enum_class.get_from_name(option.upper()))
+
         # Apply via the coordinator
         await self.coordinator.apply()
-
