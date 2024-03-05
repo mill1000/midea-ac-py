@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
-from msmart.device.AC.device import IntEnumHelper
+from msmart.utils import MideaIntEnum
 
 from .const import DOMAIN
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
@@ -52,7 +52,7 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 enum_class: IntEnumHelper,
+                 enum_class: MideaIntEnum,
                  translation_key = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
