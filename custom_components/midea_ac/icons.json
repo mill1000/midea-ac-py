@@ -1,0 +1,9 @@
+{
+  "entity": {
+    "select": {
+      "swing_angle": {
+        "default": "mdi:angle-acute"
+      }
+    }
+  }
+}
