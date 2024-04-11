@@ -95,6 +95,28 @@
           }
         }
       }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Spento",
+          "pos_1": "Sinistra",
+          "pos_2": "Sinistra-centrale",
+          "pos_3": "Centrale",
+          "pos_4": "Destra-centrale",
+          "pos_5": "Destra"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Spento",
+          "pos_1": "Superiore",
+          "pos_2": "Superiore-centrale",
+          "pos_3": "Centrale",
+          "pos_4": "Inferiore-centrale",
+          "pos_5": "Inferiore"
+        }
+      }
     }
   }
 }
