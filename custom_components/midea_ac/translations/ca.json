@@ -95,6 +95,28 @@
           }
         }
       }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Apagat",
+          "pos_1": "Esquerra",
+          "pos_2": "Centre-esquerra",
+          "pos_3": "Centre",
+          "pos_4": "Centre-dreta",
+          "pos_5": "Dreta"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Apagat",
+          "pos_1": "Superior",
+          "pos_2": "Centre-superior",
+          "pos_3": "Centre",
+          "pos_4": "Centre-inferior",
+          "pos_5": "Inferior"
+        }
+      }
     }
   }
 }
