@@ -1,0 +1,122 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Alege cum adaugi dispozitivul.",
+        "menu_options": {
+          "discover": "Descoperă dispozitivul",
+          "manual": "Configurare manuală"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Host"
+        },
+        "description": "Lasă câmpul „Host” liber pentru a descoperi dispozitivul/dispozitivele în rețea."
+      },
+      "manual": {
+        "description": "Introdu informațiile pentru dispozitivul tău.",
+        "data": {
+          "id": "ID",
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token pentru dispozitivele V3",
+          "k1": "Key pentru dispozitivele V3 "
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Dispozitivul este deja configurat.",
+      "cannot_connect": "Nu s-a putut realiza conexiunea.",
+      "no_devices_found": "Nu s-au găsit dispozitive compatibile în rețea."
+    },
+    "error": {
+      "cannot_connect": "Nu s-a putut realiza o conexiune cu aceste setări.",
+      "device_not_found": "Dispozitivul nu a fost găsit în rețea.",
+      "unsupported_device": "Dispozitivul nu este compatibil."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Activează beep-ul",
+          "temp_step": "Pas de temperatură",
+          "use_fan_only_workaround": "Folosește soluția ocolitoare „Doar ventilator”",
+          "show_all_presets": "Arată toate setările prestabilite",
+          "additional_operation_modes": "Moduri de oprare suplimentare",
+          "max_connection_lifetime": "Durata maximă a conexiunii"
+        },
+        "data_description": {
+          "temp_step": "Mărime pas incremental pentru temperatură",
+          "additional_operation_modes": "Specifică moduri adiționale de funcționare",
+          "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 30 de secunde) "
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Setează „Follow Me”",
+      "description": "Setează funcția „Follow Me”.",
+      "fields": {
+        "enabled": {
+          "name": "Activat",
+          "description": "Dacă funcția „Follow Me” ar trebui activată."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Silențios",
+              "low": "Scăzut",
+              "medium": "Medium",
+              "high": "Ridicat",
+              "auto": "Automat",
+              "custom": "Personalizat"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Oprit",
+              "vertical": "Vertical",
+              "horizontal": "Orizontal",
+              "both": "Ambele"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Oprit",
+          "pos_1": "Stânga",
+          "pos_2": "Centru-stânga",
+          "pos_3": "Centru",
+          "pos_4": "Centru-dreapta",
+          "pos_5": "Dreapta"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Oprit",
+          "pos_1": "Sus",
+          "pos_2": "Centru-sus",
+          "pos_3": "Centru",
+          "pos_4": "Centru-jos",
+          "pos_5": "Jos"
+        }
+      }
+    }
+  }
+}
