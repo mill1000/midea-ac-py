@@ -2,23 +2,23 @@
   "config": {
     "step": {
       "user": {
-        "description": "Válaszd ki, hogy szeretnél eszközt hozzáadni:",
+        "description": "Válassza ki, hogyan szeretne eszközt hozzáadni:",
         "menu_options": {
-          "discover": "Eszköz felderítése",
-          "manual": "Kézi beállítás"
+          "discover": "Eszköz felderítéssel",
+          "manual": "Kézi beállítással"
         }
       },
       "discover": {
         "data": {
-          "host": "Host"
+          "host": "Hoszt"
         },
-        "description": "Hagyd szabadon a mezőt az eszköz(ök) automatikus felderítéséhez a hálózaton."
+        "description": "Hagyja üresen a hosztot az eszköz(ök) hálózaton való felfedezéséhez."
       },
       "manual": {
-        "description": "Add meg az eszköz adatait",
+        "description": "Adja meg az eszköz adatait",
         "data": {
           "id": "ID",
-          "host": "Host",
+          "host": "Hoszt",
           "port": "Port",
           "token": "Token",
           "k1": "Kulcs"
@@ -47,7 +47,7 @@
           "prompt_tone": "Hangjelzés be",
           "temp_step": "Hőfokbeállítás lépésköze",
           "use_fan_only_workaround": "Fan-only mode hiba megkerülése",
-          "show_all_presets": "Mutasd az összes beállítást",
+          "show_all_presets": "Az összes profil mutatása",
           "additional_operation_modes": "További üzemmódok",
           "max_connection_lifetime": "Kapcsolódás maximális ideje"
         },
@@ -93,6 +93,28 @@
               "both": "Összes irány"
             }
           }
+        }
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Ki",
+          "pos_1": "Bal",
+          "pos_2": "Bal-közép",
+          "pos_3": "Közép",
+          "pos_4": "Jobb-közép",
+          "pos_5": "Jobb"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Ki",
+          "pos_1": "Felső",
+          "pos_2": "Felső-közép",
+          "pos_3": "Közép",
+          "pos_4": "Alsó-közép",
+          "pos_5": "Alsó"
         }
       }
     }
