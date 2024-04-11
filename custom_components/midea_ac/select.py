@@ -35,13 +35,13 @@ async def async_setup_entry(
         entities.append(MideaEnumSelect(coordinator,
                                         "vertical_swing_angle",
                                         AC.SwingAngle,
-                                        "swing_angle"))
+                                        "vertical_swing_angle"))
 
     if getattr(coordinator.device, "supports_horizontal_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
                                         "horizontal_swing_angle",
                                         AC.SwingAngle,
-                                        "swing_angle"))
+                                        "horizontal_swing_angle"))
     add_entities(entities)
 
 
