@@ -95,6 +95,28 @@
           }
         }
       }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Wyłączony",
+          "pos_1": "Lewo",
+          "pos_2": "Lewo-środek",
+          "pos_3": "środek",
+          "pos_4": "Prawo-środek",
+          "pos_5": "Prawo"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Wyłączony",
+          "pos_1": "Góra",
+          "pos_2": "Góra-środek",
+          "pos_3": "Środek",
+          "pos_4": "Dół-Środek",
+          "pos_5": "Dół"
+        }
+      }
     }
   }
 }
