@@ -95,6 +95,27 @@
           }
         }
       }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Off",
+          "pos_1": "Lijevo",
+          "pos_2": "Lijevo-centar",
+          "pos_3": "Centar",
+          "pos_4": "Desno-centar",
+          "pos_5": "Desno"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Off",
+          "pos_1": "Gore",
+          "pos_2": "Gore-centar",
+          "pos_3": "Centar",
+          "pos_4": "Dolje-centar",
+          "pos_5": "Dolje"
+        }
+      }
     }
   }
-}
