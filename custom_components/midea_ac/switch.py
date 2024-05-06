@@ -29,8 +29,14 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Add supported switch entities
+    entities = []
     if helpers.method_exists(coordinator.device, "toggle_display"):
-        add_entities([MideaDisplaySwitch(coordinator), ])
+        entities.append(MideaDisplaySwitch(coordinator))
+
+    if getattr(coordinator.device, "supports_anion", False):
+        entities.append(MideaSwitch(coordinator, "anion"))
+
+    add_entities(entities)
 
 
 class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
@@ -95,7 +101,7 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 entity_category: str
+                 entity_category: EntityCategory = EntityCategory.CONFIG
                  ) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
