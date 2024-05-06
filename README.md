@@ -33,6 +33,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Service to enable "Follow Me" function.<sup>2</sup>
 * Select entities to control swing angle when supported.
 * Translations
+  * български
   * Català
   * English
   * Español
