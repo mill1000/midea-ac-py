@@ -100,6 +100,7 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
+        self._name = prop.replace("_", " ").capitalize()
         self._entity_category = entity_category
 
     async def _set_state(self, state) -> None:
@@ -121,9 +122,14 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
         }
 
     @property
+    def has_entity_name(self) -> bool:
+        """Indicates if entity follows naming conventions."""
+        return True
+
+    @property
     def name(self) -> str:
         """Return the name of this entity."""
-        return f"{DOMAIN}_{self._prop}_{self._device.id}"
+        return self._name
 
     @property
     def unique_id(self) -> str:
