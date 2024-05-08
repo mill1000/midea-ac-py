@@ -26,7 +26,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Automatic device discovery and configuration via the GUI.
 * Device capability detection. Only supported modes, presets, fan speeds and functions are displayed.
 * Support for sleep, eco, boost (turbo) and away (freeze protection) presets.
-* Switch entities for anion (ionizer) and device display<sup>1</sup>.
+* Switch entities for purifier (ionizer/UV) and device display<sup>1</sup>.
 * Binary sensor entity for device filter alert.
 * Minimum and maximum target temperatures from device.
 * Number entity for fan speed if devices support custom speeds.
