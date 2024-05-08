@@ -33,8 +33,8 @@ async def async_setup_entry(
     if helpers.method_exists(coordinator.device, "toggle_display"):
         entities.append(MideaDisplaySwitch(coordinator))
 
-    if getattr(coordinator.device, "supports_anion", False):
-        entities.append(MideaSwitch(coordinator, "anion"))
+    if getattr(coordinator.device, "supports_purifier", False):
+        entities.append(MideaSwitch(coordinator, "purifier"))
 
     add_entities(entities)
 
