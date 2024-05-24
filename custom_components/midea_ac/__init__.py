@@ -16,6 +16,14 @@ from .const import CONF_KEY, CONF_MAX_CONNECTION_LIFETIME, DOMAIN
 from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
+_PLATFORMS = [
+    "binary_sensor",
+    "climate",
+    "number",
+    "select",
+    "sensor",
+    "switch"
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -62,19 +70,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     # Store coordinator in global data
     hass.data[DOMAIN][config_entry.entry_id] = coordinator
 
-    # Create platform entries
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "climate"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "sensor"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "binary_sensor"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "switch"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "number"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "select"))
+    # Forward setup to all platforms
+    for platform in _PLATFORMS:
+        hass.async_create_task(
+            hass.config_entries.async_forward_entry_setup(config_entry, platform))
 
     # Reload entry when its updated
     config_entry.async_on_unload(
@@ -91,11 +90,9 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     except KeyError:
         _LOGGER.warning("Failed remove device from global data.")
 
-    await hass.config_entries.async_forward_entry_unload(config_entry, "climate")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "binary_sensor")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "switch")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "number")
+    # Forward unload to all platforms
+    for platform in _PLATFORMS:
+        await hass.config_entries.async_forward_entry_unload(config_entry, platform)
 
     return True
 
