@@ -41,6 +41,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     port = config_entry.data[CONF_PORT]
     device = AC(ip=host, port=port, device_id=int(id))
 
+    # Configure the connection lifetime
+    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
+    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
+        _LOGGER.info(
+            "Setting maximum connection lifetime to %s seconds.", lifetime)
+        device.set_max_connection_lifetime(lifetime)
+
     # Configure token and k1 as needed
     token = config_entry.data[CONF_TOKEN]
     key = config_entry.data[CONF_KEY]
@@ -50,13 +57,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         except AuthenticationError as e:
             raise ConfigEntryNotReady(
                 "Failed to authenticate with device.") from e
-
-    # Configure the connection lifetime
-    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
-    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
-        _LOGGER.info(
-            "Setting maximum connection lifetime to %s seconds.", lifetime)
-        device.set_max_connection_lifetime(lifetime)
 
     # Query device capabilities
     if helpers.method_exists(device, "get_capabilities"):
