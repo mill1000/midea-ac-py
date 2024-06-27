@@ -4,7 +4,8 @@ from __future__ import annotations
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
+from homeassistant.const import (CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN,
+                                 Platform)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from msmart import __version__ as MSMART_VERISON
@@ -17,12 +18,12 @@ from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 _PLATFORMS = [
-    "binary_sensor",
-    "climate",
-    "number",
-    "select",
-    "sensor",
-    "switch"
+    Platform.BINARY_SENSOR,
+    Platform.CLIMATE,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH
 ]
 
 
@@ -71,9 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     hass.data[DOMAIN][config_entry.entry_id] = coordinator
 
     # Forward setup to all platforms
-    for platform in _PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(config_entry, platform))
+    await hass.config_entries.async_forward_entry_setups(config_entry, _PLATFORMS)
 
     # Reload entry when its updated
     config_entry.async_on_unload(
