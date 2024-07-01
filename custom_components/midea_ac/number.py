@@ -56,11 +56,6 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
         return True
 
     @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return "Fan speed"
-
-    @property
     def unique_id(self) -> str:
         """Return the unique ID of this entity."""
         return f"{self._device.id}-fan_speed"

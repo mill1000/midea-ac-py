@@ -55,7 +55,6 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
         self._device_class = device_class
         self._entity_category = entity_category
         self._attr_translation_key = translation_key
-        self._name = prop.replace("_", " ").capitalize()
 
     @property
     def device_info(self) -> dict:
@@ -70,11 +69,6 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
     def has_entity_name(self) -> bool:
         """Indicates if entity follows naming conventions."""
         return True
-
-    @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return self._name
 
     @property
     def unique_id(self) -> str:

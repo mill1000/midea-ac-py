@@ -71,11 +71,6 @@ class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
         return True
 
     @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return "Display"
-
-    @property
     def unique_id(self) -> str:
         """Return the unique ID of this entity."""
         return f"{self._device.id}-display"
@@ -114,7 +109,6 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
         self._prop = prop
         self._entity_category = entity_category
         self._attr_translation_key = translation_key
-        self._name = prop.replace("_", " ").capitalize()
 
     async def _set_state(self, state) -> None:
         """Set the state of the property controlled by the switch."""
@@ -138,11 +132,6 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
     def has_entity_name(self) -> bool:
         """Indicates if entity follows naming conventions."""
         return True
-
-    @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return self._name
 
     @property
     def unique_id(self) -> str:
