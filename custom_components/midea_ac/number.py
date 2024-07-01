@@ -36,6 +36,8 @@ async def async_setup_entry(
 class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
     """Fan speed number for Midea AC."""
 
+    _attr_translation_key = "fan_speed"
+
     def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Optional
 
 from homeassistant.components.binary_sensor import (BinarySensorDeviceClass,
                                                     BinarySensorEntity)
@@ -31,7 +32,12 @@ async def async_setup_entry(
 
     # Create sensor entities from device if supported
     if helpers.property_exists(coordinator.device, "filter_alert"):
-        add_entities([MideaBinarySensor(coordinator, "filter_alert"), ])
+        add_entities([MideaBinarySensor(coordinator,
+                                        "filter_alert",
+                                        BinarySensorDeviceClass.PROBLEM,
+                                        EntityCategory.DIAGNOSTIC,
+                                        "filter_alert"
+                                        )])
 
 
 class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
@@ -39,10 +45,16 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
 
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
-                 prop: str) -> None:
+                 prop: str,
+                 device_class: BinarySensorDeviceClass,
+                 entity_category: EntityCategory,
+                 translation_key: Optional[str] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
+        self._device_class = device_class
+        self._entity_category = entity_category
+        self._attr_translation_key = translation_key
         self._name = prop.replace("_", " ").capitalize()
 
     @property
@@ -72,12 +84,12 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
     @property
     def device_class(self) -> str:
         """Return the device class of this entity."""
-        return BinarySensorDeviceClass.PROBLEM
+        return self._device_class
 
     @property
     def entity_category(self) -> str:
         """Return the entity category of this entity."""
-        return EntityCategory.DIAGNOSTIC
+        return self._entity_category
 
     @property
     def is_on(self) -> bool | None:

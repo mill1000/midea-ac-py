@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Optional
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -34,13 +35,18 @@ async def async_setup_entry(
         entities.append(MideaDisplaySwitch(coordinator))
 
     if getattr(coordinator.device, "supports_purifier", False):
-        entities.append(MideaSwitch(coordinator, "purifier"))
+        entities.append(MideaSwitch(coordinator,
+                                    "purifier",
+                                    EntityCategory.CONFIG,
+                                    "purifier"))
 
     add_entities(entities)
 
 
 class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
     """Display switch for Midea AC."""
+
+    _attr_translation_key = "display"
 
     def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
@@ -101,13 +107,14 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 entity_category: EntityCategory = EntityCategory.CONFIG
-                 ) -> None:
+                 entity_category: EntityCategory,
+                 translation_key: Optional[str] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
-        self._name = prop.replace("_", " ").capitalize()
         self._entity_category = entity_category
+        self._attr_translation_key = translation_key
+        self._name = prop.replace("_", " ").capitalize()
 
     async def _set_state(self, state) -> None:
         """Set the state of the property controlled by the switch."""

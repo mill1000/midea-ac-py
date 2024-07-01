@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Optional
 
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
@@ -30,8 +31,14 @@ async def async_setup_entry(
 
     # Create sensor entities
     add_entities([
-        MideaTemperatureSensor(coordinator, "indoor_temperature"),
-        MideaTemperatureSensor(coordinator, "outdoor_temperature"),
+        MideaTemperatureSensor(
+            coordinator,
+            "indoor_temperature",
+            "indoor_temperature"),
+        MideaTemperatureSensor(
+            coordinator,
+            "outdoor_temperature",
+            "outdoor_temperature"),
     ])
 
 
@@ -40,10 +47,12 @@ class MideaTemperatureSensor(MideaCoordinatorEntity, SensorEntity):
 
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
-                 prop: str) -> None:
+                 prop: str,
+                 translation_key: Optional[str] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
+        self._attr_translation_key = translation_key
         self._name = prop.replace("_", " ").capitalize()
 
     @property
