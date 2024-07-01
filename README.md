@@ -46,6 +46,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * Polski
   * Português
   * Română
+  * Pусский
   * Slovenčina
   * [Help contribute a new language](https://github.com/mill1000/midea-ac-py/issues/54)
 
