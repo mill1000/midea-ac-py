@@ -117,6 +117,22 @@
           "pos_5": "Dół"
         }
       }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Temperatura wewnętrzna"
+      },
+      "outdoor_temperature": {
+        "name": "Temperatura zewnętrzna"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Wyświetlacz"
+      },
+      "purifier": {
+        "name": "Oczyszczanie powietrza"
+      }
     }
   }
 }
