@@ -96,8 +96,19 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Alert brudnych filtrów"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Prędność wentylatora"
+      }
+    },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Zakres ruchu w poziomie",
         "state": {
           "off": "Wyłączony",
           "pos_1": "Lewo",
@@ -108,6 +119,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Zakres ruchu w pionie",
         "state": {
           "off": "Wyłączony",
           "pos_1": "Góra",
