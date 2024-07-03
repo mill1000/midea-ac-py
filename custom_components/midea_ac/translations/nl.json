@@ -12,7 +12,7 @@
         "data": {
           "host": "Host"
         },
-        "description": "Laat dit veld leeg om apparaten op het netwerk automatisch te ontdekken."
+        "description": "Laat dit veld leeg om apparaten op het netwerk automatisch te detecteren."
       },
       "manual": {
         "description": "Voer de gegevens van uw apparaat in.",
@@ -24,8 +24,8 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token voor V3 apparaten",
-          "k1": "Sleutel voor V3 apparaten"
+          "token": "Token voor V3-apparaten",
+          "k1": "Steutel voor V3-apparaten"
         }
       }
     },
@@ -46,10 +46,10 @@
         "data": {
           "prompt_tone": "Piep inschakelen",
           "temp_step": "Stapgrootte voor temperatuur",
-          "use_fan_only_workaround": "Fan-only Workaround gebruiken",
+          "use_fan_only_workaround": "Fan-only workaround gebruiken",
           "show_all_presets": "Alle presets tonen",
           "additional_operation_modes": "Extra functies",
-          "max_connection_lifetime": "Maximale duur verbinding"
+          "max_connection_lifetime": "Maximale verbindingsduur"
         },
         "data_description": {
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
@@ -87,13 +87,63 @@
           },
           "swing_mode": {
             "state": {
-              "off": "Uit",
+              "off": "Off",
               "vertical": "Verticaal",
               "horizontal": "Horizontaal",
               "both": "Beide"
             }
           }
         }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filterwaarschuwing"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Ventilatorsnelheid"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Horizontale blaasrichting",
+        "state": {
+          "off": "Uit",
+          "pos_1": "Links",
+          "pos_2": "Links-midden",
+          "pos_3": "Midden",
+          "pos_4": "Rechts-midden",
+          "pos_5": "Rechts"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Verticale blaasrichting",
+        "state": {
+          "off": "Uit",
+          "pos_1": "Omhoog",
+          "pos_2": "Omhoog-midden",
+          "pos_3": "Midden",
+          "pos_4": "Omlaag-midden",
+          "pos_5": "Omlaag"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Binnentemperatuur"
+      },
+      "outdoor_temperature": {
+        "name": "Buitentemperatuur"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Display"
+      },
+      "purifier": {
+        "name": "Luchtreiniger"
       }
     }
   }
