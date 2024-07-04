@@ -96,8 +96,19 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Alertă filtru"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Viteză ventilator"
+      }
+    },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Baleiere orizontală",
         "state": {
           "off": "Oprit",
           "pos_1": "Stânga",
@@ -108,6 +119,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Baleiere verticală",
         "state": {
           "off": "Oprit",
           "pos_1": "Sus",
@@ -116,6 +128,22 @@
           "pos_4": "Centru-jos",
           "pos_5": "Jos"
         }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Temperatură interioară"
+      },
+      "outdoor_temperature": {
+        "name": "Temperatură exterioară"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Afișaj"
+      },
+      "purifier": {
+        "name": "Purificator"
       }
     }
   }
