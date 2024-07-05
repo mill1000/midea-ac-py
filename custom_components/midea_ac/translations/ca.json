@@ -96,8 +96,19 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Alerta de filtre"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Velocitat del ventilador"
+      }
+    },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Angle d'oscil·lació horitzontal",
         "state": {
           "off": "Apagat",
           "pos_1": "Esquerra",
@@ -108,6 +119,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Angle d'oscil·lació vertical",
         "state": {
           "off": "Apagat",
           "pos_1": "Superior",
@@ -116,6 +128,22 @@
           "pos_4": "Centre-inferior",
           "pos_5": "Inferior"
         }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Temperatura interior"
+      },
+      "outdoor_temperature": {
+        "name": "Temperatura exterior"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Pantalla"
+      },
+      "purifier": {
+        "name": "Purificador"
       }
     }
   }
