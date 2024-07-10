@@ -7,7 +7,7 @@ from typing import Optional
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature, PERCENTAGE
+from homeassistant.const import PERCENTAGE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -31,24 +31,24 @@ async def async_setup_entry(
 
     entities = [
         MideaSensor(coordinator,
-                               "indoor_temperature",
-                               SensorDeviceClass.TEMPERATURE,
-                               UnitOfTemperature.CELSIUS,
-                               "indoor_temperature"),
+                    "indoor_temperature",
+                    SensorDeviceClass.TEMPERATURE,
+                    UnitOfTemperature.CELSIUS,
+                    "indoor_temperature"),
         MideaSensor(coordinator,
-                               "outdoor_temperature",
-                               SensorDeviceClass.TEMPERATURE,
-                               UnitOfTemperature.CELSIUS,
-                               "outdoor_temperature"),
+                    "outdoor_temperature",
+                    SensorDeviceClass.TEMPERATURE,
+                    UnitOfTemperature.CELSIUS,
+                    "outdoor_temperature"),
     ]
 
     # TODO missing in msmart-ng
     if getattr(coordinator.device, "supports_humidity", False):
         entities.append(MideaSensor(coordinator,
-                            "indoor_humidity",
-                             SensorDeviceClass.HUMIDITY,
-                             PERCENTAGE,
-                            "indoor_humidity"))
+                                    "indoor_humidity",
+                                    SensorDeviceClass.HUMIDITY,
+                                    PERCENTAGE,
+                                    "indoor_humidity"))
 
     add_entities(entities)
 
@@ -99,7 +99,7 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
     def device_class(self) -> str:
         """Return the device class of this entity."""
         return self._device_class
-    
+
     @property
     def state_class(self) -> str:
         """Return the state class of this entity."""
