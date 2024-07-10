@@ -108,6 +108,7 @@
     },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Horizontalni kut zakretanja",
         "state": {
           "off": "Off",
           "pos_1": "Lijevo",
@@ -118,6 +119,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Vertikalni kut zakretanja",
         "state": {
           "off": "Off",
           "pos_1": "Gore",
