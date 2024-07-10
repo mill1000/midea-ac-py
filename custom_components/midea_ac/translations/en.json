@@ -131,6 +131,9 @@
       }
     },
     "sensor": {
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
       "indoor_temperature": {
         "name": "Indoor temperature"
       },
