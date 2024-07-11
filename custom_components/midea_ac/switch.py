@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Optional
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -29,12 +30,23 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Add supported switch entities
+    entities = []
     if helpers.method_exists(coordinator.device, "toggle_display"):
-        add_entities([MideaDisplaySwitch(coordinator), ])
+        entities.append(MideaDisplaySwitch(coordinator))
+
+    if getattr(coordinator.device, "supports_purifier", False):
+        entities.append(MideaSwitch(coordinator,
+                                    "purifier",
+                                    EntityCategory.CONFIG,
+                                    "purifier"))
+
+    add_entities(entities)
 
 
 class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
     """Display switch for Midea AC."""
+
+    _attr_translation_key = "display"
 
     def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
@@ -57,11 +69,6 @@ class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
     def has_entity_name(self) -> bool:
         """Indicates if entity follows naming conventions."""
         return True
-
-    @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return "Display"
 
     @property
     def unique_id(self) -> str:
@@ -87,3 +94,64 @@ class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
         """Turn the display off."""
         if self.is_on:
             await self._toggle_display()
+
+
+class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
+    """Generic switch for Midea AC."""
+
+    def __init__(self,
+                 coordinator: MideaDeviceUpdateCoordinator,
+                 prop: str,
+                 entity_category: EntityCategory,
+                 translation_key: Optional[str] = None) -> None:
+        MideaCoordinatorEntity.__init__(self, coordinator)
+
+        self._prop = prop
+        self._entity_category = entity_category
+        self._attr_translation_key = translation_key
+
+    async def _set_state(self, state) -> None:
+        """Set the state of the property controlled by the switch."""
+
+        # Update device property
+        setattr(self._device, self._prop, state)
+
+        # Apply via coordinator
+        await self.coordinator.apply()
+
+    @property
+    def device_info(self) -> dict:
+        """Return info for device registry."""
+        return {
+            "identifiers": {
+                (DOMAIN, self._device.id)
+            },
+        }
+
+    @property
+    def has_entity_name(self) -> bool:
+        """Indicates if entity follows naming conventions."""
+        return True
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique ID of this entity."""
+        return f"{self._device.id}-{self._prop}"
+
+    @property
+    def entity_category(self) -> str:
+        """Return the entity category of this entity."""
+        return self._entity_category
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return the on state of the switch."""
+        return getattr(self._device, self._prop, None)
+
+    async def async_turn_on(self) -> None:
+        """Turn the switch on."""
+        await self._set_state(True)
+
+    async def async_turn_off(self) -> None:
+        """Turn the switch off."""
+        await self._set_state(False)

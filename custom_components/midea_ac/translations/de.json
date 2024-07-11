@@ -1,0 +1,122 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Wählen Sie, wie Sie ein Gerät hinzufügen möchten.",
+        "menu_options": {
+          "discover": "Gerät erkennen",
+          "manual": "Manuell konfigurieren"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Host"
+        },
+        "description": "Lassen Sie das Host-Feld leer, um Geräte im Netzwerk zu erkennen."
+      },
+      "manual": {
+        "description": "Geben Sie Informationen für Ihr Gerät ein.",
+        "data": {
+          "id": "ID",
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token für V3-Geräte",
+          "k1": "Key für V3-Geräte"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Das Gerät wurde bereits konfiguriert.",
+      "cannot_connect": "Es konnte keine Verbindung hergestellt werden.",
+      "no_devices_found": "Keine unterstützten Geräte im Netzwerk gefunden."
+    },
+    "error": {
+      "cannot_connect": "Mit diesen Einstellungen konnte keine Verbindung hergestellt werden.",
+      "device_not_found": "Gerät im Netzwerk nicht gefunden.",
+      "unsupported_device": "Gerät wird nicht unterstützt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Signalton aktivieren",
+          "temp_step": "Temperaturschritt",
+          "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden",
+          "show_all_presets": "Alle Voreinstellungen anzeigen",
+          "additional_operation_modes": "Zusätzliche Betriebsmodi",
+          "max_connection_lifetime": "Maximale Verbindungsdauer"
+        },
+        "data_description": {
+          "temp_step": "Schrittgröße für Temperatureinstellung",
+          "additional_operation_modes": "Zusätzliche Betriebsmodi angeben",
+          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 30 Sekunden)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Follow Me einstellen",
+      "description": "Follow Me-Funktion einstellen.",
+      "fields": {
+        "enabled": {
+          "name": "Aktiviert",
+          "description": "Ob Follow Me aktiviert werden soll."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Leise",
+              "low": "Niedrig",
+              "medium": "Mittel",
+              "high": "Hoch",
+              "auto": "Auto",
+              "custom": "Benutzerdefiniert"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Aus",
+              "vertical": "Vertikal",
+              "horizontal": "Horizontal",
+              "both": "Beides"
+            }
+          }
+        }
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "state": {
+          "off": "Aus",
+          "pos_1": "Links",
+          "pos_2": "Links-mitte",
+          "pos_3": "Mitte",
+          "pos_4": "Rechts-mitte",
+          "pos_5": "Rechts"
+        }
+      },
+      "vertical_swing_angle": {
+        "state": {
+          "off": "Aus",
+          "pos_1": "Oben",
+          "pos_2": "Oben-mitte",
+          "pos_3": "Mitte",
+          "pos_4": "Unten-mitte",
+          "pos_5": "Unten"
+        }
+      }
+    }
+  }
+}

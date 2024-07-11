@@ -4,7 +4,8 @@ from __future__ import annotations
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
+from homeassistant.const import (CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN,
+                                 Platform)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from msmart import __version__ as MSMART_VERISON
@@ -16,6 +17,14 @@ from .const import CONF_KEY, CONF_MAX_CONNECTION_LIFETIME, DOMAIN
 from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
+_PLATFORMS = [
+    Platform.BINARY_SENSOR,
+    Platform.CLIMATE,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -33,6 +42,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     port = config_entry.data[CONF_PORT]
     device = AC(ip=host, port=port, device_id=int(id))
 
+    # Configure the connection lifetime
+    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
+    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
+        _LOGGER.info(
+            "Setting maximum connection lifetime to %s seconds.", lifetime)
+        device.set_max_connection_lifetime(lifetime)
+
     # Configure token and k1 as needed
     token = config_entry.data[CONF_TOKEN]
     key = config_entry.data[CONF_KEY]
@@ -42,13 +58,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         except AuthenticationError as e:
             raise ConfigEntryNotReady(
                 "Failed to authenticate with device.") from e
-
-    # Configure the connection lifetime
-    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
-    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
-        _LOGGER.info(
-            "Setting maximum connection lifetime to %s seconds.", lifetime)
-        device.set_max_connection_lifetime(lifetime)
 
     # Query device capabilities
     if helpers.method_exists(device, "get_capabilities"):
@@ -62,19 +71,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     # Store coordinator in global data
     hass.data[DOMAIN][config_entry.entry_id] = coordinator
 
-    # Create platform entries
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "climate"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "sensor"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "binary_sensor"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "switch"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "number"))
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(config_entry, "select"))
+    # Forward setup to all platforms
+    await hass.config_entries.async_forward_entry_setups(config_entry, _PLATFORMS)
 
     # Reload entry when its updated
     config_entry.async_on_unload(
@@ -91,11 +89,9 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     except KeyError:
         _LOGGER.warning("Failed remove device from global data.")
 
-    await hass.config_entries.async_forward_entry_unload(config_entry, "climate")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "binary_sensor")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "switch")
-    await hass.config_entries.async_forward_entry_unload(config_entry, "number")
+    # Forward unload to all platforms
+    for platform in _PLATFORMS:
+        await hass.config_entries.async_forward_entry_unload(config_entry, platform)
 
     return True
 

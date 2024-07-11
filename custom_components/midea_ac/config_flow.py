@@ -204,8 +204,8 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         # Create a config entry with the config data and default options
         return self.async_create_entry(title=f"{DOMAIN} {device.id}", data=data, options=_DEFAULT_OPTIONS)
 
-    @ staticmethod
-    @ callback
+    @staticmethod
+    @callback
     def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
         """Return the options flow."""
         return MideaOptionsFlow(config_entry)

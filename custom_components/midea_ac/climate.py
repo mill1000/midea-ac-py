@@ -260,12 +260,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Return the unit of measurement."""
         return UnitOfTemperature.CELSIUS
 
-    @ property
+    @property
     def min_temp(self) -> float:
         """Return the minimum temperature."""
         return self._min_temperature
 
-    @ property
+    @property
     def max_temp(self) -> float:
         """Return the maximum temperature."""
         return self._max_temperature
@@ -394,7 +394,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         return modes
 
-    @ property
+    @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
         if self._device.eco_mode:

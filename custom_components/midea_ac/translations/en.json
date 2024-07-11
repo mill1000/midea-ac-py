@@ -96,8 +96,19 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filter alert"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Fan speed"
+      }
+    },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Horizontal swing angle",
         "state": {
           "off": "Off",
           "pos_1": "Left",
@@ -108,6 +119,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Vertical swing angle",
         "state": {
           "off": "Off",
           "pos_1": "Top",
@@ -116,6 +128,22 @@
           "pos_4": "Bottom-center",
           "pos_5": "Bottom"
         }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Display"
+      },
+      "purifier": {
+        "name": "Purifier"
       }
     }
   }

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import List
+from typing import List, Optional
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
@@ -52,13 +52,12 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
                  enum_class: MideaIntEnum,
-                 translation_key=None) -> None:
+                 translation_key: Optional[str] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
         self._enum_class = enum_class
         self._attr_translation_key = translation_key
-        self._name = prop.replace("_", " ").capitalize()
 
     @property
     def device_info(self) -> dict:
@@ -73,11 +72,6 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
     def has_entity_name(self) -> bool:
         """Indicates if entity follows naming conventions."""
         return True
-
-    @property
-    def name(self) -> str:
-        """Return the name of this entity."""
-        return self._name
 
     @property
     def unique_id(self) -> str:

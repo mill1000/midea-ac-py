@@ -7,7 +7,7 @@
 Home Assistant custom integration to control Midea (and associated brands) air conditioners via LAN.
 
 Midea is an OEM for many brands including:
-Hualing, Senville, Klimaire, AirCon, Century, Pridiom, Thermocore, Comfee, Alpine Home Air, Artel, Beko, Electrolux, Galactic, Idea, Inventor, Kaisai, Mitsui, Mr. Cool, Neoclima, Olimpia Splendid, Pioneer, QLIMA, Rotenso, Royal Clima, Qzen, Toshiba, Carrier, Goodman, Friedrich, Samsung, Kenmore, Trane, Lennox, LG and more.
+AirCon, Alpine Home Air, Artel, Beko, Canair, Carrier, Century, Comfee, Electrolux, Friedrich, Galactic, Goodman, Hualing, Idea, Inventor, Kaisai, Kenmore, Klimaire, Lennox, LG, Mitsui, Mr. Cool, Neoclima, Olimpia Splendid, Pioneer, Pridiom, QLIMA, Qzen, Rotenso, Royal Clima, Samsung, Senville, Thermocore, Toshiba, Trane and more.
 
 A device is likely supported if it uses one of the following Android apps or it's iOS equivalent.
 * Artic King (com.arcticking.ac)
@@ -26,14 +26,16 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Automatic device discovery and configuration via the GUI.
 * Device capability detection. Only supported modes, presets, fan speeds and functions are displayed.
 * Support for sleep, eco, boost (turbo) and away (freeze protection) presets.
-* Switch entity for device display.<sup>1</sup>
+* Switch entities for purifier (ionizer/UV) and device display<sup>1</sup>.
 * Binary sensor entity for device filter alert.
 * Minimum and maximum target temperatures from device.
 * Number entity for fan speed if devices support custom speeds.
 * Service to enable "Follow Me" function.<sup>2</sup>
 * Select entities to control swing angle when supported.
 * Translations
+  * български
   * Català
+  * Deutsch
   * English
   * Español
   * Hrvatski
@@ -44,6 +46,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * Polski
   * Português
   * Română
+  * Pусский
   * Slovenčina
   * [Help contribute a new language](https://github.com/mill1000/midea-ac-py/issues/54)
 

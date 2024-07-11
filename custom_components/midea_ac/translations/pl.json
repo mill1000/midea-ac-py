@@ -95,6 +95,56 @@
           }
         }
       }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Alert brudnych filtrów"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Prędność wentylatora"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Zakres ruchu w poziomie",
+        "state": {
+          "off": "Wyłączony",
+          "pos_1": "Lewo",
+          "pos_2": "Lewo-środek",
+          "pos_3": "środek",
+          "pos_4": "Prawo-środek",
+          "pos_5": "Prawo"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Zakres ruchu w pionie",
+        "state": {
+          "off": "Wyłączony",
+          "pos_1": "Góra",
+          "pos_2": "Góra-środek",
+          "pos_3": "Środek",
+          "pos_4": "Dół-Środek",
+          "pos_5": "Dół"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Temperatura wewnętrzna"
+      },
+      "outdoor_temperature": {
+        "name": "Temperatura zewnętrzna"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Wyświetlacz"
+      },
+      "purifier": {
+        "name": "Oczyszczanie powietrza"
+      }
     }
   }
 }

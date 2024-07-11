@@ -95,6 +95,56 @@
           }
         }
       }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Upozorenje o filteru"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Brzina ventilatora"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Horizontalni kut zakretanja",
+        "state": {
+          "off": "Off",
+          "pos_1": "Lijevo",
+          "pos_2": "Lijevo-centar",
+          "pos_3": "Centar",
+          "pos_4": "Desno-centar",
+          "pos_5": "Desno"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Vertikalni kut zakretanja",
+        "state": {
+          "off": "Off",
+          "pos_1": "Gore",
+          "pos_2": "Gore-centar",
+          "pos_3": "Centar",
+          "pos_4": "Dolje-centar",
+          "pos_5": "Dolje"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Unutarnja temperatura"
+      },
+      "outdoor_temperature": {
+        "name": "Vanjska temperatura"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Zaslon"
+      },
+      "purifier": {
+        "name": "Pročistač"
+      }
     }
   }
 }
