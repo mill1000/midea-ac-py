@@ -1,0 +1,150 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "选择添加设备的方式。",
+        "menu_options": {
+          "discover": "自动添加",
+          "manual": "手动添加"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "地址"
+        },
+        "description": "置空地址栏时将尝试自动发现网络上的设备。"
+      },
+      "manual": {
+        "description": "输入设备的配置信息。",
+        "data": {
+          "id": "ID",
+          "host": "地址",
+          "port": "端口",
+          "token": "令牌",
+          "k1": "密钥"
+        },
+        "data_description": {
+          "token": "用于V3设备的令牌(Token)",
+          "k1": "用于V3设备的密钥(Key)"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "已存在的设备。",
+      "cannot_connect": "无法连接到设备。",
+      "no_devices_found": "未发现支持的设备。"
+    },
+    "error": {
+      "cannot_connect": "无法通过配置信息进行连接。",
+      "device_not_found": "未发现指定设备。",
+      "unsupported_device": "该设备未被支持。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "启用蜂鸣器",
+          "temp_step": "温度步进",
+          "use_fan_only_workaround": "使用仅送风方案",
+          "show_all_presets": "显示所有预设模式",
+          "additional_operation_modes": "额外运行模式",
+          "max_connection_lifetime": "最大连接有效期"
+        },
+        "data_description": {
+          "temp_step": "温度设定的步进值",
+          "additional_operation_modes": "指定额外的运行模式",
+          "max_connection_lifetime": "单次连接的最大有效期(单位为秒，最短30秒)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "智慧眼",
+      "description": "设置“智慧眼”功能。",
+      "fields": {
+        "enabled": {
+          "name": "启用",
+          "description": "是否启用“智慧眼”功能。"
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "静音",
+              "low": "低速",
+              "medium": "中速",
+              "high": "高速",
+              "auto": "自动",
+              "custom": "自定"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "停止",
+              "vertical": "垂直",
+              "horizontal": "水平",
+              "both": "双向"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "滤网报警"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "风速"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "横向摆风",
+        "state": {
+          "off": "停止",
+          "pos_1": "左方",
+          "pos_2": "中左",
+          "pos_3": "中部",
+          "pos_4": "中右",
+          "pos_5": "右方"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "垂直摆风",
+        "state": {
+          "off": "停止",
+          "pos_1": "上方",
+          "pos_2": "中上",
+          "pos_3": "中部",
+          "pos_4": "中下",
+          "pos_5": "下方"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "室内温度"
+      },
+      "outdoor_temperature": {
+        "name": "室外温度"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "面板显示"
+      },
+      "purifier": {
+        "name": "空气净化"
+      }
+    }
+  }
+}
