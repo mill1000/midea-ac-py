@@ -32,6 +32,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
         )
 
         self._device = device
+        self._energy_sensors = 0
 
     async def _async_update_data(self) -> None:
         """Update the device data."""
@@ -50,6 +51,20 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
     def device(self) -> AC:
         """Fetch the device object."""
         return self._device
+
+    def register_energy_sensor(self) -> None:
+        """Record that an energy sensor is active."""
+        self._energy_sensors += 1
+
+        # Enable requests
+        self._device.enable_energy_usage_requests = True
+
+    def unregister_energy_sensor(self) -> None:
+        """Record that an energy sensor is inactive."""
+        self._energy_sensors -= 1
+
+        # Disable requests if last sensor
+        self._device.enable_energy_usage_requests = self._energy_sensors > 0
 
 
 class MideaCoordinatorEntity(CoordinatorEntity):
