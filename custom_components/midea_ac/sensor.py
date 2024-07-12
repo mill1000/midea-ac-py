@@ -42,7 +42,6 @@ async def async_setup_entry(
                     "outdoor_temperature"),
     ]
 
-    # TODO missing in msmart-ng
     if getattr(coordinator.device, "supports_humidity", False):
         entities.append(MideaSensor(coordinator,
                                     "indoor_humidity",
