@@ -131,6 +131,9 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
       "indoor_humidity": {
         "name": "Indoor humidity"
       },
@@ -139,6 +142,12 @@
       },
       "outdoor_temperature": {
         "name": "Outdoor temperature"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
       }
     },
     "switch": {
