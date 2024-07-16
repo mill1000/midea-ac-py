@@ -137,6 +137,10 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         supported_op_modes = getattr(
             self._device, "supported_operation_modes",  AC.OperationalMode.list())
 
+        # Don't include smart dry, we will try to automatically use this mode when supported
+        if AC.OperationalMode.SMART_DRY in supported_op_modes:
+            supported_op_modes.remove(AC.OperationalMode.SMART_DRY)
+
         # Convert from Midea operational modes to HA HVAC mode
         self._hvac_modes = [_OPERATIONAL_MODE_TO_HVAC_MODE[m]
                             for m in supported_op_modes]
