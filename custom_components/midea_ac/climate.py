@@ -290,6 +290,21 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         await self._apply()
 
     @property
+    def current_humidity(self) -> float | None:
+        """Return the current humidity."""
+        return self._device.indoor_humidity
+
+    @property
+    def target_humidity(self) -> float | None:
+        """Return the current target humidity."""
+        return self._device.target_humidity
+
+    async def async_set_humidity(self, humidity) -> None:
+        """Set a new target humidity."""
+        self._device.target_humidity = int(humidity)
+        await self._apply()
+
+    @property
     def swing_modes(self) -> list[str]:
         """Return the supported swing modes."""
         return self._swing_modes
