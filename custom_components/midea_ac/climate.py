@@ -248,6 +248,11 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def supported_features(self) -> int:
         """Return the supported features."""
+
+        if (self._device.operational_mode == AC.OperationalMode.DRY
+                and getattr(self._device, "supports_target_humidity", False)):
+            return self._supported_features | ClimateEntityFeature.TARGET_HUMIDITY
+
         return self._supported_features
 
     @property
@@ -366,7 +371,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         if not self._device.power_state:
             return HVACMode.OFF
 
-        return _OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
+        mode = self._device.operational_mode
+
+        if mode == AC.OperationalMode.SMART_DRY:
+            mode = AC.OperationalMode.DRY
+
+        return _OPERATIONAL_MODE_TO_HVAC_MODE.get(mode, HVACMode.OFF)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
@@ -375,8 +385,14 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         else:
             self._device.power_state = True
 
-            self._device.operational_mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
+            mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
                 hvac_mode, self._device.operational_mode)
+
+            if (mode == AC.OperationalMode.DRY
+                    and getattr(self._device, "supports_target_humidity", False)):
+                mode = AC.OperationalMode.SMART_DRY
+
+            self._device.operational_mode = mode
 
         await self._apply()
 
