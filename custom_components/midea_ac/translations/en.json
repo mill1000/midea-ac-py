@@ -81,6 +81,7 @@
               "low": "Low",
               "medium": "Medium",
               "high": "High",
+              "max": "Max",
               "auto": "Auto",
               "custom": "Custom"
             }
