@@ -253,7 +253,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     def supported_features(self) -> int:
         """Return the supported features."""
 
-        if (self._device.operational_mode == AC.OperationalMode.DRY
+        if (self._device.operational_mode in [AC.OperationalMode.DRY,
+                                              AC.OperationalMode.SMART_DRY]
                 and getattr(self._device, "supports_target_humidity", False)):
             return self._supported_features | ClimateEntityFeature.TARGET_HUMIDITY
 
