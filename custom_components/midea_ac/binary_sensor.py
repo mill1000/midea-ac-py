@@ -31,7 +31,7 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Create sensor entities from device if supported
-    if helpers.property_exists(coordinator.device, "filter_alert"):
+    if getattr(coordinator.device, "supports_filter_reminder", False):
         add_entities([MideaBinarySensor(coordinator,
                                         "filter_alert",
                                         BinarySensorDeviceClass.PROBLEM,
