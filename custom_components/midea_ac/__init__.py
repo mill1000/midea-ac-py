@@ -12,7 +12,6 @@ from msmart import __version__ as MSMART_VERISON
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 
-from . import helpers
 from .const import CONF_KEY, CONF_MAX_CONNECTION_LIFETIME, DOMAIN
 from .coordinator import MideaDeviceUpdateCoordinator
 
@@ -44,7 +43,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     # Configure the connection lifetime
     lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
-    if lifetime is not None and helpers.method_exists(device, "set_max_connection_lifetime"):
+    if lifetime is not None and hasattr(device, "set_max_connection_lifetime"):
         _LOGGER.info(
             "Setting maximum connection lifetime to %s seconds.", lifetime)
         device.set_max_connection_lifetime(lifetime)
@@ -60,9 +59,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
                 "Failed to authenticate with device.") from e
 
     # Query device capabilities
-    if helpers.method_exists(device, "get_capabilities"):
-        _LOGGER.info("Querying device capabilities.")
-        await device.get_capabilities()
+    _LOGGER.info("Querying device capabilities.")
+    await device.get_capabilities()
 
     # Create device coordinator and fetch data
     coordinator = MideaDeviceUpdateCoordinator(hass, device)

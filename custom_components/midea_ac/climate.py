@@ -19,7 +19,6 @@ from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 
-from . import helpers
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
@@ -64,7 +63,7 @@ async def async_setup_entry(
     ])
 
     # Add a service to control 'follow me' function
-    if helpers.property_exists(coordinator.device, "follow_me"):
+    if hasattr(coordinator.device, "follow_me"):
         platform = entity_platform.async_get_current_platform()
         platform.async_register_entity_service(
             "set_follow_me",
@@ -186,8 +185,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Apply changes to the device."""
 
         # Display on the AC should use the same unit as homeassistant
-        helpers.set_properties(self._device, ["fahrenheit", "fahrenheit_unit"],
-                               self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
+        self._device.fahrenheit = (self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
 
         # Apply via the coordinator
         await self.coordinator.apply()
