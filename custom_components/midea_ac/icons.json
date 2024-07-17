@@ -1,8 +1,35 @@
 {
   "entity": {
+    "number": {
+      "fan_speed": {
+        "default": "mdi:fan"
+      }
+    },
     "select": {
-      "swing_angle": {
+      "horizontal_swing_angle": {
         "default": "mdi:angle-acute"
+      },
+      "vertical_swing_angle": {
+        "default": "mdi:angle-acute"
+      }
+    },
+    "sensor": {
+      "outdoor_temperature": {
+        "default": "mdi:sun-thermometer"
+      }
+    },
+    "switch": {
+      "display": {
+        "default": "mdi:led-on",
+        "state": {
+          "off": "mdi:led-off"
+        }
+      },
+      "purifier": {
+        "default": "mdi:minus-circle",
+        "state": {
+          "off": "mdi:minus-circle-outline"
+        }
       }
     }
   }
