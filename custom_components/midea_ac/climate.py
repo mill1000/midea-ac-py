@@ -185,7 +185,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Apply changes to the device."""
 
         # Display on the AC should use the same unit as homeassistant
-        self._device.fahrenheit = (self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
+        self._device.fahrenheit = (
+            self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
 
         # Apply via the coordinator
         await self.coordinator.apply()
