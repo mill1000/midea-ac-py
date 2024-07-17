@@ -34,6 +34,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Select entities to control swing angle when supported.
 * Indoor humidity sensor when supported.
 * Energy and power sensors when supported<sup>3</sup>.
+* Button and binary sensor to start & monitor self cleaning.
 * Translations
   * български
   * Català
