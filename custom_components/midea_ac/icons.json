@@ -1,5 +1,10 @@
 {
   "entity": {
+    "binary_sensor": {
+      "self_clean": {
+        "default": "mdi:spray-bottle"
+      }
+    },
     "number": {
       "fan_speed": {
         "default": "mdi:fan"
