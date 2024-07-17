@@ -33,6 +33,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Service to enable "Follow Me" function<sup>2</sup>.
 * Select entities to control swing angle when supported.
 * Indoor humidity sensor when supported.
+* Target humidity in Dry mode when supported.
 * Energy and power sensors when supported<sup>3</sup>.
 * Translations
   * български
