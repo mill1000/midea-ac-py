@@ -105,6 +105,11 @@
         "name": "Self clean"
       }
     },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
+      }
+    },
     "number": {
       "fan_speed": {
         "name": "Fan speed"

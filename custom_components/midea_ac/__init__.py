@@ -18,6 +18,7 @@ from .coordinator import MideaDeviceUpdateCoordinator
 _LOGGER = logging.getLogger(__name__)
 _PLATFORMS = [
     Platform.BINARY_SENSOR,
+    Platform.BUTTON,
     Platform.CLIMATE,
     Platform.NUMBER,
     Platform.SELECT,
