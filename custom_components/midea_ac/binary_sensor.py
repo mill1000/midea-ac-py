@@ -35,7 +35,7 @@ async def async_setup_entry(
         add_entities([MideaBinarySensor(coordinator,
                                         "filter_alert",
                                         BinarySensorDeviceClass.PROBLEM,
-                                        EntityCategory.DIAGNOSTIC,
+                                        EntityCategory.CONFIG,
                                         "filter_alert"
                                         )])
 
