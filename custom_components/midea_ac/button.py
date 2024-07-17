@@ -32,10 +32,10 @@ async def async_setup_entry(
     entities = []
     if getattr(coordinator.device, "supports_self_clean", False):
         entities.append(MideaButton(coordinator,
-                                           "start_self_clean",
-                                           EntityCategory.DIAGNOSTIC,
-                                           "self_clean"
-                                           ))
+                                    "start_self_clean",
+                                    "self_clean",
+                                    entity_category=EntityCategory.DIAGNOSTIC,
+                                    ))
     add_entities(entities)
 
 
@@ -45,8 +45,9 @@ class MideaButton(MideaCoordinatorEntity, ButtonEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  method: str,
-                 entity_category: EntityCategory,
-                 translation_key: Optional[str] = None) -> None:
+                 translation_key: Optional[str] = None,
+                 *,
+                 entity_category: EntityCategory = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._method = method
