@@ -29,13 +29,23 @@ async def async_setup_entry(
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    # Create sensor entities from device if supported
+    # Create entities for supported features
+    entities = []
     if getattr(coordinator.device, "supports_filter_reminder", False):
         add_entities([MideaBinarySensor(coordinator,
                                         "filter_alert",
                                         BinarySensorDeviceClass.PROBLEM,
                                         "filter_alert"
                                         )])
+
+    if getattr(coordinator.device, "supports_self_clean", False):
+        entities.append(MideaBinarySensor(coordinator,
+                                          "self_clean_active",
+                                          BinarySensorDeviceClass.RUNNING,
+                                          "self_clean",
+                                          entity_category=EntityCategory.DIAGNOSTIC,
+                                          ))
+    add_entities(entities)
 
 
 class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
