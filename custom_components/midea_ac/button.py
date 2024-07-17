@@ -70,7 +70,7 @@ class MideaButton(MideaCoordinatorEntity, ButtonEntity):
     @property
     def unique_id(self) -> str:
         """Return the unique ID of this entity."""
-        return f"{self._device.id}-{self._prop}"
+        return f"{self._device.id}-{self._method}"
 
     @property
     def entity_category(self) -> str:
