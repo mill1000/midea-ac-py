@@ -35,7 +35,6 @@ async def async_setup_entry(
         add_entities([MideaBinarySensor(coordinator,
                                         "filter_alert",
                                         BinarySensorDeviceClass.PROBLEM,
-                                        EntityCategory.DIAGNOSTIC,
                                         "filter_alert"
                                         )])
 
@@ -79,11 +78,6 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
     def device_class(self) -> str:
         """Return the device class of this entity."""
         return self._device_class
-
-    @property
-    def entity_category(self) -> str:
-        """Return the entity category of this entity."""
-        return self._entity_category
 
     @property
     def is_on(self) -> bool | None:
