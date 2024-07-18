@@ -32,11 +32,11 @@ async def async_setup_entry(
     # Create entities for supported features
     entities = []
     if getattr(coordinator.device, "supports_filter_reminder", False):
-        add_entities([MideaBinarySensor(coordinator,
-                                        "filter_alert",
-                                        BinarySensorDeviceClass.PROBLEM,
-                                        "filter_alert"
-                                        )])
+        entities.append(MideaBinarySensor(coordinator,
+                                          "filter_alert",
+                                          BinarySensorDeviceClass.PROBLEM,
+                                          "filter_alert"
+                                          ))
 
     if getattr(coordinator.device, "supports_self_clean", False):
         entities.append(MideaBinarySensor(coordinator,
