@@ -98,7 +98,7 @@
     },
     "binary_sensor": {
       "filter_alert": {
-        "name": "Filter upoyozornenia"
+        "name": "Upozornenie filtra"
       }
     },
     "number": {
