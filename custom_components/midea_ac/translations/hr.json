@@ -99,6 +99,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Upozorenje o filteru"
+      },
+      "self_clean": {
+        "name": "Samo-čišćenje"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Pokreni samo-čišćenje"
       }
     },
     "number": {
