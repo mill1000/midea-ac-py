@@ -1,0 +1,150 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Izberi kako dodati napravo.",
+        "menu_options": {
+          "discover": "Najdi napravo",
+          "manual": "Ročna nastavitev"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Gost"
+        },
+        "description": "Pustite gosta praznega za iskate naprave v omrežju"
+      },
+      "manual": {
+        "description": "Vstavite podatke o vaši naprvai",
+        "data": {
+          "id": "ID številko",
+          "host": "Gost(IP)",
+          "port": "Vrata",
+          "token": "Žeton",
+          "k1": "Klujč"
+        },
+        "data_description": {
+          "token": "Žeton za V3 naprave",
+          "k1": "Ključ za V3 naprave"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Ta naprava je že bila nastavljena.",
+      "cannot_connect": "Povezave ni bilo mogoče vspoztaviti.",
+      "no_devices_found": "Podprtih naprav ni bilo mogoče najti na omrežju."
+    },
+    "error": {
+      "cannot_connect": "Povezava ni bila mogoča z trenutnimi nastavitvami.",
+      "device_not_found": "Naprava ni bila najdena na omrežju.",
+      "unsupported_device": "Naprava ni podprta."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Omogoči piskanje(Beep)",
+          "temp_step": "Temperaturni korak",
+          "use_fan_only_workaround": "Uprabi samo ventilator nadomestna rešitev",
+          "show_all_presets": "Prikaži vse privzete nastavitve",
+          "additional_operation_modes": "Dodatni načini delovanja",
+          "max_connection_lifetime": "Najdalši čas povezave"
+        },
+        "data_description": {
+          "temp_step": "Velikost koraka za nastavljeno temperaturo",
+          "additional_operation_modes": "Določite dodatne načine delovanja",
+          "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 30 sekund)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Nastavi sledi mi",
+      "description": "Nastavite funkcijo »sledi mi«.",
+      "fields": {
+        "enabled": {
+          "name": "Omogočeno",
+          "description": "Ali naj >Sledi mi< naj bo omogočeno."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Tiho",
+              "low": "Nizko",
+              "medium": "Srednje",
+              "high": "Visoko",
+              "auto": "Auto",
+              "custom": "Po meri"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Izklop",
+              "vertical": "Vertikalno",
+              "horizontal": "Horizontalno",
+              "both": "Oboje"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filter alert"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Hitrost ventilatorja"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Vodoravni kot nihanja",
+        "state": {
+          "off": "Izklop",
+          "pos_1": "Levo",
+          "pos_2": "Levo-center",
+          "pos_3": "Sredina",
+          "pos_4": "Desno-center",
+          "pos_5": "Desno"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Navpični kot nihanja",
+        "state": {
+          "off": "Izklop",
+          "pos_1": "Vrh",
+          "pos_2": "Vrhnja sredina",
+          "pos_3": "Sredina",
+          "pos_4": "Spodnja sredina",
+          "pos_5": "Dno"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "Notranja Temperatura"
+      },
+      "outdoor_temperature": {
+        "name": "Zunanja Temperatura"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Prikaz"
+      },
+      "purifier": {
+        "name": "Čistilc zraka"
+      }
+    }
+  }
+}

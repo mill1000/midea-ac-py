@@ -19,7 +19,6 @@ from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 
-from . import helpers
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
@@ -64,7 +63,7 @@ async def async_setup_entry(
     ])
 
     # Add a service to control 'follow me' function
-    if helpers.property_exists(coordinator.device, "follow_me"):
+    if hasattr(coordinator.device, "follow_me"):
         platform = entity_platform.async_get_current_platform()
         platform.async_register_entity_service(
             "set_follow_me",
@@ -138,8 +137,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             self._device, "supported_operation_modes",  AC.OperationalMode.list())
 
         # Convert from Midea operational modes to HA HVAC mode
-        self._hvac_modes = [_OPERATIONAL_MODE_TO_HVAC_MODE[m]
-                            for m in supported_op_modes]
+        self._hvac_modes = [
+            _OPERATIONAL_MODE_TO_HVAC_MODE[m]
+            for m in supported_op_modes
+            # Don't include smart dry, we will try to automatically use this mode when supported
+            if m != AC.OperationalMode.SMART_DRY
+        ]
         self._hvac_modes.append(HVACMode.OFF)
 
         # Append additional operation modes as needed
@@ -186,8 +189,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Apply changes to the device."""
 
         # Display on the AC should use the same unit as homeassistant
-        helpers.set_properties(self._device, ["fahrenheit", "fahrenheit_unit"],
-                               self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
+        self._device.fahrenheit = (
+            self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
 
         # Apply via the coordinator
         await self.coordinator.apply()
@@ -248,6 +251,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def supported_features(self) -> int:
         """Return the supported features."""
+
+        if (self._device.operational_mode in [AC.OperationalMode.DRY,
+                                              AC.OperationalMode.SMART_DRY]
+                and getattr(self._device, "supports_target_humidity", False)):
+            return self._supported_features | ClimateEntityFeature.TARGET_HUMIDITY
+
         return self._supported_features
 
     @property
@@ -287,6 +296,21 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         # Round temperature to nearest .5
         self._device.target_temperature = round(temperature * 2) / 2
+        await self._apply()
+
+    @property
+    def current_humidity(self) -> float | None:
+        """Return the current humidity."""
+        return self._device.indoor_humidity
+
+    @property
+    def target_humidity(self) -> float | None:
+        """Return the current target humidity."""
+        return self._device.target_humidity
+
+    async def async_set_humidity(self, humidity) -> None:
+        """Set a new target humidity."""
+        self._device.target_humidity = int(humidity)
         await self._apply()
 
     @property
@@ -351,7 +375,12 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         if not self._device.power_state:
             return HVACMode.OFF
 
-        return _OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
+        mode = self._device.operational_mode
+
+        if mode == AC.OperationalMode.SMART_DRY:
+            mode = AC.OperationalMode.DRY
+
+        return _OPERATIONAL_MODE_TO_HVAC_MODE.get(mode, HVACMode.OFF)
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
@@ -360,8 +389,14 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         else:
             self._device.power_state = True
 
-            self._device.operational_mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
+            mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
                 hvac_mode, self._device.operational_mode)
+
+            if (mode == AC.OperationalMode.DRY
+                    and getattr(self._device, "supports_target_humidity", False)):
+                mode = AC.OperationalMode.SMART_DRY
+
+            self._device.operational_mode = mode
 
         await self._apply()
 

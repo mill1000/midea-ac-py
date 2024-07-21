@@ -27,14 +27,20 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Device capability detection. Only supported modes, presets, fan speeds and functions are displayed.
 * Support for sleep, eco, boost (turbo) and away (freeze protection) presets.
 * Switch entities for purifier (ionizer/UV) and device display<sup>1</sup>.
-* Binary sensor entity for device filter alert.
+* Binary sensor entity for device filter alert when supported.
 * Minimum and maximum target temperatures from device.
-* Number entity for fan speed if devices support custom speeds.
-* Service to enable "Follow Me" function.<sup>2</sup>
+* Number entity for fan speed when device supports custom speeds.
+* Service to enable "Follow Me" function<sup>2</sup>.
 * Select entities to control swing angle when supported.
+* Indoor humidity sensor when supported.
+* Target humidity in Dry mode when supported.
+* Energy and power sensors when supported<sup>3</sup>.
+* Button and binary sensor to start & monitor self cleaning.
 * Translations
   * български
   * Català
+  * 简体中文
+  * 繁體中文
   * Deutsch
   * English
   * Español
@@ -48,12 +54,14 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * Română
   * Pусский
   * Slovenčina
+  * Slovenski
   * [Help contribute a new language](https://github.com/mill1000/midea-ac-py/issues/54)
 
 <small>
 
 1. Device dependent. Some devices only support display control via IR.
 2. Experimental. "Follow Me" requires the IR remote to transmit temperature data. More info [here](https://github.com/mill1000/midea-msmart/pull/91).
+3. Experimental. Sensors must be manually enabled on the device page.
 </small>
 
 ## Install Via HACS

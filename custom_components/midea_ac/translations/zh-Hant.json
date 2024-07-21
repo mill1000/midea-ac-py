@@ -1,0 +1,150 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "選擇新增設備的方式。",
+        "menu_options": {
+          "discover": "自動檢索",
+          "manual": "手動新增"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "位址"
+        },
+        "description": "空置位址列時將嘗試自動檢索網路上的設備。"
+      },
+      "manual": {
+        "description": "錄入設備的設定資訊。",
+        "data": {
+          "id": "ID",
+          "host": "位址",
+          "port": "埠號",
+          "token": "權杖",
+          "k1": "密鑰"
+        },
+        "data_description": {
+          "token": "用於V3設備的令牌(Token)",
+          "k1": "用於V3設備的密鑰(Key)"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "已存在的設備。",
+      "cannot_connect": "無法連結到設備。",
+      "no_devices_found": "未發現支援的設備。"
+    },
+    "error": {
+      "cannot_connect": "無法通過設定資訊進行連結。",
+      "device_not_found": "未發現指定設備。",
+      "unsupported_device": "此設備未被支援。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "啟用嗶聲",
+          "temp_step": "溫度步進",
+          "use_fan_only_workaround": "使用僅送風方案",
+          "show_all_presets": "顯示所有預設模式",
+          "additional_operation_modes": "額外執行模式",
+          "max_connection_lifetime": "最大連結有效期"
+        },
+        "data_description": {
+          "temp_step": "溫度設置的步進值",
+          "additional_operation_modes": "指定額外的執行模式",
+          "max_connection_lifetime": "單次連結的最大有效期(單位為秒，最短30秒)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "智慧眼",
+      "description": "設置“智慧眼”功能。",
+      "fields": {
+        "enabled": {
+          "name": "啟用",
+          "description": "是否啟用“智慧眼”功能。"
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "靜音",
+              "low": "低速",
+              "medium": "中速",
+              "high": "高速",
+              "auto": "自動",
+              "custom": "自定"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "停止",
+              "vertical": "垂直",
+              "horizontal": "水平",
+              "both": "雙向"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "濾網報警"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "風速"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "橫向擺風",
+        "state": {
+          "off": "停用",
+          "pos_1": "左方",
+          "pos_2": "中左",
+          "pos_3": "中部",
+          "pos_4": "中右",
+          "pos_5": "右方"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "垂直擺風",
+        "state": {
+          "off": "停用",
+          "pos_1": "上方",
+          "pos_2": "中上",
+          "pos_3": "中部",
+          "pos_4": "中下",
+          "pos_5": "下方"
+        }
+      }
+    },
+    "sensor": {
+      "indoor_temperature": {
+        "name": "室內溫度"
+      },
+      "outdoor_temperature": {
+        "name": "室外溫度"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "面板顯示"
+      },
+      "purifier": {
+        "name": "空氣淨化"
+      }
+    }
+  }
+}

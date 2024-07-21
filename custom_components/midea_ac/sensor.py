@@ -7,7 +7,8 @@ from typing import Optional
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature
+from homeassistant.const import (PERCENTAGE, UnitOfEnergy, UnitOfPower,
+                                 UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -29,29 +30,67 @@ async def async_setup_entry(
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    # Create sensor entities
-    add_entities([
-        MideaTemperatureSensor(
-            coordinator,
-            "indoor_temperature",
-            "indoor_temperature"),
-        MideaTemperatureSensor(
-            coordinator,
-            "outdoor_temperature",
-            "outdoor_temperature"),
-    ])
+    entities = [
+        MideaSensor(coordinator,
+                    "indoor_temperature",
+                    SensorDeviceClass.TEMPERATURE,
+                    UnitOfTemperature.CELSIUS,
+                    "indoor_temperature"),
+        MideaSensor(coordinator,
+                    "outdoor_temperature",
+                    SensorDeviceClass.TEMPERATURE,
+                    UnitOfTemperature.CELSIUS,
+                    "outdoor_temperature"),
+    ]
+
+    if getattr(coordinator.device, "supports_humidity", False):
+        entities.append(MideaSensor(coordinator,
+                                    "indoor_humidity",
+                                    SensorDeviceClass.HUMIDITY,
+                                    PERCENTAGE,
+                                    "indoor_humidity"))
+
+    if hasattr(coordinator.device, "enable_energy_usage_requests"):
+        entities.append(MideaEnergySensor(coordinator,
+                                          "total_energy_usage",
+                                          SensorDeviceClass.ENERGY,
+                                          UnitOfEnergy.KILO_WATT_HOUR,
+                                          "total_energy_usage",
+                                          state_class=SensorStateClass.TOTAL))
+
+        entities.append(MideaEnergySensor(coordinator,
+                                          "current_energy_usage",
+                                          SensorDeviceClass.ENERGY,
+                                          UnitOfEnergy.KILO_WATT_HOUR,
+                                          "current_energy_usage",
+                                          state_class=SensorStateClass.TOTAL_INCREASING))
+
+        entities.append(MideaEnergySensor(coordinator,
+                                          "real_time_power_usage",
+                                          SensorDeviceClass.POWER,
+                                          UnitOfPower.KILO_WATT,
+                                          "real_time_power_usage"))
+
+    add_entities(entities)
 
 
-class MideaTemperatureSensor(MideaCoordinatorEntity, SensorEntity):
-    """Temperature sensor for Midea AC."""
+class MideaSensor(MideaCoordinatorEntity, SensorEntity):
+    """Generic sensor class for Midea AC."""
 
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 translation_key: Optional[str] = None) -> None:
+                 device_class: SensorDeviceClass,
+                 unit: str,
+                 translation_key: Optional[str] = None,
+                 *,
+                 state_class: SensorStateClass = SensorStateClass.MEASUREMENT) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
+        self._device_class = device_class
+        self._state_class = state_class
+        self._unit = unit
         self._attr_translation_key = translation_key
 
     @property
@@ -76,29 +115,43 @@ class MideaTemperatureSensor(MideaCoordinatorEntity, SensorEntity):
     @property
     def available(self) -> bool:
         """Check entity availability."""
-        # Sensor is unavailable if device is offline
-        if not super().available:
-            return False
 
-        # Sensor is unavailable if value is None
-        return self.native_value is not None
+        # Sensor is unavailable if device is offline or value is None
+        return super().available and self.native_value is not None
 
     @property
     def device_class(self) -> str:
         """Return the device class of this entity."""
-        return SensorDeviceClass.TEMPERATURE
+        return self._device_class
 
     @property
     def state_class(self) -> str:
         """Return the state class of this entity."""
-        return SensorStateClass.MEASUREMENT
+        return self._state_class
 
     @property
     def native_unit_of_measurement(self) -> str:
-        """Return the native units pf this entity."""
-        return UnitOfTemperature.CELSIUS
+        """Return the native units of this entity."""
+        return self._unit
 
     @property
     def native_value(self) -> float | None:
         """Return the current native value."""
         return getattr(self._device, self._prop, None)
+
+
+class MideaEnergySensor(MideaSensor):
+    """Energy sensor class for Midea AC."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        self._attr_entity_registry_enabled_default = False
+
+    async def async_added_to_hass(self) -> None:
+        """Run when entity about to be added to hass."""
+        self.coordinator.register_energy_sensor()
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Run when entity will be removed from hass."""
+        self.coordinator.unregister_energy_sensor()

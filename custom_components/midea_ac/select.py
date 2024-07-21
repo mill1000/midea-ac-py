@@ -81,7 +81,7 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
     @property
     def available(self) -> bool:
         """Check device availability."""
-        return self._device.online and self._device.power_state
+        return super().available and self._device.power_state
 
     @property
     def current_option(self) -> str:

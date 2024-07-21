@@ -10,7 +10,6 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from . import helpers
 from .const import DOMAIN
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
@@ -31,7 +30,7 @@ async def async_setup_entry(
 
     # Add supported switch entities
     entities = []
-    if helpers.method_exists(coordinator.device, "toggle_display"):
+    if hasattr(coordinator.device, "toggle_display"):
         entities.append(MideaDisplaySwitch(coordinator))
 
     if getattr(coordinator.device, "supports_purifier", False):

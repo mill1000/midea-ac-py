@@ -1,11 +1,10 @@
-"""Binary platform for Midea Smart AC."""
+"""Button platform for Midea Smart AC."""
 from __future__ import annotations
 
 import logging
 from typing import Optional
 
-from homeassistant.components.binary_sensor import (BinarySensorDeviceClass,
-                                                    BinarySensorEntity)
+from homeassistant.components.button import ButtonEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
@@ -22,46 +21,36 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     add_entities: AddEntitiesCallback,
 ) -> None:
-    """Setup the binary sensor platform for Midea Smart AC."""
+    """Setup the button platform for Midea Smart AC."""
 
-    _LOGGER.info("Setting up binary sensor platform.")
+    _LOGGER.info("Setting up button platform.")
 
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Create entities for supported features
     entities = []
-    if getattr(coordinator.device, "supports_filter_reminder", False):
-        entities.append(MideaBinarySensor(coordinator,
-                                          "filter_alert",
-                                          BinarySensorDeviceClass.PROBLEM,
-                                          "filter_alert"
-                                          ))
-
     if getattr(coordinator.device, "supports_self_clean", False):
-        entities.append(MideaBinarySensor(coordinator,
-                                          "self_clean_active",
-                                          BinarySensorDeviceClass.RUNNING,
-                                          "self_clean",
-                                          entity_category=EntityCategory.DIAGNOSTIC,
-                                          ))
+        entities.append(MideaButton(coordinator,
+                                    "start_self_clean",
+                                    "self_clean",
+                                    entity_category=EntityCategory.DIAGNOSTIC,
+                                    ))
     add_entities(entities)
 
 
-class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
-    """Binary sensor for Midea AC."""
+class MideaButton(MideaCoordinatorEntity, ButtonEntity):
+    """Button for Midea AC."""
 
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
-                 prop: str,
-                 device_class: BinarySensorDeviceClass,
+                 method: str,
                  translation_key: Optional[str] = None,
                  *,
                  entity_category: EntityCategory = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
-        self._prop = prop
-        self._device_class = device_class
+        self._method = method
         self._entity_category = entity_category
         self._attr_translation_key = translation_key
 
@@ -82,19 +71,15 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
     @property
     def unique_id(self) -> str:
         """Return the unique ID of this entity."""
-        return f"{self._device.id}-{self._prop}"
-
-    @property
-    def device_class(self) -> str:
-        """Return the device class of this entity."""
-        return self._device_class
+        return f"{self._device.id}-{self._method}"
 
     @property
     def entity_category(self) -> str:
         """Return the entity category of this entity."""
         return self._entity_category
 
-    @property
-    def is_on(self) -> bool | None:
-        """Return the on state of this entity."""
-        return getattr(self._device, self._prop, None)
+    async def async_press(self) -> None:
+        """Handle the button press."""
+        # Call the buttons method
+        if method := getattr(self._device, self._method, None):
+            await method()
