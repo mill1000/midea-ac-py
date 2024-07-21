@@ -81,6 +81,7 @@
               "low": "Alacsony",
               "medium": "Közepes",
               "high": "Magas",
+              "max": "Maximum",
               "auto": "Auto",
               "custom": "Egyéni"
             }
@@ -99,6 +100,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Szűrő figyelmeztetés"
+      },
+      "self_clean": {
+        "name": "Öntisztítás"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Öntisztítás indítása"
       }
     },
     "number": {
@@ -131,11 +140,23 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Aktuális energiafogyasztás"
+      },
+      "indoor_humidity": {
+        "name": "Beltéri páratartalom"
+      },
       "indoor_temperature": {
         "name": "Beltéri hőmérséklet"
       },
       "outdoor_temperature": {
         "name": "Kültéri hőmérséklet"
+      },
+      "real_time_power_usage": {
+        "name": "Teljesítmény"
+      },
+      "total_energy_usage": {
+        "name": "Összesített energiafogyasztás"
       }
     },
     "switch": {
