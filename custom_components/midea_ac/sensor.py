@@ -68,7 +68,7 @@ async def async_setup_entry(
         entities.append(MideaEnergySensor(coordinator,
                                           "real_time_power_usage",
                                           SensorDeviceClass.POWER,
-                                          UnitOfPower.KILO_WATT,
+                                          UnitOfPower.WATT,
                                           "real_time_power_usage"))
 
     add_entities(entities)
