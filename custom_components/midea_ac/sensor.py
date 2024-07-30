@@ -150,8 +150,16 @@ class MideaEnergySensor(MideaSensor):
 
     async def async_added_to_hass(self) -> None:
         """Run when entity about to be added to hass."""
+        # Call super method to ensure lifecycle is properly handled
+        await super().async_added_to_hass()
+
+        # Register energy sensor with coordinator
         self.coordinator.register_energy_sensor()
 
     async def async_will_remove_from_hass(self) -> None:
         """Run when entity will be removed from hass."""
+        # Call super method to ensure lifecycle is properly handled
+        await super().async_will_remove_from_hass()
+
+        # Unregister energy sensor with coordinator
         self.coordinator.unregister_energy_sensor()
