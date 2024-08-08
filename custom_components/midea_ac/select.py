@@ -42,6 +42,16 @@ async def async_setup_entry(
                                         "horizontal_swing_angle",
                                         AC.SwingAngle,
                                         "horizontal_swing_angle"))
+
+    supported_rates = getattr(
+        coordinator.device, "supported_rate_selects", [AC.RateSelect.OFF])
+    if supported_rates is not [AC.RateSelect.OFF]:
+        entities.append(MideaEnumSelect(coordinator,
+                                        "rate_select",
+                                        AC.RateSelect,
+                                        "rate_select",
+                                        options=supported_rates))
+
     add_entities(entities)
 
 
@@ -52,12 +62,15 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
                  enum_class: MideaIntEnum,
-                 translation_key: Optional[str] = None) -> None:
+                 translation_key: Optional[str] = None,
+                 *,
+                 options: Optional[List[MideaIntEnum]] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
         self._enum_class = enum_class
         self._attr_translation_key = translation_key
+        self._options = options
 
     @property
     def device_info(self) -> dict:
@@ -91,7 +104,8 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
     @property
     def options(self) -> List[str]:
         """Get available options."""
-        return [m.name.lower() for m in self._enum_class.list()]
+        opts = self._options if self._options is not None else self._enum_class.list()
+        return [m.name.lower() for m in opts]
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""

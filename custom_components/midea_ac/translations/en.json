@@ -127,6 +127,19 @@
           "pos_5": "Right"
         }
       },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Off",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Vertical swing angle",
         "state": {
