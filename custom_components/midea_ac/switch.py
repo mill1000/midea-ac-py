@@ -159,6 +159,11 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
         return self._entity_category
 
     @property
+    def available(self) -> bool:
+        """Check device availability."""
+        return super().available and self._device.power_state
+
+    @property
     def is_on(self) -> bool | None:
         """Return the on state of the switch."""
         return getattr(self._device, self._prop, None)
