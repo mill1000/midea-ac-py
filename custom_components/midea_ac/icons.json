@@ -24,6 +24,15 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "default": "mdi:weather-windy"
+      },
+      "breeze_mild": {
+        "default": "mdi:tailwind"
+      },
+      "breezeless": {
+        "default": "mdi:blur"
+      },
       "display": {
         "default": "mdi:led-on",
         "state": {

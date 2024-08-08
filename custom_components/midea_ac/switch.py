@@ -36,8 +36,23 @@ async def async_setup_entry(
     if getattr(coordinator.device, "supports_purifier", False):
         entities.append(MideaSwitch(coordinator,
                                     "purifier",
-                                    EntityCategory.CONFIG,
-                                    "purifier"))
+                                    "purifier",
+                                    entity_category=EntityCategory.CONFIG))
+
+    if getattr(coordinator.device, "supports_breeze_away", False):
+        entities.append(MideaSwitch(coordinator,
+                                    "breeze_away",
+                                    "breeze_away"))
+
+    if getattr(coordinator.device, "supports_breeze_mild", False):
+        entities.append(MideaSwitch(coordinator,
+                                    "breeze_mild",
+                                    "breeze_mild"))
+
+    if getattr(coordinator.device, "supports_breezeless", False):
+        entities.append(MideaSwitch(coordinator,
+                                    "breezeless",
+                                    "breezeless"))
 
     add_entities(entities)
 
@@ -101,8 +116,9 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 entity_category: EntityCategory,
-                 translation_key: Optional[str] = None) -> None:
+                 translation_key: Optional[str] = None,
+                 *,
+                 entity_category: EntityCategory = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
