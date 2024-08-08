@@ -36,6 +36,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
 * Target humidity in Dry mode when supported.
 * Energy and power sensors when supported<sup>3</sup>.
 * Button and binary sensor to start & monitor self cleaning.
+* Select entities for rate select (gear) modes when supported.
 * Translations
   * български
   * Català
