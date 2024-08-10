@@ -160,6 +160,15 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
       "display": {
         "name": "Zaslon"
       },
