@@ -13,7 +13,7 @@
     "msmart"
   ],
   "requirements": [
-    "msmart-ng>=2024.8.0"
+    "msmart-ng>=2024.8.1"
   ],
   "version": "2024.8.0"
 }
