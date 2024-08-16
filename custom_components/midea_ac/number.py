@@ -29,7 +29,7 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Create entity if supported
-    if getattr(coordinator.device, "supports_custom_fan_speed", False):
+    if coordinator.device.supports_custom_fan_speed:
         add_entities([MideaFanSpeedNumber(coordinator)])
 
 

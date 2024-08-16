@@ -31,21 +31,19 @@ async def async_setup_entry(
 
     # Create entities for supported features
     entities = []
-    if getattr(coordinator.device, "supports_vertical_swing_angle", False):
+    if coordinator.device.supports_vertical_swing_angle:
         entities.append(MideaEnumSelect(coordinator,
                                         "vertical_swing_angle",
                                         AC.SwingAngle,
                                         "vertical_swing_angle"))
 
-    if getattr(coordinator.device, "supports_horizontal_swing_angle", False):
+    if coordinator.device.supports_horizontal_swing_angle:
         entities.append(MideaEnumSelect(coordinator,
                                         "horizontal_swing_angle",
                                         AC.SwingAngle,
                                         "horizontal_swing_angle"))
 
-    supported_rates = getattr(
-        coordinator.device, "supported_rate_selects", [AC.RateSelect.OFF])
-    if supported_rates is not [AC.RateSelect.OFF]:
+    if (supported_rates := coordinator.device.supported_rate_selects) is not [AC.RateSelect.OFF]:
         entities.append(MideaEnumSelect(coordinator,
                                         "rate_select",
                                         AC.RateSelect,

@@ -44,8 +44,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     device = AC(ip=host, port=port, device_id=int(id))
 
     # Configure the connection lifetime
-    lifetime = config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)
-    if lifetime is not None and hasattr(device, "set_max_connection_lifetime"):
+    if (lifetime := config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)) is not None:
         _LOGGER.info(
             "Setting maximum connection lifetime to %s seconds for device ID %s.", lifetime, device.id)
         device.set_max_connection_lifetime(lifetime)
