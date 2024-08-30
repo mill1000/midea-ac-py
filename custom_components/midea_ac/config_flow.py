@@ -16,7 +16,8 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
-                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_TEMP_STEP, CONF_USE_ALTERNATE_ENERGY_FORMAT,
+                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
 
 _DEFAULT_OPTIONS = {
     CONF_BEEP: True,
@@ -25,6 +26,7 @@ _DEFAULT_OPTIONS = {
     CONF_SHOW_ALL_PRESETS: False,
     CONF_ADDITIONAL_OPERATION_MODES: None,
     CONF_MAX_CONNECTION_LIFETIME: None,
+    CONF_USE_ALTERNATE_ENERGY_FORMAT: False,
 }
 
 
@@ -238,6 +240,8 @@ class MideaOptionsFlow(OptionsFlow):
                          description={"suggested_value": options.get(CONF_ADDITIONAL_OPERATION_MODES, None)}): cv.string,
             vol.Optional(CONF_MAX_CONNECTION_LIFETIME,
                          description={"suggested_value": options.get(CONF_MAX_CONNECTION_LIFETIME, None)}): vol.All(vol.Coerce(int), vol.Range(min=30)),
+            vol.Optional(CONF_USE_ALTERNATE_ENERGY_FORMAT,
+                         default=options.get(CONF_USE_ALTERNATE_ENERGY_FORMAT, False)): cv.boolean,
         })
 
         return self.async_show_form(step_id="init", data_schema=data_schema)

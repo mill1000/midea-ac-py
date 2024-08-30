@@ -49,7 +49,8 @@
           "use_fan_only_workaround": "Use Fan-only Workaround",
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
-          "max_connection_lifetime": "Maximum Connection Lifetime"
+          "max_connection_lifetime": "Maximum Connection Lifetime",
+          "use_alternate_energy_format": "Use Alternate Energy Format"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",

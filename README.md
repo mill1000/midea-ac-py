@@ -116,6 +116,8 @@ Name | Default | Description
 **Show All Presets** | False | Show all presets regardless of device's reported capabilities.
 **Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.
 **Maximum Connection Lifetime** | Empty | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
+**Use Alternate Energy Format** | False | Use an alternative data format when decoding energy and power data from the device.
+
 
 ## Getting Device Info
 Use the `midea-discover` command from [msmart-ng](https://github.com/mill1000/midea-msmart) to obtain device information.
