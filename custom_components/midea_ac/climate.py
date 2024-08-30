@@ -21,7 +21,7 @@ from msmart.device import AirConditioner as AC
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, PRESET_IECO)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -130,6 +130,9 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
             if self._device.supports_turbo_mode:
                 self._preset_modes.append(PRESET_BOOST)
+
+            if self._device.supports_ieco:
+                self._preset_modes.append(PRESET_IECO)
 
         # Fetch supported operational modes
         supported_op_modes = self._device.supported_operation_modes
@@ -395,12 +398,15 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             if PRESET_AWAY in self._preset_modes:
                 modes.append(PRESET_AWAY)
 
-        # Add eco preset in cool, dry and auto if supported
+        # Add eco & ieco preset in cool, dry and auto if supported
         if self._device.operational_mode in [AC.OperationalMode.AUTO,
                                              AC.OperationalMode.COOL,
                                              AC.OperationalMode.DRY]:
             if PRESET_ECO in self._preset_modes:
                 modes.append(PRESET_ECO)
+
+            if PRESET_IECO in self._preset_modes:
+                modes.append(PRESET_IECO)
 
         # Add sleep and/or turbo preset in heat, cool or auto
         if self._device.operational_mode in [AC.OperationalMode.AUTO,
@@ -419,6 +425,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Get the current preset mode."""
         if self._device.eco_mode:
             return PRESET_ECO
+        elif self._device.ieco:
+            return PRESET_IECO
         elif self._device.turbo_mode:
             return PRESET_BOOST
         elif self._device.freeze_protection_mode:
@@ -431,6 +439,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the preset mode."""
         self._device.eco_mode = False
+        self._device.ieco = False
         self._device.turbo_mode = False
         self._device.freeze_protection_mode = False
         self._device.sleep_mode = False
@@ -440,6 +449,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             self._device.turbo_mode = True
         elif preset_mode == PRESET_ECO:
             self._device.eco_mode = True
+        elif preset_mode == PRESET_IECO:
+            self._device.ieco = True
         elif preset_mode == PRESET_AWAY:
             self._device.freeze_protection_mode = True
         elif preset_mode == PRESET_SLEEP:
