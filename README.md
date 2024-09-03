@@ -40,6 +40,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * Start and monitor self-cleaning
   * Rate selection (Gear mode)
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
+  * iECO
 
 <small>
 
