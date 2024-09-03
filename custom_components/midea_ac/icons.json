@@ -6,10 +6,12 @@
       }
     },
     "climate": {
-      "state_attributes": {
-        "preset_mode": {
-          "state": {
-            "ieco": "mdi:leaf-circle-outline"
+      "midea_ac": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "ieco": "mdi:leaf-circle-outline"
+            }
           }
         }
       }
