@@ -122,13 +122,13 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             ]
 
             # Only add presets supported by device
-            if self._device.supports_freeze_protection_mode:
+            if self._device.supports_freeze_protection:
                 self._preset_modes.append(PRESET_AWAY)
 
-            if self._device.supports_eco_mode:
+            if self._device.supports_eco:
                 self._preset_modes.append(PRESET_ECO)
 
-            if self._device.supports_turbo_mode:
+            if self._device.supports_turbo:
                 self._preset_modes.append(PRESET_BOOST)
 
             if self._device.supports_ieco:
@@ -423,38 +423,38 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
-        if self._device.eco_mode:
+        if self._device.eco:
             return PRESET_ECO
         elif self._device.ieco:
             return PRESET_IECO
-        elif self._device.turbo_mode:
+        elif self._device.turbo:
             return PRESET_BOOST
-        elif self._device.freeze_protection_mode:
+        elif self._device.freeze_protection:
             return PRESET_AWAY
-        elif self._device.sleep_mode:
+        elif self._device.sleep:
             return PRESET_SLEEP
         else:
             return PRESET_NONE
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the preset mode."""
-        self._device.eco_mode = False
+        self._device.eco = False
         self._device.ieco = False
-        self._device.turbo_mode = False
-        self._device.freeze_protection_mode = False
-        self._device.sleep_mode = False
+        self._device.turbo = False
+        self._device.freeze_protection = False
+        self._device.sleep = False
 
         # Enable proper mode
         if preset_mode == PRESET_BOOST:
-            self._device.turbo_mode = True
+            self._device.turbo = True
         elif preset_mode == PRESET_ECO:
-            self._device.eco_mode = True
+            self._device.eco = True
         elif preset_mode == PRESET_IECO:
             self._device.ieco = True
         elif preset_mode == PRESET_AWAY:
-            self._device.freeze_protection_mode = True
+            self._device.freeze_protection = True
         elif preset_mode == PRESET_SLEEP:
-            self._device.sleep_mode = True
+            self._device.sleep = True
 
         await self._apply()
 
