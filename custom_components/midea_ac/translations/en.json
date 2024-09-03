@@ -87,6 +87,11 @@
               "custom": "Custom"
             }
           },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
+            }
+          },
           "swing_mode": {
             "state": {
               "off": "Off",

@@ -5,6 +5,15 @@
         "default": "mdi:spray-bottle"
       }
     },
+    "climate": {
+      "state_attributes": {
+        "preset_mode": {
+          "state": {
+            "ieco": "mdi:leaf-circle-outline"
+          }
+        }
+      }
+    },
     "number": {
       "fan_speed": {
         "default": "mdi:fan"
