@@ -157,14 +157,13 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         self._fan_modes = [m.name.lower()
                            for m in self._device.supported_fan_speeds]
 
-        # Fetch supported swing modes
-        if (swing_modes := self._device.supported_swing_modes) != [AC.SwingMode.OFF]:
-            # Add swing modes to supported features
+        # If device supports any swing mode, add it to supported features
+        if self._device.supported_swing_modes != [AC.SwingMode.OFF]:
             self._supported_features |= ClimateEntityFeature.SWING_MODE
 
-            # Convert Midea swing modes to strings
-            self._swing_modes = [m.name.lower()
-                                 for m in swing_modes]
+        # Convert Midea swing modes to strings
+        self._swing_modes = [m.name.lower()
+                             for m in self._device.supported_swing_modes]
 
         # Dump all supported modes for debug
         _LOGGER.debug("Supported operational modes: '%s'.",
