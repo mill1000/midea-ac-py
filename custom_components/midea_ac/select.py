@@ -43,7 +43,7 @@ async def async_setup_entry(
                                         AC.SwingAngle,
                                         "horizontal_swing_angle"))
 
-    if (supported_rates := coordinator.device.supported_rate_selects) is not [AC.RateSelect.OFF]:
+    if (supported_rates := coordinator.device.supported_rate_selects) != [AC.RateSelect.OFF]:
         entities.append(MideaEnumSelect(coordinator,
                                         "rate_select",
                                         AC.RateSelect,
