@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 
-from .const import DOMAIN
+from .const import CONF_FAN_SPEED_STEP, DOMAIN
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,7 +30,10 @@ async def async_setup_entry(
 
     # Create entity if supported
     if coordinator.device.supports_custom_fan_speed:
-        add_entities([MideaFanSpeedNumber(coordinator)])
+        add_entities([MideaFanSpeedNumber(
+            coordinator,
+            config_entry.options.get(CONF_FAN_SPEED_STEP, 1)
+        )])
 
 
 class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
@@ -38,8 +41,13 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
 
     _attr_translation_key = "fan_speed"
 
-    def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
+    def __init__(self,
+                 coordinator: MideaDeviceUpdateCoordinator,
+                 step_size: float = 1
+                 ) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
+
+        self._step_size = step_size
 
     @property
     def device_info(self) -> dict:
@@ -76,6 +84,10 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
     @property
     def native_min_value(self) -> float:
         return 1
+
+    @property
+    def native_step(self) -> float:
+        return self._step_size
 
     @property
     def native_value(self) -> float:
