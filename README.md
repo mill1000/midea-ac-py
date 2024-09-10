@@ -113,6 +113,7 @@ Name | Default | Description
 :--- | :--- | :--- 
 **Beep** | True | Enable beep on setting changes.
 **Temperature Step** | 1.0 | Step size for temperature set point.
+**Fan Speed Step** | 1 | Step size for custom fan speeds.
 **Use Fan-only Workaround** | False | Enable this option if device updates cause the device to turn on and switch to fan-only.
 **Show All Presets** | False | Show all presets regardless of device's reported capabilities.
 **Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.

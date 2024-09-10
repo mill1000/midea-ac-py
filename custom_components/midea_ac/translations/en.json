@@ -55,7 +55,7 @@
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
-          "fan_speed_step": "Step size for custom fan speed.",
+          "fan_speed_step": "Step size for custom fan speeds",
           "additional_operation_modes": "Specify additional operational modes",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (30 second minimum)"
         }
