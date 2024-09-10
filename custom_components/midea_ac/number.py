@@ -83,7 +83,8 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
 
     @property
     def native_min_value(self) -> float:
-        return 1
+        # Use step size as minimum to ensure steps are nice and round
+        return self._step_size
 
     @property
     def native_step(self) -> float:
