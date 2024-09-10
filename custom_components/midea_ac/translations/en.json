@@ -46,6 +46,7 @@
         "data": {
           "prompt_tone": "Enable Beep",
           "temp_step": "Temperature Step",
+          "fan_speed_step": "Fan Speed Step",
           "use_fan_only_workaround": "Use Fan-only Workaround",
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
@@ -54,6 +55,7 @@
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
+          "fan_speed_step": "Step size for custom fan speed.",
           "additional_operation_modes": "Specify additional operational modes",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (30 second minimum)"
         }
