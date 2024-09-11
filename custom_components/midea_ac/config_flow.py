@@ -235,7 +235,7 @@ class MideaOptionsFlow(OptionsFlow):
             vol.Optional(CONF_TEMP_STEP,
                          default=options.get(CONF_TEMP_STEP, 1.0)): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
             vol.Optional(CONF_FAN_SPEED_STEP,
-                         default=options.get(CONF_FAN_SPEED_STEP, 1)): vol.All(vol.Coerce(float), vol.Range(min=1, max=50)),
+                         default=options.get(CONF_FAN_SPEED_STEP, 1)): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
             vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND,
                          default=options.get(CONF_USE_FAN_ONLY_WORKAROUND, False)): cv.boolean,
             vol.Optional(CONF_SHOW_ALL_PRESETS,
