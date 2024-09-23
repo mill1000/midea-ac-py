@@ -1,0 +1,201 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Виберіть спосіб додавання пристрою.",
+        "menu_options": {
+          "discover": "Знайти пристрій автоматично",
+          "manual": "Налаштувати вручну"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Хост (IP)"
+        },
+        "description": "Залиште поле «Хост (IP)» порожнім, щоб знайти пристрій у мережі автоматично."
+      },
+      "manual": {
+        "description": "Введіть інформацію про свій пристрій.",
+        "data": {
+          "id": "ID",
+          "host": "Хост (IP)",
+          "port": "Порт",
+          "token": "Токен",
+          "k1": "Ключ"
+        },
+        "data_description": {
+          "token": "Токен для пристроїв версії V3",
+          "k1": "Ключ для пристроїв версії V3"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Пристрій вже налаштовано.",
+      "cannot_connect": "Не вдалося встановити зʼєднання.",
+      "no_devices_found": "У мережі не знайдено підтримуваних пристроїв."
+    },
+    "error": {
+      "cannot_connect": "Неможливо встановити зʼєднання з цими налаштуваннями.",
+      "device_not_found": "Пристрій не знайдено в мережі.",
+      "unsupported_device": "Пристрій не підтримується."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Увімкнути звуковий сигнал",
+          "temp_step": "Крок температури",
+          "fan_speed_step": "Крок швидкості вентилятора",
+          "use_fan_only_workaround": "Хак для режиму «Вентилятор»",
+          "show_all_presets": "Показати всі передналаштування",
+          "additional_operation_modes": "Додаткові режими роботи",
+          "max_connection_lifetime": "Максимальний час підключення",
+          "use_alternate_energy_format": "Використовувати альтернативний формат енергії"
+        },
+        "data_description": {
+          "temp_step": "Розмір кроку для налаштування температури",
+          "fan_speed_step": "Розмір кроку для ручного налаштування швидкості вентилятора",
+          "additional_operation_modes": "Вкажіть додаткові режими роботи",
+          "max_connection_lifetime": "Максимальний час використання зʼєднання в секундах (мінімум 30 секунд)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Встановити «Слідкуй за мною»",
+      "description": "Встановити функцію «Слідкуй за мною».",
+      "fields": {
+        "enabled": {
+          "name": "Увімкнено",
+          "description": "Чи слід увімкнути функцію «Слідкуй за мною»."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Тихий",
+              "low": "Низький",
+              "medium": "Середній",
+              "high": "Високий",
+              "max": "Максимальний",
+              "auto": "Автоматичний",
+              "custom": "Користувацький"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Вимкнений",
+              "vertical": "Вертикальний",
+              "horizontal": "Горизонтальний",
+              "both": "Обидва"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Брудні фільтри"
+      },
+      "self_clean": {
+        "name": "Самоочищення"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Запустити самоочищення"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Швидкість вентилятора"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Горизонтальна позиція",
+        "state": {
+          "off": "Вимкнено",
+          "pos_1": "Зліва",
+          "pos_2": "Зліва-середина",
+          "pos_3": "Середина",
+          "pos_4": "Справа-середина",
+          "pos_5": "Справа"
+        }
+      },
+      "rate_select": {
+        "name": "Вибір тарифу",
+        "state": {
+          "off": "Вимкнено",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Рівень 5",
+          "level_4": "Рівень 4",
+          "level_3": "Рівень 3",
+          "level_2": "Рівень 2",
+          "level_1": "Рівень 1"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Вертикальна позиція",
+        "state": {
+          "off": "Вимкнено",
+          "pos_1": "На верх",
+          "pos_2": "Вище середини",
+          "pos_3": "Середина",
+          "pos_4": "Нижче середини",
+          "pos_5": "На низ"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Поточне споживання"
+      },
+      "indoor_humidity": {
+        "name": "Вологість всередині"
+      },
+      "indoor_temperature": {
+        "name": "Температура всередині"
+      },
+      "outdoor_temperature": {
+        "name": "Температура зовні"
+      },
+      "real_time_power_usage": {
+        "name": "Потужність"
+      },
+      "total_energy_usage": {
+        "name": "Загальне споживання"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Вітер віє"
+      },
+      "breeze_mild": {
+        "name": "Легкий вітерець"
+      },
+      "breezeless": {
+        "name": "Безвітряно"
+      },
+      "display": {
+        "name": "Дисплей"
+      },
+      "purifier": {
+        "name": "Очищення повітря"
+      }
+    }
+  }
+}
