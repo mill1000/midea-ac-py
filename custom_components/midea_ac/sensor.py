@@ -49,13 +49,15 @@ async def async_setup_entry(
                           SensorDeviceClass.ENERGY,
                           UnitOfEnergy.KILO_WATT_HOUR,
                           "total_energy_usage",
-                          state_class=SensorStateClass.TOTAL),
+                          state_class=SensorStateClass.TOTAL,
+                          scale=.1),
         MideaEnergySensor(coordinator,
                           "current_energy_usage",
                           SensorDeviceClass.ENERGY,
                           UnitOfEnergy.KILO_WATT_HOUR,
                           "current_energy_usage",
-                          state_class=SensorStateClass.TOTAL_INCREASING),
+                          state_class=SensorStateClass.TOTAL_INCREASING,
+                          scale=.1),
         MideaEnergySensor(coordinator,
                           "real_time_power_usage",
                           SensorDeviceClass.POWER,
@@ -83,7 +85,8 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
                  unit: str,
                  translation_key: Optional[str] = None,
                  *,
-                 state_class: SensorStateClass = SensorStateClass.MEASUREMENT) -> None:
+                 state_class: SensorStateClass = SensorStateClass.MEASUREMENT,
+                 scale: float = 1.0) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
@@ -91,6 +94,7 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
         self._state_class = state_class
         self._unit = unit
         self._attr_translation_key = translation_key
+        self._scale = scale
 
     @property
     def device_info(self) -> dict:
@@ -136,7 +140,12 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> float | None:
         """Return the current native value."""
-        return getattr(self._device, self._prop, None)
+        value = getattr(self._device, self._prop, None)
+
+        if value is None:
+            return None
+
+        return value * self._scale
 
 
 class MideaEnergySensor(MideaSensor):
