@@ -1,0 +1,201 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Sélectionnez comment ajouter un appareil.",
+        "menu_options": {
+          "discover": "Découvrir l'appareil",
+          "manual": "Configurer manuellement"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Hôte"
+        },
+        "description": "Laissez l'hôte vide pour découvrir des appareils sur le réseau."
+      },
+      "manual": {
+        "description": "Entrez les informations pour votre appareil.",
+        "data": {
+          "id": "ID",
+          "host": "Hôte",
+          "port": "Port",
+          "token": "Jeton (token)",
+          "k1": "Clé (key)"
+        },
+        "data_description": {
+          "token": "Jeton pour les appareils V3",
+          "k1": "Clé pour les appareils V3"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "L'appareil a déjà été configuré.",
+      "cannot_connect": "La connexion n'a pas pu être établie.",
+      "no_devices_found": "Aucun appareil compatible trouvé sur le réseau."
+    },
+    "error": {
+      "cannot_connect": "La connexion n'a pas pu être établie avec ces paramètres.",
+      "device_not_found": "Appareil introuvable sur le réseau.",
+      "unsupported_device": "L'appareil n'est pas pris en charge."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Activer le bip",
+          "temp_step": "Palier de température",
+          "fan_speed_step": "Palier de vitesse du ventilateur",
+          "use_fan_only_workaround": "Utiliser la solution de contournement du ventilateur uniquement",
+          "show_all_presets": "Afficher tous les préréglages",
+          "additional_operation_modes": "Modes de fonctionnement supplémentaires",
+          "max_connection_lifetime": "Durée maximale de connexion",
+          "use_alternate_energy_format": "Utiliser un format d'énergie alternatif"
+        },
+        "data_description": {
+          "temp_step": "Taille du palier pour le réglage de la température",
+          "fan_speed_step": "Taille du palier pour le réglage de la vitesses personnalisé du ventilateur",
+          "additional_operation_modes": "Spécifiez des modes de fonctionnement supplémentaires",
+          "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 30 secondes)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Activer Me Suivre (follow Me)",
+      "description": "Activer la fonction Me Suivre.",
+      "fields": {
+        "enabled": {
+          "name": "Activé",
+          "description": "Détermine si la fonction Me Suivre doit être activée."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Silencieux",
+              "low": "Faible",
+              "medium": "Moyen",
+              "high": "Élevé",
+              "max": "Maximum",
+              "auto": "Automatique",
+              "custom": "Personnalisé"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Arrêt",
+              "vertical": "Vertical",
+              "horizontal": "Horizontal",
+              "both": "Les deux"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Alerte filtre"
+      },
+      "self_clean": {
+        "name": "Auto-nettoyage"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Démarrer l'auto-nettoyage"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Vitesse du ventilateur"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Angle de balancement horizontal",
+        "state": {
+          "off": "Arrêt",
+          "pos_1": "Gauche",
+          "pos_2": "Gauche-centre",
+          "pos_3": "Centre",
+          "pos_4": "Droite-centre",
+          "pos_5": "Droite"
+        }
+      },
+      "rate_select": {
+        "name": "Sélection du taux",
+        "state": {
+          "off": "Arrêt",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Niveau 5",
+          "level_4": "Niveau 4",
+          "level_3": "Niveau 3",
+          "level_2": "Niveau 2",
+          "level_1": "Niveau 1"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Angle de balancement vertical",
+        "state": {
+          "off": "Arrêt",
+          "pos_1": "Haut",
+          "pos_2": "Haut-centre",
+          "pos_3": "Centre",
+          "pos_4": "Bas-centre",
+          "pos_5": "Bas"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Énergie actuelle"
+      },
+      "indoor_humidity": {
+        "name": "Humidité intérieure"
+      },
+      "indoor_temperature": {
+        "name": "Température intérieure"
+      },
+      "outdoor_temperature": {
+        "name": "Température extérieure"
+      },
+      "real_time_power_usage": {
+        "name": "Puissance"
+      },
+      "total_energy_usage": {
+        "name": "Énergie totale"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Éloigner la brise"
+      },
+      "breeze_mild": {
+        "name": "Brise légère"
+      },
+      "breezeless": {
+        "name": "Sans brise"
+      },
+      "display": {
+        "name": "Affichage"
+      },
+      "purifier": {
+        "name": "Purificateur"
+      }
+    }
+  }
+}
