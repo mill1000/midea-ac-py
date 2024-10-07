@@ -35,6 +35,9 @@ _DEFAULT_OPTIONS = {
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
+    VERSION = 1
+    MINOR_VERSION = 2
+
     async def async_step_user(self, _) -> FlowResult:
         """Handle a config flow initialized by the user."""
         return self.async_show_menu(
@@ -62,7 +65,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unsupported_device"
             else:
                 # Check if device has already been configured
-                await self.async_set_unique_id(device.id)
+                await self.async_set_unique_id(str(device.id))
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
@@ -92,7 +95,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
             if device:
                 # Check if device has already been configured
-                await self.async_set_unique_id(device.id)
+                await self.async_set_unique_id(str(device.id))
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
@@ -116,7 +119,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 f"{device.name} - {device.id} ({device.ip})"
             )
             for device in self._discovered_devices
-            if (device.id not in configured_devices and
+            if (str(device.id) not in configured_devices and
                 device.type == DeviceType.AIR_CONDITIONER)
         }
 
@@ -140,7 +143,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             id = int(user_input.get(CONF_ID))
 
             # Check if device has already been configured
-            await self.async_set_unique_id(id)
+            await self.async_set_unique_id(str(id))
             self._abort_if_unique_id_configured()
 
             # Attempt a connection to see if config is valid

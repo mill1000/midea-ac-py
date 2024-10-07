@@ -87,6 +87,28 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     return True
 
 
+async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+    """Migrate config entry."""
+
+    _LOGGER.debug("Migrating configuration from version %s.%s.",
+                  config_entry.version, config_entry.minor_version)
+
+    if config_entry.version > 1:
+        # Unsupported downgrade
+        return False
+
+    if config_entry.version == 1:
+        # 1.1 -> 1.2: Convert unique ID to string
+        if config_entry.minor_version == 1:
+            hass.config_entries.async_update_entry(
+                config_entry, unique_id=str(config_entry.unique_id), minor_version=2)
+
+    _LOGGER.debug("Migration to configuration version %s.%s successful.",
+                  config_entry.version, config_entry.minor_version)
+
+    return True
+
+
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     # Remove the coordinator from global data
