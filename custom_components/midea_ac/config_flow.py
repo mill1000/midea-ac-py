@@ -1,20 +1,24 @@
 """Config flow for Midea Smart AC."""
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
+from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
+                                 CONF_PORT, CONF_TOKEN)
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers.selector import (CountrySelector,
+                                            CountrySelectorConfig)
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.discover import Discover
 from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
+                    CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
                     CONF_TEMP_STEP, CONF_USE_ALTERNATE_ENERGY_FORMAT,
@@ -29,6 +33,10 @@ _DEFAULT_OPTIONS = {
     CONF_ADDITIONAL_OPERATION_MODES: None,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_USE_ALTERNATE_ENERGY_FORMAT: False,
+}
+
+_CLOUD_CREDENTIALS = {
+    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1")
 }
 
 
@@ -52,12 +60,22 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
+            country_code = cast(str, user_input.get(CONF_COUNTRY_CODE))
+
             # If host was not provided, discover all devices
             if not (host := user_input.get(CONF_HOST)):
-                return await self.async_step_pick_device()
+                return await self.async_step_pick_device(country_code=country_code)
+
+            # Get credentials for region
+            account, password = _CLOUD_CREDENTIALS.get(
+                country_code, (None, None))
 
             # Attempt to find specified device
-            device = await Discover.discover_single(host, auto_connect=False, timeout=2)
+            device = await Discover.discover_single(host,
+                                                    auto_connect=False,
+                                                    timeout=2,
+                                                    account=account,
+                                                    password=password)
 
             if device is None:
                 errors["base"] = "device_not_found"
@@ -76,14 +94,22 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     return self.async_abort(reason="cannot_connect")
 
         data_schema = vol.Schema({
-            vol.Optional(CONF_HOST, default=""): str
+            vol.Optional(CONF_HOST, default=""): str,
+            vol.Optional(
+                CONF_COUNTRY_CODE, default=CONF_DEFAULT_CLOUD_COUNTRY
+            ): CountrySelector(
+                CountrySelectorConfig(
+                    countries=CONF_CLOUD_COUNTRY_CODES)
+            ),
         })
 
         return self.async_show_form(step_id="discover",
                                     data_schema=data_schema, errors=errors)
 
     async def async_step_pick_device(
-        self, user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None,
+        *,
+        country_code: str = CONF_DEFAULT_CLOUD_COUNTRY
     ) -> FlowResult:
         """Handle the pick device step of config flow."""
 
@@ -110,8 +136,15 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             entry.unique_id for entry in self._async_current_entries()
         }
 
+        # Get credentials for region
+        account, password = _CLOUD_CREDENTIALS.get(country_code, (None, None))
+
         # Discover all devices
-        self._discovered_devices = await Discover.discover(auto_connect=False, timeout=2)
+        self._discovered_devices = await Discover.discover(
+            auto_connect=False,
+            timeout=2,
+            account=account,
+            password=password)
 
         # Create dict of device ID to friendly name
         devices_name = {

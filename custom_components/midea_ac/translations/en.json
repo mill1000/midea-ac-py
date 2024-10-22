@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Leave the host blank to discover device(s) on the network.",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Region"
         },
-        "description": "Leave the host blank to discover device(s) on the network."
+        "data_description":{
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Enter information for your device.",
