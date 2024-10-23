@@ -36,7 +36,8 @@ _DEFAULT_OPTIONS = {
 }
 
 _CLOUD_CREDENTIALS = {
-    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1")
+    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1"),
+    "KR": ("midea_sea@mailinator.com", "password_for_sea1")
 }
 
 
