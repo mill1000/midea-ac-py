@@ -9,13 +9,17 @@
         }
       },
       "discover": {
+        "description": "Hagyja üresen a gazdagépet, hogy felfedezze a hálózaton lévő eszközöket.",
         "data": {
-          "host": "Hoszt"
+          "host": "Hoszt",
+          "country_code": "Felhő régió"
         },
-        "description": "Hagyja üresen a hosztot az eszköz(ök) hálózaton való felfedezéséhez."
+        "data_description":{
+          "country_code": "Válassza ki az Önhöz legközelebbi országot."
+        }
       },
       "manual": {
-        "description": "Adja meg az eszköz adatait",
+        "description": "Adja meg az eszközéhez tartozó információkat.",
         "data": {
           "id": "ID",
           "host": "Hoszt",
@@ -30,31 +34,34 @@
       }
     },
     "abort": {
-      "already_configured": "Az eszköz már be lett állítva.",
-      "cannot_connect": "Nem hozható létre kapcsolat.",
+      "already_configured": "Az eszköz már konfigurálva lett.",
+      "cannot_connect": "Nem sikerült a csatlakozás.",
       "no_devices_found": "Nem található támogatott eszköz a hálózaton."
     },
     "error": {
-      "cannot_connect": "Ezekkel a beállításokkal nem hozható létre kapcsolat.",
+      "cannot_connect": "Nem sikerült a csatlakozás ezekkel a beállításokkal.",
       "device_not_found": "Az eszköz nem található a hálózaton.",
-      "unsupported_device": "Nem támogatott eszköz."
+      "unsupported_device": "Az eszköz nem támogatott."
     }
   },
   "options": {
     "step": {
       "init": {
         "data": {
-          "prompt_tone": "Hangjelzés be",
-          "temp_step": "Hőfokbeállítás lépésköze",
-          "use_fan_only_workaround": "Fan-only mode hiba megkerülése",
-          "show_all_presets": "Az összes profil mutatása",
+          "prompt_tone": "Hangjelzés engedélyezése",
+          "temp_step": "Hőmérséklet lépésköz",
+          "fan_speed_step": "Ventilátor sebesség lépésköz",
+          "use_fan_only_workaround": "Csak ventilátor mód hiba megoldása",
+          "show_all_presets": "Minden előbeállítás megjelenítése",
           "additional_operation_modes": "További üzemmódok",
-          "max_connection_lifetime": "Kapcsolódás maximális ideje"
+          "max_connection_lifetime": "Maximális kapcsolat időtartama",
+          "use_alternate_energy_format": "Alternatív energia formátum használata"
         },
         "data_description": {
-          "temp_step": "A hőfok beállításakor használt lépésköz nagysága",
-          "additional_operation_modes": "További üzemmódok létrehozása",
-          "max_connection_lifetime": "A maximális idő, amíg a kapcsolódás él, másodpercben (30mp minimum)"
+          "temp_step": "A hőmérséklet beállítás lépésköze",
+          "fan_speed_step": "Ventilátor sebességek egyéni lépésköze",
+          "additional_operation_modes": "Adja meg a további üzemmódokat",
+          "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 30 másodperc)"
         }
       }
     }
@@ -84,6 +91,11 @@
               "max": "Maximum",
               "auto": "Auto",
               "custom": "Egyéni"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -127,6 +139,19 @@
           "pos_5": "Jobb"
         }
       },
+      "rate_select": {
+        "name": "Teljesítmény kiválasztása",
+        "state": {
+          "off": "Ki",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "5. szint",
+          "level_4": "4. szint",
+          "level_3": "3. szint",
+          "level_2": "2. szint",
+          "level_1": "1. szint"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Függőleges lengési szög",
         "state": {
@@ -160,6 +185,15 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Távoli szellő"
+      },
+      "breeze_mild": {
+        "name": "Enyhe szellő"
+      },
+      "breezeless": {
+        "name": "Lágy légáramlás"
+      },
       "display": {
         "name": "Kijelző"
       },
