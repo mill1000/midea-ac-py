@@ -46,13 +46,16 @@
         "data": {
           "prompt_tone": "Tón výzvy",
           "temp_step": "Teplotný krok",
+          "fan_speed_step": "Krok rýchlosti ventilátora",
           "use_fan_only_workaround": "Použite alternatívne riešenie pre ventilátor",
           "show_all_presets": "Zobraziť všetky predvoľby",
           "additional_operation_modes": "Ďalšie prevádzkové režimy",
-          "max_connection_lifetime": "Maximálna životnosť pripojenia"
+          "max_connection_lifetime": "Maximálna životnosť pripojenia",
+          "use_alternate_energy_format": "Použiť alternatívny formát energie"
         },
         "data_description": {
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",
+          "fan_speed_step": "Veľkosť kroku voliteľnej rýchlosti ventilátora",
           "additional_operation_modes": "Zadajte ďalšie prevádzkové režimy",
           "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 30 sekúnd)"
         }
@@ -81,8 +84,14 @@
               "low": "Nízky",
               "medium": "Stredný",
               "high": "Vysoký",
+              "max": "Max",
               "auto": "Auto",
               "custom": "Voliteľný"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -99,6 +108,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Upozornenie filtra"
+      },
+      "self_clean": {
+        "name": "Samočistenie čistenie"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Spustiť samočistenie"
       }
     },
     "number": {
@@ -118,6 +135,19 @@
           "pos_5": "Vpravo"
         }
       },
+      "rate_select": {
+        "name": "Výber",
+        "state": {
+          "off": "Vyp",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Úroveň 5",
+          "level_4": "Úroveň 4",
+          "level_3": "Úroveň 3",
+          "level_2": "Úroveň 2",
+          "level_1": "Úroveň 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Vertikálny uhol výkyvu",
         "state": {
@@ -131,14 +161,35 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Aktuálna energia"
+      },
+      "indoor_humidity": {
+        "name": "Vnútorná vlhkosť"
+      },
       "indoor_temperature": {
         "name": "Vnútorná teplota"
       },
       "outdoor_temperature": {
         "name": "Vonkajšia teplota"
+      },
+      "real_time_power_usage": {
+        "name": "Výkon"
+      },
+      "total_energy_usage": {
+        "name": "Celková energia"
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Vánok v neprítomnosti"
+      },
+      "breeze_mild": {
+        "name": "Jemný vánok"
+      },
+      "breezeless": {
+        "name": "Bez vánku"
+      },
       "display": {
         "name": "Zobraziť"
       },

@@ -30,7 +30,7 @@ async def async_setup_entry(
 
     # Create entities for supported features
     entities = []
-    if getattr(coordinator.device, "supports_self_clean", False):
+    if coordinator.device.supports_self_clean:
         entities.append(MideaButton(coordinator,
                                     "start_self_clean",
                                     "self_clean",

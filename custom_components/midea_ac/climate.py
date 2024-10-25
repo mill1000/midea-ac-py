@@ -21,7 +21,7 @@ from msmart.device import AirConditioner as AC
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, PRESET_IECO)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -63,15 +63,14 @@ async def async_setup_entry(
     ])
 
     # Add a service to control 'follow me' function
-    if hasattr(coordinator.device, "follow_me"):
-        platform = entity_platform.async_get_current_platform()
-        platform.async_register_entity_service(
-            "set_follow_me",
-            {
-                vol.Required(CONF_ENABLED): cv.boolean,
-            },
-            "async_set_follow_me",
-        )
+    platform = entity_platform.async_get_current_platform()
+    platform.async_register_entity_service(
+        "set_follow_me",
+        {
+            vol.Required(CONF_ENABLED): cv.boolean,
+        },
+        "async_set_follow_me",
+    )
 
 
 class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
@@ -123,18 +122,20 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             ]
 
             # Only add presets supported by device
-            if getattr(self._device, "supports_freeze_protection_mode", False):
+            if self._device.supports_freeze_protection:
                 self._preset_modes.append(PRESET_AWAY)
 
-            if getattr(self._device, "supports_eco_mode", False):
+            if self._device.supports_eco:
                 self._preset_modes.append(PRESET_ECO)
 
-            if getattr(self._device, "supports_turbo_mode", False):
+            if self._device.supports_turbo:
                 self._preset_modes.append(PRESET_BOOST)
 
+            if self._device.supports_ieco:
+                self._preset_modes.append(PRESET_IECO)
+
         # Fetch supported operational modes
-        supported_op_modes = getattr(
-            self._device, "supported_operation_modes",  AC.OperationalMode.list())
+        supported_op_modes = self._device.supported_operation_modes
 
         # Convert from Midea operational modes to HA HVAC mode
         self._hvac_modes = [
@@ -152,25 +153,17 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
                 _LOGGER.info("Adding additional mode '%s'.", mode)
                 self._hvac_modes.append(mode)
 
-        # Fetch supported fan speeds
-        supported_fan_speeds = getattr(
-            self._device, "supported_fan_speeds", AC.FanSpeed.list())
-
-        # Convert Midea swing modes to strings
+        # Convert fan speeds to strings
         self._fan_modes = [m.name.lower()
-                           for m in supported_fan_speeds]
-
-        # Fetch supported swing modes
-        supported_swing_modes = getattr(
-            self._device, "supported_swing_modes", AC.SwingMode.list())
+                           for m in self._device.supported_fan_speeds]
 
         # If device supports any swing mode, add it to supported features
-        if supported_swing_modes != [AC.SwingMode.OFF]:
+        if self._device.supported_swing_modes != [AC.SwingMode.OFF]:
             self._supported_features |= ClimateEntityFeature.SWING_MODE
 
         # Convert Midea swing modes to strings
         self._swing_modes = [m.name.lower()
-                             for m in supported_swing_modes]
+                             for m in self._device.supported_swing_modes]
 
         # Dump all supported modes for debug
         _LOGGER.debug("Supported operational modes: '%s'.",
@@ -179,11 +172,9 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         _LOGGER.debug("Supported fan modes: '%s'.", self._fan_modes)
         _LOGGER.debug("Supported swing modes: '%s'.", self._swing_modes)
 
-        # Attempt to load min/max target temperatures
-        self._min_temperature = getattr(
-            self._device, "min_target_temperature", 16)
-        self._max_temperature = getattr(
-            self._device, "max_target_temperature", 30)
+        # Set min and max temperatures
+        self._min_temperature = self._device.min_target_temperature
+        self._max_temperature = self._device.max_target_temperature
 
     async def _apply(self) -> None:
         """Apply changes to the device."""
@@ -235,13 +226,10 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def extra_state_attributes(self) -> dict[str, str]:
         """Return device specific state attributes."""
-        state_attributes = {}
 
-        if hasattr(self._device, "follow_me"):
-            state_attributes["follow_me"] = getattr(
-                self._device, "follow_me")
-
-        return state_attributes
+        return {
+            "follow_me": self._device.follow_me
+        }
 
     async def async_set_follow_me(self, enabled: bool) -> None:
         """Set 'follow me' mode."""
@@ -254,7 +242,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
 
         if (self._device.operational_mode in [AC.OperationalMode.DRY,
                                               AC.OperationalMode.SMART_DRY]
-                and getattr(self._device, "supports_target_humidity", False)):
+                and self._device.supports_target_humidity):
             return self._supported_features | ClimateEntityFeature.TARGET_HUMIDITY
 
         return self._supported_features
@@ -335,7 +323,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Return the supported fan modes."""
 
         # Add "Custom" to the list if a device supports custom fan speeds, and is using a custom speed
-        if (getattr(self._device, "supports_custom_fan_speed", False)
+        if (self._device.supports_custom_fan_speed
                 and not isinstance(self._device.fan_speed, AC.FanSpeed)):
             return [_FAN_CUSTOM] + self._fan_modes
 
@@ -392,8 +380,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             mode = _HVAC_MODE_TO_OPERATIONAL_MODE.get(
                 hvac_mode, self._device.operational_mode)
 
-            if (mode == AC.OperationalMode.DRY
-                    and getattr(self._device, "supports_target_humidity", False)):
+            if (mode == AC.OperationalMode.DRY and self._device.supports_target_humidity):
                 mode = AC.OperationalMode.SMART_DRY
 
             self._device.operational_mode = mode
@@ -410,12 +397,15 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
             if PRESET_AWAY in self._preset_modes:
                 modes.append(PRESET_AWAY)
 
-        # Add eco preset in cool, dry and auto if supported
+        # Add eco & ieco preset in cool, dry and auto if supported
         if self._device.operational_mode in [AC.OperationalMode.AUTO,
                                              AC.OperationalMode.COOL,
                                              AC.OperationalMode.DRY]:
             if PRESET_ECO in self._preset_modes:
                 modes.append(PRESET_ECO)
+
+            if PRESET_IECO in self._preset_modes:
+                modes.append(PRESET_IECO)
 
         # Add sleep and/or turbo preset in heat, cool or auto
         if self._device.operational_mode in [AC.OperationalMode.AUTO,
@@ -432,33 +422,38 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
-        if self._device.eco_mode:
+        if self._device.eco:
             return PRESET_ECO
-        elif self._device.turbo_mode:
+        elif self._device.ieco:
+            return PRESET_IECO
+        elif self._device.turbo:
             return PRESET_BOOST
-        elif getattr(self._device, "freeze_protection_mode", False):
+        elif self._device.freeze_protection:
             return PRESET_AWAY
-        elif getattr(self._device, "sleep_mode", False):
+        elif self._device.sleep:
             return PRESET_SLEEP
         else:
             return PRESET_NONE
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the preset mode."""
-        self._device.eco_mode = False
-        self._device.turbo_mode = False
-        self._device.freeze_protection_mode = False
-        self._device.sleep_mode = False
+        self._device.eco = False
+        self._device.ieco = False
+        self._device.turbo = False
+        self._device.freeze_protection = False
+        self._device.sleep = False
 
         # Enable proper mode
         if preset_mode == PRESET_BOOST:
-            self._device.turbo_mode = True
+            self._device.turbo = True
         elif preset_mode == PRESET_ECO:
-            self._device.eco_mode = True
+            self._device.eco = True
+        elif preset_mode == PRESET_IECO:
+            self._device.ieco = True
         elif preset_mode == PRESET_AWAY:
-            self._device.freeze_protection_mode = True
+            self._device.freeze_protection = True
         elif preset_mode == PRESET_SLEEP:
-            self._device.sleep_mode = True
+            self._device.sleep = True
 
         await self._apply()
 

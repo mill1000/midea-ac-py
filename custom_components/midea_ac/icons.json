@@ -5,6 +5,17 @@
         "default": "mdi:spray-bottle"
       }
     },
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "ieco": "mdi:leaf-circle-outline"
+            }
+          }
+        }
+      }
+    },
     "number": {
       "fan_speed": {
         "default": "mdi:fan"
@@ -13,6 +24,9 @@
     "select": {
       "horizontal_swing_angle": {
         "default": "mdi:angle-acute"
+      },
+      "rate_select": {
+        "default": "mdi:slope-downhill"
       },
       "vertical_swing_angle": {
         "default": "mdi:angle-acute"
@@ -24,6 +38,15 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "default": "mdi:weather-windy"
+      },
+      "breeze_mild": {
+        "default": "mdi:tailwind"
+      },
+      "breezeless": {
+        "default": "mdi:blur"
+      },
       "display": {
         "default": "mdi:led-on",
         "state": {

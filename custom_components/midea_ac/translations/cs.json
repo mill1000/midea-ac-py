@@ -1,0 +1,171 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Zadejte informace o svém zařízení.",
+        "menu_options": {
+          "discover": "Objevit zařízení",
+          "manual": "Manuální konfigurace"
+        }
+      },
+      "discover": {
+        "data": {
+          "host": "Host"
+        },
+        "description": "Pokud chcete vyhledat zařízení v síti, nechte pole Host prázdné."
+      },
+      "manual": {
+        "description": "Zadejte informace o svém zařízení.",
+        "data": {
+          "id": "ID",
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Klíč"
+        },
+        "data_description": {
+          "token": "Token pro V3 zařízení",
+          "k1": "K1 pro V3 zařízení"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "ID zařízení již bylo nakonfigurováno.",
+      "cannot_connect": "Nepodařilo se vytvořit spojení.",
+      "no_devices_found": "V síti nebyla nalezena žádná podporovaná zařízení."
+    },
+    "error": {
+      "cannot_connect": "S těmito nastaveními se nepodařilo navázat spojení.",
+      "device_not_found": "Zařízení nebylo v síti nalezeno.",
+      "unsupported_device": "Zařízení není podporováno."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Tóny zařízení",
+          "temp_step": "Teplotní krok",
+          "use_fan_only_workaround": "Použít alternativní řešení pro problém ventilátoru",
+          "show_all_presets": "Zobrazit všechny předvolby",
+          "additional_operation_modes": "Další provozní režimy",
+          "max_connection_lifetime": "Maximální životnost připojení (sekundy)"
+        },
+        "data_description": {
+          "temp_step": "Velikost kroku pro nastavení teploty",
+          "additional_operation_modes": "Zadejte další provozní režimy",
+          "max_connection_lifetime": "Maximální čas v sekundách, po který se bude používat připojení (minimálně 30 sekund)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Následuj mě",
+      "description": "Nastavte funkci následujte mě.",
+      "fields": {
+        "enabled": {
+          "name": "Povoleno",
+          "description": "Zda by měla být povolena funkce Následuj mě."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Tichý",
+              "low": "Nízký",
+              "medium": "Střední",
+              "high": "Vysoký",
+              "max": "Max",
+              "auto": "Auto",
+              "custom": "Volitelný"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Vypnuto",
+              "vertical": "Vertikální",
+              "horizontal": "Horizontální",
+              "both": "Oba"
+            }
+          }
+        }
+      }
+    },
+	  "binary_sensor": {
+      "filter_alert": {
+        "name": "Upozornění filtr"
+      },
+      "self_clean": {
+        "name": "Samočištění"
+      }
+    },
+      "button": {
+      "self_clean": {
+        "name": "Zahájit samočištění"
+      }
+    },
+      "number": {
+      "fan_speed": {
+        "name": "Rychlost ventilátoru"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Horizontální úhel výkyvu",
+        "state": {
+          "off": "Vypnuto",
+          "pos_1": "Vlevo",
+          "pos_2": "Vlevo-střed",
+          "pos_3": "Střed",
+          "pos_4": "Vpravo-střed",
+          "pos_5": "Vpravo"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Vertikální úhel výkyvu",
+        "state": {
+          "off": "Vypnuto",
+          "pos_1": "Nahoru",
+          "pos_2": "Nahoru-střed",
+          "pos_3": "Střed",
+          "pos_4": "Dolů-střed",
+          "pos_5": "Dolů"
+        }
+      }
+    },
+	  "sensor": {
+      "current_energy_usage": {
+        "name": "Aktuální spotřeba energie"
+      },
+      "indoor_humidity": {
+        "name": "Vnitřní vlhkost"
+      },
+      "indoor_temperature": {
+        "name": "Vnitřní teplota"
+      },
+      "outdoor_temperature": {
+        "name": "Venkovní teplota"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Celková spotřeba energie"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Display"
+      },
+      "purifier": {
+        "name": "Čistička vzduchu"
+      }
+    }
+  }
+}

@@ -15,11 +15,11 @@
         "description": "Lasciare Host vuoto per trovare dispositivi nella rete"
       },
       "manual": {
-        "description": "Inserisci le informazioni del tuo.",
+        "description": "Inserisci le informazioni del tuo dispositivo.",
         "data": {
           "id": "ID",
           "host": "Host",
-          "port": "Port",
+          "port": "Porta",
           "token": "Token",
           "k1": "Key"
         },
@@ -30,14 +30,14 @@
       }
     },
     "abort": {
-      "already_configured": "Il dispositivo è già stato configurato",
-      "cannot_connect": "Connessione non riuscita",
-      "no_devices_found": "Nessun dispositivo supportato è stato trovato nella rete"
+      "already_configured": "Il dispositivo è già stato configurato.",
+      "cannot_connect": "Connessione non riuscita.",
+      "no_devices_found": "Nessun dispositivo supportato è stato trovato nella rete."
     },
     "error": {
-      "cannot_connect": "Connessione non riuscita con queste impostazioni",
+      "cannot_connect": "Connessione non riuscita con queste impostazioni.",
       "device_not_found": "Nessun dispositivo supportato è stato trovato nella rete.",
-      "unsupported_device": "Dispositivo non è supportato."
+      "unsupported_device": "Dispositivo non supportato."
     }
   },
   "options": {
@@ -45,28 +45,31 @@
       "init": {
         "data": {
           "prompt_tone": "Abilita Beep",
-          "temp_step": "Temperatura Step",
-          "use_fan_only_workaround": "Usare solo la ventola",
+          "temp_step": "Incremento temperatura",
+          "fan_speed_step": "Incremento velocità della ventola",
+          "use_fan_only_workaround": "Usa un metodo alternativo per modalità Solo Ventola",
           "show_all_presets": "Mostra tutte le preimpostazioni",
-          "additional_operation_modes": "Funzionalità aggiuntive",
-          "max_connection_lifetime": "Durata massima della connessione"
+          "additional_operation_modes": "Modalità aggiuntive",
+          "max_connection_lifetime": "Durata massima della connessione",
+          "use_alternate_energy_format": "Usa formato alternativo per l'energia"
         },
         "data_description": {
-          "temp_step": "Dimensione er il set point della temperatura",
-          "additional_operation_modes": "Specifica ulteriori funzionalità aggiuntive",
-          "max_connection_lifetime": "Tempo massimo di utilizzo della connessione in secondi (minimo 30 secondi)"
+          "temp_step": "Incremento per la configurazione della temperatura",
+          "fan_speed_step": "Incremento per la configurazione della velocità della ventola",
+          "additional_operation_modes": "Specifica ulteriori modalità aggiuntive",
+          "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 30 secondi)"
         }
       }
     }
   },
   "services": {
     "set_follow_me": {
-      "name": "Imposta Seguimi",
-      "description": "Imposta funzionalità Seguimi",
+      "name": "Configura Seguimi",
+      "description": "Configura funzionalità Seguimi",
       "fields": {
         "enabled": {
-          "name": "Abilitato",
-          "description": "Quando la funzionalità Seguimi è abilitata"
+          "name": "Abilitata",
+          "description": "Se la funzionalità Seguimi deve essere abilitata"
         }
       }
     }
@@ -81,6 +84,7 @@
               "low": "Bassa",
               "medium": "Media",
               "high": "Alta",
+              "max": "Massima",
               "auto": "Automatica",
               "custom": "Personalizzata"
             }
@@ -96,8 +100,27 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Allarme filtro"
+      },
+      "self_clean": {
+        "name": "Auto-pulizia"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Inizia auto-pulizia"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Velocità ventola"
+      }
+    },
     "select": {
       "horizontal_swing_angle": {
+        "name": "Angolo di oscillazione orizzontale",
         "state": {
           "off": "Spento",
           "pos_1": "Sinistra",
@@ -107,7 +130,21 @@
           "pos_5": "Destra"
         }
       },
+      "rate_select": {
+        "name": "Selezione livello",
+        "state": {
+          "off": "Spento",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Livello 5",
+          "level_4": "Livello 4",
+          "level_3": "Livello 3",
+          "level_2": "Livello 2",
+          "level_1": "Livello 1"
+        }
+      },
       "vertical_swing_angle": {
+        "name": "Angolo di oscillazione verticale",
         "state": {
           "off": "Spento",
           "pos_1": "Superiore",
@@ -116,6 +153,43 @@
           "pos_4": "Inferiore-centrale",
           "pos_5": "Inferiore"
         }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Energia attuale"
+      },
+      "indoor_humidity": {
+        "name": "Umidità interna"
+      },
+      "indoor_temperature": {
+        "name": "Temperatura interna"
+      },
+      "outdoor_temperature": {
+        "name": "Temperatura esterna"
+      },
+      "real_time_power_usage": {
+        "name": "Potenza attuale"
+      },
+      "total_energy_usage": {
+        "name": "Energia totale"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Vento forte"
+      },
+      "breeze_mild": {
+        "name": "Vento leggero"
+      },
+      "breezeless": {
+        "name": "Senza vento"
+      },
+      "display": {
+        "name": "Schermo"
+      },
+      "purifier": {
+        "name": "Depuratore"
       }
     }
   }
