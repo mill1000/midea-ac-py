@@ -9,7 +9,7 @@
         }
       },
       "discover": {
-        "description": "Hagyja üresen a gazdagépet, hogy felfedezze a hálózaton lévő eszközöket.",
+        "description": "Hagyja üresen a hosztot, a hálózaton lévő eszközök feledezéséhez.",
         "data": {
           "host": "Hoszt",
           "country_code": "Felhő régió"
@@ -59,7 +59,7 @@
         },
         "data_description": {
           "temp_step": "A hőmérséklet beállítás lépésköze",
-          "fan_speed_step": "Ventilátor sebességek egyéni lépésköze",
+          "fan_speed_step": "Ventilátor sebesség egyéni lépésköze",
           "additional_operation_modes": "Adja meg a további üzemmódokat",
           "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 30 másodperc)"
         }
@@ -69,7 +69,7 @@
   "services": {
     "set_follow_me": {
       "name": "Követés beállítása",
-      "description": "A követés funkció bekapcsolása.",
+      "description": "A követés (Follow me) funkció bekapcsolása.",
       "fields": {
         "enabled": {
           "name": "Bekapcsolva",
