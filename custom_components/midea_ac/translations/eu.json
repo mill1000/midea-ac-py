@@ -1,0 +1,205 @@
+﻿{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Hautatu nola gehitu gailu bat.",
+        "menu_options": {
+          "discover": "Gailua aurkitu",
+          "manual": "Eskuz konfiguratu"
+        }
+      },
+      "discover": {
+        "description": "Utzi ostalaria hutsik, sareko gailuak aurkitzeko.",
+        "data": {
+          "host": "Ostalaria",
+          "country_code": "Hodei Eskualdea"
+        },
+        "data_description":{
+          "country_code": "Hautatu zure kokapenetik hurbilen dagoen herrialdea."
+        }
+      },
+      "manual": {
+        "description": "Sartu zure gailuaren informazioa.",
+        "data": {
+          "id": "ID",
+          "host": "Ostalari",
+          "port": "Portu",
+          "token": "Token",
+          "k1": "Gakoa"
+        },
+        "data_description": {
+          "token": "V3 gailuetarako tokena",
+          "k1": "V3 gailuetarako Gakoa"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Gailua dagoeneko konfiguratuta dago.",
+      "cannot_connect": "Ezin izan da konexiorik egin.",
+      "no_devices_found": "Ez da onartutako gailurik aurkitu sarean."
+    },
+    "error": {
+      "cannot_connect": "Ezin izan da konexiorik egin ezarpen hauekin.",
+      "device_not_found": "Ez da gailua sarean aurkitu.",
+      "unsupported_device": "Gailua ez da onartzen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Beepa gaitu",
+          "temp_step": "Tenperatura Urratsa",
+          "fan_speed_step": "Haizagailu Abiadura Pausuak",
+          "use_fan_only_workaround": "Erabili Fan-only konponbidea",
+          "show_all_presets": "Erakutsi Aurrezarpen Guztiak",
+          "additional_operation_modes": "Eragiketa-Modu Gehigarriak",
+          "max_connection_lifetime": "Gehienezko Konexio-Denbora",
+          "use_alternate_energy_format": "Erabili Ordezko Energia Formatua"
+        },
+        "data_description": {
+          "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
+          "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
+          "additional_operation_modes": "Zehaztu eragiketa modu osagarriak",
+          "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (30 segundo gutxienez)"
+        }
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Ezarri jarraitu niri",
+      "description": "Jarraitu niri funtzioa ezarri.",
+      "fields": {
+        "enabled": {
+          "name": "Gaitua",
+          "description": "Jarraitu niri gaituta egon behar den."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Isilik",
+              "low": "Baxua",
+              "medium": "Ertaina",
+              "high": "Altua",
+              "max": "Max",
+              "auto": "Auto",
+              "custom": "Pertsonalizatua"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Off",
+              "vertical": "Bertikal",
+              "horizontal": "Horizontal",
+              "both": "Biak"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Iragazi alerta"
+      },
+      "self_clean": {
+        "name": "Auto garbiketa"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Auto garbiketa hasi"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Fan abiadura"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Swing angelu horizontala",
+        "state": {
+          "off": "Itzalita",
+          "pos_1": "Ezker",
+          "pos_2": "Ezker-zentro",
+          "pos_3": "Zentro",
+          "pos_4": "Eskubi-zentro",
+          "pos_5": "Eskubi"
+        }
+      },
+      "rate_select": {
+        "name": "Hautatu tasa",
+        "state": {
+          "off": "Itzalita",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "5. Maila",
+          "level_4": "4. Maila",
+          "level_3": "3. Maila",
+          "level_2": "2. Maila",
+          "level_1": "1. Maila"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Swing angelu bertikala",
+        "state": {
+          "off": "Itzalita",
+          "pos_1": "Goi",
+          "pos_2": "Goi-zentro",
+          "pos_3": "Zentro",
+          "pos_4": "Behe-zentro",
+          "pos_5": "Behe"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Egungo energia"
+      },
+      "indoor_humidity": {
+        "name": "Barruko hezetasuna"
+      },
+      "indoor_temperature": {
+        "name": "Barruko tenperatura"
+      },
+      "outdoor_temperature": {
+        "name": "Kanpoko tenperatura"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Energia totala"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Brisa urrun"
+      },
+      "breeze_mild": {
+        "name": "Haize leuna"
+      },
+      "breezeless": {
+        "name": "Brisagabea"
+      },
+      "display": {
+        "name": "Bistaratzea"
+      },
+      "purifier": {
+        "name": "Purifikatzailea"
+      }
+    }
+  }
+}

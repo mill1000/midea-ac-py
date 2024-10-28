@@ -59,6 +59,7 @@ Thanks to the community the integration is available in the following languages.
   * Deutsch
   * English
   * Español
+  * Euskara
   * Français
   * Hrvatski
   * Italiano
