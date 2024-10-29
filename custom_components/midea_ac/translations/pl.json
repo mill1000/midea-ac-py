@@ -54,7 +54,8 @@
           "use_fan_only_workaround": "Użyj obejścia dla błędu tylko tryb wentylacji.",
           "show_all_presets": "Pokaż wszystkie ustawienia wstępne",
           "additional_operation_modes": "Dodatkowe tryby pracy",
-          "max_connection_lifetime": "Maksymalny czas połączenia""use_alternate_energy_format": "Użyj alternatywnego formatu energii"
+          "max_connection_lifetime": "Maksymalny czas połączenia",
+          "use_alternate_energy_format": "Użyj alternatywnego formatu energii"
         },
         "data_description": {
           "temp_step": "Wielkość kroku dla nastawy temperatury",
