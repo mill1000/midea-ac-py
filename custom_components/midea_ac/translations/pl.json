@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Pozostaw host(IP) pusty, aby znaleźć urządzenia w sieci.",
         "data": {
-          "host": "Host (IP)"
+          "host": "Host (IP)",
+          "country_code": "Region aplikacji"
         },
-        "description": "Pozostaw host(IP) pusty, aby znaleźć urządzenia w sieci."
+        "data_description": {
+          "country_code": "Wybierz najbliższy kraj dla Twojej lokalizacji."
+        }
       },
       "manual": {
         "description": "Podaj dane Twojego urządzenia.",
@@ -46,13 +50,15 @@
         "data": {
           "prompt_tone": "Włącz sygnał dźwiękowy",
           "temp_step": "Krok nastawy temperatury",
+          "fan_speed_step": "Krok prędkości wentylatora",
           "use_fan_only_workaround": "Użyj obejścia dla błędu tylko tryb wentylacji.",
           "show_all_presets": "Pokaż wszystkie ustawienia wstępne",
           "additional_operation_modes": "Dodatkowe tryby pracy",
-          "max_connection_lifetime": "Maksymalny czas połączenia"
+          "max_connection_lifetime": "Maksymalny czas połączenia""use_alternate_energy_format": "Użyj alternatywnego formatu energii"
         },
         "data_description": {
           "temp_step": "Wielkość kroku dla nastawy temperatury",
+          "fan_speed_step": "Rozmiar kroku dla niestandardowych prędkości wentylatora",
           "additional_operation_modes": "Określenie dodatkowych trybów pracy",
           "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 30 sekund)"
         }
@@ -84,6 +90,11 @@
               "max": "Maksymalny",
               "auto": "Automatyczny",
               "custom": "Ręcznie"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -127,6 +138,19 @@
           "pos_5": "Prawo"
         }
       },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Wyłączony",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Poziom 5",
+          "level_4": "Poziom 4",
+          "level_3": "Poziom 3",
+          "level_2": "Poziom 2",
+          "level_1": "Poziom 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Zakres ruchu w pionie",
         "state": {
@@ -160,6 +184,15 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
       "display": {
         "name": "Wyświetlacz"
       },
