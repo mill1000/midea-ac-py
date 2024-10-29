@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Deixa l'amfitrió en blanc per descobrir dispositius a la xarxa.",
         "data": {
-          "host": "Amfitrió"
+          "host": "Amfitrió",
+          "country_code": "Regió del núvol"
         },
-        "description": "Deixa l'amfitrió en blanc per descobrir dispositius a la xarxa."
+        "data_description":{
+          "country_code": "Selecciona el país més proper a la teva ubicació."
+        }
       },
       "manual": {
         "description": "Afegeix la informació del teu dispositiu.",
@@ -45,14 +49,17 @@
       "init": {
         "data": {
           "prompt_tone": "Activar so",
-          "temp_step": "Mida de l'escala de temperatura",
+          "temp_step": "Mida del pas de temperatura",
+          "fan_speed_step": "Mida del pas de velocitat del ventilador",
           "use_fan_only_workaround": "Utilitzar l'alternativa \"només ventilador\"",
           "show_all_presets": "Mostrar tots els preajustaments",
           "additional_operation_modes": "Mètodes d'operació addicionals",
-          "max_connection_lifetime": "Temps màxim de connexió"
+          "max_connection_lifetime": "Temps màxim de connexió",
+          "use_alternate_energy_format": "Utilitzar format d'energia alternatiu"
         },
         "data_description": {
-          "temp_step": "Mida de l'escala per a la consigna de temperatura",
+          "temp_step": "Mida del pas de la consigna de temperatura",
+          "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
           "additional_operation_modes": "Especificar modes d'operació addicionals",
           "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 30 segons)"
         }
@@ -81,8 +88,14 @@
               "low": "Baix",
               "medium": "Mitjà",
               "high": "Alt",
+              "max": "Màxim",
               "auto": "Automàtic",
               "custom": "Personalitzat"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -99,6 +112,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Alerta de filtre"
+      },
+      "self_clean": {
+        "name": "Auto neteja"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Començar auto neteja"
       }
     },
     "number": {
@@ -118,6 +139,19 @@
           "pos_5": "Dreta"
         }
       },
+      "rate_select": {
+        "name": "Sel·lecció de taxa",
+        "state": {
+          "off": "Apagat",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Nivell 5",	
+          "level_4": "Nivell 4",
+          "level_3": "Nivell 3",
+          "level_2": "Nivell 2",
+          "level_1": "Nivell 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Angle d'oscil·lació vertical",
         "state": {
@@ -131,14 +165,35 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Consum d'energia actual"
+      },
+      "indoor_humidity": {
+        "name": "Humitat interior"
+      },
       "indoor_temperature": {
         "name": "Temperatura interior"
       },
       "outdoor_temperature": {
         "name": "Temperatura exterior"
+      },
+      "real_time_power_usage": {
+        "name": "Consum d'energia en temps real"
+      },
+      "total_energy_usage": {
+        "name": "Consum total d'energia"
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Brisa llunyana"
+      },
+      "breeze_mild": {
+        "name": "Brisa suau"
+      },
+      "breezeless": {
+        "name": "Sense brisa"
+      },
       "display": {
         "name": "Pantalla"
       },
