@@ -13,7 +13,7 @@
     "msmart"
   ],
   "requirements": [
-    "msmart-ng>=2024.9.0"
+    "git+https://github.com/mill1000/midea-msmart.git"
   ],
   "version": "2024.10.4"
 }
