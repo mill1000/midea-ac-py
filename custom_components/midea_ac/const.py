@@ -16,7 +16,8 @@ CONF_DEFAULT_CLOUD_COUNTRY = "US"
 
 PRESET_IECO = "ieco"
 
+
 class EnergyFormat(StrEnum):
-  DEFAULT = auto()
-  ALTERNATE_A = auto()
-  ALTERNATE_B = auto()
+    DEFAULT = auto()
+    ALTERNATE_A = auto()
+    ALTERNATE_B = auto()
