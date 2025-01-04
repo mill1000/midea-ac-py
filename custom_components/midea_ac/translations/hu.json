@@ -55,7 +55,7 @@
           "show_all_presets": "Minden előbeállítás megjelenítése",
           "additional_operation_modes": "További üzemmódok",
           "max_connection_lifetime": "Maximális kapcsolat időtartama",
-          "use_alternate_energy_format": "Alternatív energia formátum használata"
+          "energy_format": "Alternatív energia formátum használata"
         },
         "data_description": {
           "temp_step": "A hőmérséklet beállítás lépésköze",

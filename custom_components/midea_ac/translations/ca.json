@@ -55,7 +55,7 @@
           "show_all_presets": "Mostrar tots els preajustaments",
           "additional_operation_modes": "Mètodes d'operació addicionals",
           "max_connection_lifetime": "Temps màxim de connexió",
-          "use_alternate_energy_format": "Utilitzar format d'energia alternatiu"
+          "energy_format": "Utilitzar format d'energia alternatiu"
         },
         "data_description": {
           "temp_step": "Mida del pas de la consigna de temperatura",

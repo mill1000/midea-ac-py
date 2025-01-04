@@ -12,7 +12,7 @@ from homeassistant.const import (PERCENTAGE, UnitOfEnergy, UnitOfPower,
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import CONF_ENERGY_FORMAT, DOMAIN, EnergyFormat
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,6 +29,11 @@ async def async_setup_entry(
 
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
+
+    # Configure energy format
+    energy_scale = 1.0
+    if config_entry.options.get(CONF_ENERGY_FORMAT) == EnergyFormat.ALTERNATE_B:
+        energy_scale = .1
 
     entities = [
         # Temperature sensors
@@ -50,14 +55,14 @@ async def async_setup_entry(
                           UnitOfEnergy.KILO_WATT_HOUR,
                           "total_energy_usage",
                           state_class=SensorStateClass.TOTAL,
-                          scale=.1 if coordinator.device.use_alternate_energy_format else 1.0),
+                          scale=energy_scale),
         MideaEnergySensor(coordinator,
                           "current_energy_usage",
                           SensorDeviceClass.ENERGY,
                           UnitOfEnergy.KILO_WATT_HOUR,
                           "current_energy_usage",
                           state_class=SensorStateClass.TOTAL_INCREASING,
-                          scale=.1 if coordinator.device.use_alternate_energy_format else 1.0),
+                          scale=energy_scale),
         MideaEnergySensor(coordinator,
                           "real_time_power_usage",
                           SensorDeviceClass.POWER,

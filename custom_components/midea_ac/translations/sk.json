@@ -51,7 +51,7 @@
           "show_all_presets": "Zobraziť všetky predvoľby",
           "additional_operation_modes": "Ďalšie prevádzkové režimy",
           "max_connection_lifetime": "Maximálna životnosť pripojenia",
-          "use_alternate_energy_format": "Použiť alternatívny formát energie"
+          "energy_format": "Použiť alternatívny formát energie"
         },
         "data_description": {
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",

@@ -51,7 +51,7 @@
           "show_all_presets": "Mostra tutte le preimpostazioni",
           "additional_operation_modes": "Modalità aggiuntive",
           "max_connection_lifetime": "Durata massima della connessione",
-          "use_alternate_energy_format": "Usa formato alternativo per l'energia"
+          "energy_format": "Usa formato alternativo per l'energia"
         },
         "data_description": {
           "temp_step": "Incremento per la configurazione della temperatura",

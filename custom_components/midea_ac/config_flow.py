@@ -11,7 +11,10 @@ from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.selector import (CountrySelector,
-                                            CountrySelectorConfig)
+                                            CountrySelectorConfig,
+                                            SelectSelector,
+                                            SelectSelectorConfig,
+                                            SelectSelectorMode)
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.discover import Discover
@@ -19,10 +22,10 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
-                    CONF_FAN_SPEED_STEP, CONF_KEY,
+                    CONF_ENERGY_FORMAT, CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
-                    CONF_TEMP_STEP, CONF_USE_ALTERNATE_ENERGY_FORMAT,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN)
+                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN,
+                    EnergyFormat)
 
 _DEFAULT_OPTIONS = {
     CONF_BEEP: True,
@@ -32,7 +35,7 @@ _DEFAULT_OPTIONS = {
     CONF_SHOW_ALL_PRESETS: False,
     CONF_ADDITIONAL_OPERATION_MODES: None,
     CONF_MAX_CONNECTION_LIFETIME: None,
-    CONF_USE_ALTERNATE_ENERGY_FORMAT: False,
+    CONF_ENERGY_FORMAT: EnergyFormat.DEFAULT,
 }
 
 _CLOUD_CREDENTIALS = {
@@ -281,8 +284,16 @@ class MideaOptionsFlow(OptionsFlow):
                          description={"suggested_value": options.get(CONF_ADDITIONAL_OPERATION_MODES, None)}): cv.string,
             vol.Optional(CONF_MAX_CONNECTION_LIFETIME,
                          description={"suggested_value": options.get(CONF_MAX_CONNECTION_LIFETIME, None)}): vol.All(vol.Coerce(int), vol.Range(min=30)),
-            vol.Optional(CONF_USE_ALTERNATE_ENERGY_FORMAT,
-                         default=options.get(CONF_USE_ALTERNATE_ENERGY_FORMAT, False)): cv.boolean,
+            vol.Optional(CONF_ENERGY_FORMAT,
+                         default=options.get(
+                             CONF_ENERGY_FORMAT, EnergyFormat.DEFAULT)
+                         ): SelectSelector(
+                             SelectSelectorConfig(
+                                 options=[e.value for e in EnergyFormat],
+                                 translation_key="energy_format",
+                                 mode=SelectSelectorMode.DROPDOWN,
+                             )
+            ),
         })
 
         return self.async_show_form(step_id="init", data_schema=data_schema)

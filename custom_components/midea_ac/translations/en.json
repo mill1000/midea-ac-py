@@ -55,7 +55,7 @@
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
           "max_connection_lifetime": "Maximum Connection Lifetime",
-          "use_alternate_energy_format": "Use Alternate Energy Format"
+          "energy_format": "Energy Format"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
@@ -63,6 +63,15 @@
           "additional_operation_modes": "Specify additional operational modes",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (30 second minimum)"
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_format": {
+      "options": {
+        "default": "Default",
+        "alternate_a": "Alternate A!",
+        "alternate_b": "Alternate B?"
       }
     }
   },

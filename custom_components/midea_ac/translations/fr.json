@@ -51,7 +51,7 @@
           "show_all_presets": "Afficher tous les préréglages",
           "additional_operation_modes": "Modes de fonctionnement supplémentaires",
           "max_connection_lifetime": "Durée maximale de connexion",
-          "use_alternate_energy_format": "Utiliser un format d'énergie alternatif"
+          "energy_format": "Utiliser un format d'énergie alternatif"
         },
         "data_description": {
           "temp_step": "Taille du palier pour le réglage de la température",

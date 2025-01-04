@@ -55,7 +55,7 @@
           "show_all_presets": "Erakutsi Aurrezarpen Guztiak",
           "additional_operation_modes": "Eragiketa-Modu Gehigarriak",
           "max_connection_lifetime": "Gehienezko Konexio-Denbora",
-          "use_alternate_energy_format": "Erabili Ordezko Energia Formatua"
+          "energy_format": "Erabili Ordezko Energia Formatua"
         },
         "data_description": {
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",

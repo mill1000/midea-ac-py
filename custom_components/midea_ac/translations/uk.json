@@ -51,7 +51,7 @@
           "show_all_presets": "Показати всі передналаштування",
           "additional_operation_modes": "Додаткові режими роботи",
           "max_connection_lifetime": "Максимальний час підключення",
-          "use_alternate_energy_format": "Використовувати альтернативний формат енергії"
+          "energy_format": "Використовувати альтернативний формат енергії"
         },
         "data_description": {
           "temp_step": "Розмір кроку для налаштування температури",

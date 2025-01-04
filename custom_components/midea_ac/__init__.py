@@ -12,8 +12,8 @@ from msmart import __version__ as MSMART_VERISON
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
-                    CONF_USE_ALTERNATE_ENERGY_FORMAT, DOMAIN)
+from .const import (CONF_ENERGY_FORMAT, CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
+                    DOMAIN, EnergyFormat)
 from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -51,9 +51,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         device.set_max_connection_lifetime(lifetime)
 
     # Configure energy format
-    if config_entry.options.get(CONF_USE_ALTERNATE_ENERGY_FORMAT):
+    if (energy_format := config_entry.options.get(CONF_ENERGY_FORMAT)) != EnergyFormat.DEFAULT:
         _LOGGER.info(
-            "Using alternate energy format for device ID %s.", device.id)
+            "Using alternate energy format %s for device ID %s.", energy_format, device.id)
         device.use_alternate_energy_format = True
 
     # Configure token and k1 as needed
