@@ -103,6 +103,17 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
             hass.config_entries.async_update_entry(
                 config_entry, unique_id=str(config_entry.unique_id), minor_version=2)
 
+        # 1.2 -> 1.3: Convert alternate energy boolean option to enum
+        if config_entry.minor_version == 2:
+            new_options = {**config_entry.options}
+            if new_options.pop("use_alternate_energy_format", False):
+                new_options[CONF_ENERGY_FORMAT] = EnergyFormat.ALTERNATE_B
+            else:
+                new_options[CONF_ENERGY_FORMAT] = EnergyFormat.DEFAULT
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=3)
+
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)
 
