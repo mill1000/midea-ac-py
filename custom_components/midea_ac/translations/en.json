@@ -70,8 +70,8 @@
     "energy_format": {
       "options": {
         "default": "Default",
-        "alternate_a": "Alternate A!",
-        "alternate_b": "Alternate B?"
+        "alternate_a": "Alternate A",
+        "alternate_b": "Alternate B"
       }
     }
   },
