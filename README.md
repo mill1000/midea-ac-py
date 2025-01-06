@@ -133,7 +133,8 @@ Name | Default | Description
 **Show All Presets** | False | Show all presets regardless of device's reported capabilities.
 **Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.
 **Maximum Connection Lifetime** | Empty | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
-**Use Alternate Energy Format** | False | Use an alternative data format when decoding energy and power data from the device.
+**Energy Format** | Default | Select alternative data formats for decoding energy and power data from the device.<br> Options: <ul><li>`Default` - BCD format</li><li>`Alternate A` - Binary format</li><li>`Alternate B` - Binary format, energy scaled by 1/10</li></ul>
+
 
 ## Resolving Connectivity Issues
 Some users have reported issue with their devices periodically becoming unavailable, and with logs full of warnings and errors. This is almost always due to the device terminating the existing connection and briefly rejecting new connections. 
