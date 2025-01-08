@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Ostavite 'host' prazno za pretraživanje uređaja na mreži.",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Regija"
         },
-        "description": "Ostavite 'host' prazno za pretraživanje uređaja na mreži."
+        "data_description": {
+          "country_code": "Odaberite zemlju najbliže vašoj lokaciji."
+        }
       },
       "manual": {
         "description": "Unesite informacije o vašem uređaju.",
@@ -49,13 +53,24 @@
           "use_fan_only_workaround": "Koristite zaobilazno rješenje samo za ventilatore",
           "show_all_presets": "Prikaži sve unaprijed postavljene postavke",
           "additional_operation_modes": "Dodatni načini rada",
-          "max_connection_lifetime": "Maksimalno trajanje veze"
+          "max_connection_lifetime": "Maksimalno trajanje veze",
+          "energy_format": "Format energije"
         },
         "data_description": {
           "temp_step": "Veličina koraka za zadanu vrijednost temperature",
+          "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "additional_operation_modes": "Navedite dodatne načine rada",
           "max_connection_lifetime": "Maksimalno vrijeme u sekundama tijekom kojeg će se veza koristiti (najmanje 30 sekundi)"
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_format": {
+      "options": {
+        "default": "Zadano",
+        "alternate_a": "Zamjenski A",
+        "alternate_b": "Zamjenski B"
       }
     }
   },
@@ -83,6 +98,11 @@
               "high": "Visoko",
               "auto": "Auto",
               "custom": "Prilagođeno"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -152,11 +172,23 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Trenutna energija"
+      },
+      "indoor_humidity": {
+        "name": "Unutarnja vlažnost"
+      },
       "indoor_temperature": {
         "name": "Unutarnja temperatura"
       },
       "outdoor_temperature": {
         "name": "Vanjska temperatura"
+      },
+      "real_time_power_usage": {
+        "name": "Energija"
+      },
+      "total_energy_usage": {
+        "name": "Ukupna energija"
       }
     },
     "switch": {
