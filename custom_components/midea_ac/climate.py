@@ -5,7 +5,8 @@ import logging
 
 import voluptuous as vol
 from homeassistant.components.climate import ClimateEntity
-from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
+from homeassistant.components.climate.const import (ATTR_HVAC_MODE,
+                                                    PRESET_AWAY, PRESET_BOOST,
                                                     PRESET_ECO, PRESET_NONE,
                                                     PRESET_SLEEP,
                                                     ClimateEntityFeature,
@@ -285,6 +286,9 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Round temperature to nearest .5
         self._device.target_temperature = round(temperature * 2) / 2
         await self._apply()
+
+        if (mode := kwargs.get(ATTR_HVAC_MODE, None)) is not None:
+            await self.async_set_hvac_mode(mode)
 
     @property
     def current_humidity(self) -> float | None:
