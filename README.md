@@ -66,6 +66,7 @@ Thanks to the community the integration is available in the following languages.
   * 한국어
   * Magyar
   * Nederlands
+  * Norsk
   * Polski
   * Português
   * Română

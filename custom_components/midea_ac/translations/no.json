@@ -1,0 +1,214 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Velg hvordan du vil legge til en enhet.",
+        "menu_options": {
+          "discover": "Finn enhet",
+          "manual": "Sett opp manuelt"
+        }
+      },
+      "discover": {
+        "description": "La verten stå tom for å finne enhet(er) på nettverket.",
+        "data": {
+          "host": "Vert",
+          "country_code": "Sky-region"
+        },
+        "data_description":{
+          "country_code": "Velg det landet som er nærmest der du er."
+        }
+      },
+      "manual": {
+        "description": "Angi informasjon om enheten din.",
+        "data": {
+          "id": "ID",
+          "host": "Vert",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Nøkkel"
+        },
+        "data_description": {
+          "token": "Token for V3 enheter",
+          "k1": "Nøkkel for V3 enheter"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Enheten er allerede konfigurert.",
+      "cannot_connect": "Det kunne ikke opprettes en forbindelse.",
+      "no_devices_found": "Finner ingen støttede enheter på nettverket."
+    },
+    "error": {
+      "cannot_connect": "Det kunne ikke opprettes en forbindelse med disse innstillingene.",
+      "device_not_found": "Finner ikke enheten på nettverket.",
+      "unsupported_device": "Enheten støttes ikke."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "prompt_tone": "Aktiver lydsignal",
+          "temp_step": "Temperaturtrinn",
+          "fan_speed_step": "Viftehastighetstrinn",
+          "use_fan_only_workaround": "Bruk Kun-vifte løsning",
+          "show_all_presets": "Vis alle forhåndsinnstillinger",
+          "additional_operation_modes": "Ytterligere driftsmoduser",
+          "max_connection_lifetime": "Maksimal tilkoblingstid",
+          "energy_format": "Energiformat"
+        },
+        "data_description": {
+          "temp_step": "Trinnstørrelse for temperaturinnstilling",
+          "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
+          "additional_operation_modes": "Spesifiser ekstra driftsmoduser",
+          "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 30 sekunder)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "energy_format": {
+      "options": {
+        "default": "Standard",
+        "alternate_a": "Alternativ A",
+        "alternate_b": "Alternativ B"
+      }
+    }
+  },
+  "services": {
+    "set_follow_me": {
+      "name": "Still inn Følg meg",
+      "description": "Stiller inn Følg meg-funksjonen.",
+      "fields": {
+        "enabled": {
+          "name": "Aktivert",
+          "description": "Om Følg meg skal være aktivert."
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "midea_ac": {
+        "state_attributes": {
+          "fan_mode": {
+            "state": {
+              "silent": "Stille",
+              "low": "Lav",
+              "medium": "Medium",
+              "high": "Høy",
+              "max": "Maks",
+              "auto": "Auto",
+              "custom": "Egendefinert"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
+            }
+          },
+          "swing_mode": {
+            "state": {
+              "off": "Av",
+              "vertical": "Vertikal",
+              "horizontal": "Horisontal",
+              "both": "Begge"
+            }
+          }
+        }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filtervarsel"
+      },
+      "self_clean": {
+        "name": "Selvrensing"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start selvrensing"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Viftehastighet"
+      }
+    },
+    "select": {
+      "horizontal_swing_angle": {
+        "name": "Horisontal svingvinkel",
+        "state": {
+          "off": "Av",
+          "pos_1": "Venstre",
+          "pos_2": "Venstre-midt",
+          "pos_3": "Midtstilt",
+          "pos_4": "Høyre-midt",
+          "pos_5": "Høyre"
+        }
+      },
+      "rate_select": {
+        "name": "Velg modus",
+        "state": {
+          "off": "Av",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Nivå 5",
+          "level_4": "Nivå 4",
+          "level_3": "Nivå 3",
+          "level_2": "Nivå 2",
+          "level_1": "Nivå 1"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Vertikal svingvinkel",
+        "state": {
+          "off": "Av",
+          "pos_1": "Topp",
+          "pos_2": "Topp-midt",
+          "pos_3": "Midtstilt",
+          "pos_4": "Bunn-midt",
+          "pos_5": "Bunn"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Nåværende energibruk"
+      },
+      "indoor_humidity": {
+        "name": "Innendørs fuktighet"
+      },
+      "indoor_temperature": {
+        "name": "Innetemperatur"
+      },
+      "outdoor_temperature": {
+        "name": "Utetemperatur"
+      },
+      "real_time_power_usage": {
+        "name": "Forbruk nå"
+      },
+      "total_energy_usage": {
+        "name": "Totalt forbruk"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Luftstrøm unna"
+      },
+      "breeze_mild": {
+        "name": "Mild luftstrøm"
+      },
+      "breezeless": {
+        "name": "Uten luftstrøm"
+      },
+      "display": {
+        "name": "Skjerm/LED-display"
+      },
+      "purifier": {
+        "name": "Renser"
+      }
+    }
+  }
+}
