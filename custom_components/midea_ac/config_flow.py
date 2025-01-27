@@ -43,31 +43,6 @@ _CLOUD_CREDENTIALS = {
     "KR": ("midea_sea@mailinator.com", "password_for_sea1")
 }
 
-_MANUAL_CONFIG_SCHEMA = vol.Schema({
-    vol.Required(CONF_ID): cv.string,
-    vol.Required(CONF_HOST): cv.string,
-    vol.Required(CONF_PORT, default=6444): cv.port,
-    vol.Optional(CONF_TOKEN): cv.string,
-    vol.Optional(CONF_KEY): cv.string
-})
-
-_OPTIONS_SCHEMA = vol.Schema({
-    vol.Optional(CONF_BEEP): cv.boolean,
-    vol.Optional(CONF_TEMP_STEP): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
-    vol.Optional(CONF_FAN_SPEED_STEP): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
-    vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
-    vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
-    vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
-    vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(vol.Coerce(int), vol.Range(min=30)),
-    vol.Optional(CONF_ENERGY_FORMAT): SelectSelector(
-        SelectSelectorConfig(
-            options=[e.value for e in EnergyFormat],
-            translation_key="energy_format",
-            mode=SelectSelectorMode.DROPDOWN,
-        )
-    ),
-})
-
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
@@ -122,15 +97,16 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     # Indicate a connection could not be made
                     return self.async_abort(reason="cannot_connect")
 
-        data_schema = vol.Schema({
-            vol.Optional(CONF_HOST, default=""): str,
-            vol.Optional(
-                CONF_COUNTRY_CODE, default=CONF_DEFAULT_CLOUD_COUNTRY
-            ): CountrySelector(
-                CountrySelectorConfig(
-                    countries=CONF_CLOUD_COUNTRY_CODES)
-            ),
-        })
+        data_schema = self.add_suggested_values_to_schema(
+            vol.Schema({
+                vol.Optional(CONF_HOST, default=""): str,
+                vol.Optional(
+                    CONF_COUNTRY_CODE, default=CONF_DEFAULT_CLOUD_COUNTRY
+                ): CountrySelector(
+                    CountrySelectorConfig(
+                        countries=CONF_CLOUD_COUNTRY_CODES)
+                ),
+            }), user_input)
 
         return self.async_show_form(step_id="discover",
                                     data_schema=data_schema, errors=errors)
@@ -220,8 +196,13 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         user_input = user_input or {}
 
         data_schema = self.add_suggested_values_to_schema(
-            _MANUAL_CONFIG_SCHEMA, user_input
-        )
+            vol.Schema({
+                vol.Required(CONF_ID): cv.string,
+                vol.Required(CONF_HOST): cv.string,
+                vol.Required(CONF_PORT, default=6444): cv.port,
+                vol.Optional(CONF_TOKEN): cv.string,
+                vol.Optional(CONF_KEY): cv.string
+            }), user_input)
 
         return self.async_show_form(step_id="manual",
                                     data_schema=data_schema, errors=errors)
@@ -279,9 +260,22 @@ class MideaOptionsFlow(OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(data=user_input)
 
-        return self.async_show_form(
-            step_id="init",
-            data_schema=self.add_suggested_values_to_schema(
-                _OPTIONS_SCHEMA, self.config_entry.options
-            ),
-        )
+        data_schema = self.add_suggested_values_to_schema(
+            vol.Schema({
+                vol.Optional(CONF_BEEP): cv.boolean,
+                vol.Optional(CONF_TEMP_STEP): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
+                vol.Optional(CONF_FAN_SPEED_STEP): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
+                vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
+                vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
+                vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
+                vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(vol.Coerce(int), vol.Range(min=30)),
+                vol.Optional(CONF_ENERGY_FORMAT): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[e.value for e in EnergyFormat],
+                        translation_key="energy_format",
+                        mode=SelectSelectorMode.DROPDOWN,
+                    )
+                ),
+            }), self.config_entry.options)
+
+        return self.async_show_form(step_id="init", data_schema=data_schema)
