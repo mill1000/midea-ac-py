@@ -9,7 +9,7 @@ from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
 from msmart.device import AirConditioner as AC
 
-from .const import DOMAIN
+from .const import DOMAIN, UPDATE_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=datetime.timedelta(seconds=15),
+            update_interval=datetime.timedelta(seconds=UPDATE_INTERVAL),
             request_refresh_debouncer=Debouncer(
                 hass,
                 _LOGGER,

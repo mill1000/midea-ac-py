@@ -1,6 +1,7 @@
 from enum import StrEnum, auto
 
 DOMAIN = "midea_ac"
+UPDATE_INTERVAL = 15
 
 CONF_KEY = "k1"
 CONF_BEEP = "prompt_tone"
