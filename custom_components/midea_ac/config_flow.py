@@ -14,7 +14,9 @@ from homeassistant.helpers.selector import (CountrySelector,
                                             CountrySelectorConfig,
                                             SelectSelector,
                                             SelectSelectorConfig,
-                                            SelectSelectorMode)
+                                            SelectSelectorMode, TextSelector,
+                                            TextSelectorConfig,
+                                            TextSelectorType)
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.discover import Discover
@@ -200,7 +202,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_ID): cv.string,
                 vol.Required(CONF_HOST): cv.string,
                 vol.Required(CONF_PORT, default=6444): cv.port,
-                vol.Optional(CONF_TOKEN): cv.string,
+                vol.Optional(CONF_TOKEN): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
                 vol.Optional(CONF_KEY): cv.string
             }), user_input)
 
