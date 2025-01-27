@@ -43,6 +43,31 @@ _CLOUD_CREDENTIALS = {
     "KR": ("midea_sea@mailinator.com", "password_for_sea1")
 }
 
+_MANUAL_CONFIG_SCHEMA = vol.Schema({
+    vol.Required(CONF_ID): cv.string,
+    vol.Required(CONF_HOST): cv.string,
+    vol.Required(CONF_PORT, default=6444): cv.port,
+    vol.Optional(CONF_TOKEN): cv.string,
+    vol.Optional(CONF_KEY): cv.string
+})
+
+_OPTIONS_SCHEMA = vol.Schema({
+    vol.Optional(CONF_BEEP): cv.boolean,
+    vol.Optional(CONF_TEMP_STEP): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
+    vol.Optional(CONF_FAN_SPEED_STEP): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
+    vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
+    vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
+    vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
+    vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(vol.Coerce(int), vol.Range(min=30)),
+    vol.Optional(CONF_ENERGY_FORMAT): SelectSelector(
+        SelectSelectorConfig(
+            options=[e.value for e in EnergyFormat],
+            translation_key="energy_format",
+            mode=SelectSelectorMode.DROPDOWN,
+        )
+    ),
+})
+
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
@@ -194,18 +219,9 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         user_input = user_input or {}
 
-        data_schema = vol.Schema({
-            vol.Required(CONF_ID,
-                         default=user_input.get(CONF_ID)): cv.string,
-            vol.Required(CONF_HOST,
-                         default=user_input.get(CONF_HOST)): cv.string,
-            vol.Required(CONF_PORT,
-                         default=user_input.get(CONF_PORT, 6444)): cv.port,
-            vol.Optional(CONF_TOKEN,
-                         description={"suggested_value": user_input.get(CONF_TOKEN, "")}): cv.string,
-            vol.Optional(CONF_KEY,
-                         description={"suggested_value": user_input.get(CONF_KEY, "")}): cv.string
-        })
+        data_schema = self.add_suggested_values_to_schema(
+            _MANUAL_CONFIG_SCHEMA, user_input
+        )
 
         return self.async_show_form(step_id="manual",
                                     data_schema=data_schema, errors=errors)
@@ -250,50 +266,22 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
-        """Return the options flow."""
-        return MideaOptionsFlow(config_entry)
+    def async_get_options_flow(config_entry: ConfigEntry) -> MideaOptionsFlow:
+        """Create the options flow."""
+        return MideaOptionsFlow()
 
 
 class MideaOptionsFlow(OptionsFlow):
     """Options flow from Midea Smart AC."""
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
-        self.config_entry = config_entry
-
     async def async_step_init(self, user_input=None) -> FlowResult:
-        """Handle the first step of options flow."""
+        """Handle the options flow."""
         if user_input is not None:
-            # Confusingly, data argument in OptionsFlow is passed to async_setup_entry in the options member
-            return self.async_create_entry(title="", data=user_input)
+            return self.async_create_entry(data=user_input)
 
-        options = self.config_entry.options
-
-        data_schema = vol.Schema({
-            vol.Optional(CONF_BEEP,
-                         default=options.get(CONF_BEEP, True)): cv.boolean,
-            vol.Optional(CONF_TEMP_STEP,
-                         default=options.get(CONF_TEMP_STEP, 1.0)): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
-            vol.Optional(CONF_FAN_SPEED_STEP,
-                         default=options.get(CONF_FAN_SPEED_STEP, 1)): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
-            vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND,
-                         default=options.get(CONF_USE_FAN_ONLY_WORKAROUND, False)): cv.boolean,
-            vol.Optional(CONF_SHOW_ALL_PRESETS,
-                         default=options.get(CONF_SHOW_ALL_PRESETS, False)): cv.boolean,
-            vol.Optional(CONF_ADDITIONAL_OPERATION_MODES,
-                         description={"suggested_value": options.get(CONF_ADDITIONAL_OPERATION_MODES, None)}): cv.string,
-            vol.Optional(CONF_MAX_CONNECTION_LIFETIME,
-                         description={"suggested_value": options.get(CONF_MAX_CONNECTION_LIFETIME, None)}): vol.All(vol.Coerce(int), vol.Range(min=30)),
-            vol.Optional(CONF_ENERGY_FORMAT,
-                         default=options.get(
-                             CONF_ENERGY_FORMAT, EnergyFormat.DEFAULT)
-                         ): SelectSelector(
-                             SelectSelectorConfig(
-                                 options=[e.value for e in EnergyFormat],
-                                 translation_key="energy_format",
-                                 mode=SelectSelectorMode.DROPDOWN,
-                             )
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self.add_suggested_values_to_schema(
+                _OPTIONS_SCHEMA, self.config_entry.options
             ),
-        })
-
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        )
