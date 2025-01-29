@@ -2,6 +2,7 @@
 
 import datetime
 import logging
+from asyncio import Lock
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
@@ -31,12 +32,31 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
             )
         )
 
+        self._lock = Lock()
         self._device = device
         self._energy_sensors = 0
 
     async def _async_update_data(self) -> None:
         """Update the device data."""
-        await self._device.refresh()
+        _LOGGER.debug("Called _async_update_data()")
+        async with self._lock:
+            await self._device.refresh()
+
+    async def async_request_refresh(self) -> None:
+        _LOGGER.debug("Calling async_request_refresh()")
+        await super().async_request_refresh()
+
+    async def _handle_refresh_interval(self, *args, **kwargs) -> None:
+        _LOGGER.debug("Calling _handle_refresh_interval()")
+        await super()._handle_refresh_interval(*args, **kwargs)
+
+    async def _async_refresh(self, *args, **kwargs) -> None:
+        _LOGGER.debug("Calling _async_refresh()")
+        await super()._async_refresh(*args, **kwargs)
+
+    def _schedule_refresh(self) -> None:
+        _LOGGER.debug("Calling _schedule_refresh()")
+        super()._schedule_refresh()
 
     async def apply(self) -> None:
         """Apply changes to the device and update HA state."""
