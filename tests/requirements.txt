@@ -1,2 +1,4 @@
 pytest
 pytest-homeassistant-custom-component
+
+msmart-ng
