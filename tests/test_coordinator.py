@@ -72,6 +72,8 @@ async def test_concurrent_refresh_exception(
     lan._protocol._transport.is_closing = MagicMock(return_value=False)
 
     logging.getLogger("msmart").setLevel(logging.DEBUG)
+    logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
+    
     
     # Check that concurrent calls to the refresh function can throw an attribute error
     # with pytest.raises(AttributeError):
