@@ -27,3 +27,21 @@ jobs:
           pip install autopep8 isort
       - run: autopep8 --diff --exit-code $(git ls-files '*.py')
       - run: isort --diff --check $(git ls-files '*.py')
+
+  run-unittest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+      - run: python -c "import sys; print(sys.version)"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+      - run: pytest
