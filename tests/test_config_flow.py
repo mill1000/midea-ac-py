@@ -1,17 +1,15 @@
 """Tests for the config flow."""
 
 import logging
-from unittest.mock import patch, AsyncMock, PropertyMock, MagicMock
+from unittest.mock import patch
 
 import pytest
 from homeassistant import config_entries
-from homeassistant.const import (CONF_HOST, CONF_ID,
-                                 CONF_PORT, CONF_TOKEN)
+from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
 from msmart.lan import AuthenticationError
-from pytest_homeassistant_custom_component.common import MockConfigEntry
-from homeassistant.config_entries import ConfigEntryState
+
 from custom_components.midea_ac.const import CONF_KEY, DOMAIN
 
 logging.basicConfig(level=logging.DEBUG)
@@ -132,7 +130,7 @@ async def test_manual_flow(hass: HomeAssistant) -> None:
 #                 CONF_KEY: None
 #             },
 #         )
-    
+
 #     test = AsyncMock()
 #     test.id.return_value = "test"
 #     test.get_capabilities = AsyncMock()

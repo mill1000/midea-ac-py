@@ -1,19 +1,18 @@
 """Tests for the data update coordinator flow."""
 
-import logging
 import asyncio
-from unittest.mock import patch, AsyncMock, PropertyMock, MagicMock
+import logging
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from homeassistant import config_entries
-from homeassistant.const import (CONF_HOST, CONF_ID,
-                                 CONF_PORT, CONF_TOKEN)
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResultType, InvalidData
-from msmart.lan import AuthenticationError, _LanProtocol
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 from homeassistant.config_entries import ConfigEntryState
+from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
+from homeassistant.core import HomeAssistant
+from msmart.lan import _LanProtocol
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
 from custom_components.midea_ac.const import CONF_KEY, DOMAIN
+
 
 async def _setup_integration(hass: HomeAssistant) -> MockConfigEntry:
     """Set up the integration with a mock config entry."""
@@ -66,31 +65,17 @@ async def test_concurrent_refresh_exception(
     lan._connect = AsyncMock()
     lan._protocol = _LanProtocol()
     lan._protocol._peer = "127.0.0.1:6444"
-    
+
     # Mock the transport so connection wil be seen as alive
     lan._protocol._transport = MagicMock()
     lan._protocol._transport.is_closing = MagicMock(return_value=False)
 
-    logging.getLogger("msmart").setLevel(logging.DEBUG)
-    logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
-    
-    
-    # Check that concurrent calls to the refresh function can throw an attribute error
-    # with pytest.raises(AttributeError):
-    #     task1 = asyncio.create_task(coordinator._async_update_data()) 
-    #     await asyncio.sleep(3)
-    #     task2 = asyncio.create_task(coordinator._async_update_data()) 
-    #     await asyncio.gather(task1, task2)
-    
+    # logging.getLogger("msmart").setLevel(logging.DEBUG)
+    # logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
 
-    lan._protocol = _LanProtocol()
-    lan._protocol._peer = "127.0.0.1:6444"
-    
-    # Mock the transport so connection wil be seen as alive
-    lan._protocol._transport = MagicMock()
-    lan._protocol._transport.is_closing = MagicMock(return_value=False)
-
-    task1 = asyncio.create_task(coordinator.async_request_refresh()) 
-    await asyncio.sleep(3)
-    task2 = asyncio.create_task(coordinator.apply()) 
-    await asyncio.gather(task1, task2)
+    # Check that concurrent calls to network actions can throw
+    with pytest.raises(AttributeError):
+        task1 = asyncio.create_task(coordinator.async_request_refresh())
+        await asyncio.sleep(3)
+        task2 = asyncio.create_task(coordinator.apply())
+        await asyncio.gather(task1, task2)
