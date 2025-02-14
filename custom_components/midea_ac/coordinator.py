@@ -62,7 +62,8 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator):
         """Apply changes to the device and update HA state."""
 
         # Apply changes to device
-        await self._device.apply()
+        async with self._lock:
+            await self._device.apply()
 
         # Update state
         await self.async_request_refresh()
