@@ -45,7 +45,7 @@ async def _setup_integration(hass: HomeAssistant) -> MockConfigEntry:
 
 def _mock_lan_protocol(lan) -> None:
     """ Mock the LAN protocol object to enable testing."""
-    
+
     # Mock the read_available method so send() will be reached
     lan._read_available = MagicMock()
     lan._read_available.__aiter__.return_value = None
