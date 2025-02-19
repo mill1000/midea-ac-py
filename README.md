@@ -41,6 +41,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * Rate selection (Gear mode)
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
   * iECO
+  * Auxiliary heating mode
 
 <small>
 

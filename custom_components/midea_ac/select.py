@@ -50,6 +50,13 @@ async def async_setup_entry(
                                         "rate_select",
                                         options=supported_rates))
 
+    if (supported_aux_modes := coordinator.device.supported_aux_modes) != [AC.AuxHeatMode.OFF]:
+        entities.append(MideaEnumSelect(coordinator,
+                                        "aux_mode",
+                                        AC.AuxHeatMode,
+                                        "aux_mode",
+                                        options=supported_aux_modes))
+
     add_entities(entities)
 
 

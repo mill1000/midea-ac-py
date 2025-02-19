@@ -137,6 +137,14 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Off",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horizontal swing angle",
         "state": {

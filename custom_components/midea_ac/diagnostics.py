@@ -40,6 +40,7 @@ async def async_get_config_entry_diagnostics(
                 "supported_fan_speeds": device.supported_fan_speeds,
                 "supports_custom_fan_speed": device.supports_custom_fan_speed,
                 "supported_rate_selects": device.supported_rate_selects,
+                "supported_aux_modes": device.supported_aux_modes,
 
                 "supports_eco": device.supports_eco,
                 "supports_ieco": device.supports_ieco,
