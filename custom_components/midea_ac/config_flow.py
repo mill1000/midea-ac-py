@@ -77,11 +77,14 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 country_code, (None, None))
 
             # Attempt to find specified device
-            device = await Discover.discover_single(host,
-                                                    auto_connect=False,
-                                                    timeout=2,
-                                                    account=account,
-                                                    password=password)
+            device = await Discover.discover_single(
+                host,
+                auto_connect=False,
+                timeout=2,
+                account=account,
+                password=password,
+                get_async_client=homeassistant.helpers.httpx_client.get_async_client
+            )
 
             if device is None:
                 errors["base"] = "device_not_found"
@@ -151,7 +154,9 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             auto_connect=False,
             timeout=2,
             account=account,
-            password=password)
+            password=password,
+            get_async_client=homeassistant.helpers.httpx_client.get_async_client
+        )
 
         # Create dict of device ID to friendly name
         devices_name = {
