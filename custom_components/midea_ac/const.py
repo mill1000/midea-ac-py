@@ -14,6 +14,7 @@ CONF_MAX_CONNECTION_LIFETIME = "max_connection_lifetime"
 CONF_ENERGY_FORMAT = "energy_format"
 CONF_CLOUD_COUNTRY_CODES = ["DE", "KR", "US"]
 CONF_DEFAULT_CLOUD_COUNTRY = "US"
+CONF_SWING_ANGLE_RTL = "swing_angle_rtl"
 
 PRESET_IECO = "ieco"
 

@@ -55,7 +55,8 @@
           "show_all_presets": "Show All Presets",
           "additional_operation_modes": "Additional Operation Modes",
           "max_connection_lifetime": "Maximum Connection Lifetime",
-          "energy_format": "Energy Format"
+          "energy_format": "Energy Format",
+          "swing_angle_rtl": "Right-to-left Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
@@ -154,6 +155,17 @@
           "pos_3": "Center",
           "pos_4": "Right-center",
           "pos_5": "Right"
+        }
+      },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontal swing angle",
+        "state": {
+          "off": "Off",
+          "pos_1": "Right",
+          "pos_2": "Right-center",
+          "pos_3": "Center",
+          "pos_4": "Left-center",
+          "pos_5": "Left"
         }
       },
       "rate_select": {

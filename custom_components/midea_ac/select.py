@@ -11,7 +11,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 from msmart.utils import MideaIntEnum
 
-from .const import DOMAIN
+from .const import CONF_SWING_ANGLE_RTL, DOMAIN
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -34,28 +34,30 @@ async def async_setup_entry(
     if coordinator.device.supports_vertical_swing_angle:
         entities.append(MideaEnumSelect(coordinator,
                                         "vertical_swing_angle",
-                                        AC.SwingAngle,
-                                        "vertical_swing_angle"))
+                                        AC.SwingAngle
+                                        ))
 
     if coordinator.device.supports_horizontal_swing_angle:
         entities.append(MideaEnumSelect(coordinator,
                                         "horizontal_swing_angle",
                                         AC.SwingAngle,
-                                        "horizontal_swing_angle"))
+                                        translation_key="horizontal_swing_angle_rtl" if config_entry.options.get(
+                                            CONF_SWING_ANGLE_RTL) else None
+                                        ))
 
     if (supported_rates := coordinator.device.supported_rate_selects) != [AC.RateSelect.OFF]:
         entities.append(MideaEnumSelect(coordinator,
                                         "rate_select",
                                         AC.RateSelect,
-                                        "rate_select",
-                                        options=supported_rates))
+                                        options=supported_rates
+                                        ))
 
     if (supported_aux_modes := coordinator.device.supported_aux_modes) != [AC.AuxHeatMode.OFF]:
         entities.append(MideaEnumSelect(coordinator,
                                         "aux_mode",
                                         AC.AuxHeatMode,
-                                        "aux_mode",
-                                        options=supported_aux_modes))
+                                        options=supported_aux_modes
+                                        ))
 
     add_entities(entities)
 
@@ -67,14 +69,14 @@ class MideaEnumSelect(MideaCoordinatorEntity, SelectEntity):
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
                  enum_class: MideaIntEnum,
-                 translation_key: Optional[str] = None,
                  *,
+                 translation_key: Optional[str] = None,
                  options: Optional[List[MideaIntEnum]] = None) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
         self._enum_class = enum_class
-        self._attr_translation_key = translation_key
+        self._attr_translation_key = translation_key if translation_key is not None else prop
         self._options = options
 
     @property
