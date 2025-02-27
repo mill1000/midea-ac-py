@@ -56,7 +56,7 @@
           "additional_operation_modes": "Additional Operation Modes",
           "max_connection_lifetime": "Maximum Connection Lifetime",
           "energy_format": "Energy Format",
-          "swing_angle_rtl": "Right-to-left Horizontal Swing Angle"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
