@@ -107,6 +107,16 @@
           "pos_5": "Rechts"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "state": {
+          "off": "Aus",
+          "pos_1": "Rechts",
+          "pos_2": "Rechts-mitte",
+          "pos_3": "Mitte",
+          "pos_4": "Links-mitte",
+          "pos_5": "Links"
+        }
+      },
       "vertical_swing_angle": {
         "state": {
           "off": "Aus",

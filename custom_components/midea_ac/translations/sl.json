@@ -118,6 +118,17 @@
           "pos_5": "Desno"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Vodoravni kot nihanja",
+        "state": {
+          "off": "Izklop",
+          "pos_1": "Desno",
+          "pos_2": "Desno-center",
+          "pos_3": "Sredina",
+          "pos_4": "Levo-center",
+          "pos_5": "Levo"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Navpični kot nihanja",
         "state": {

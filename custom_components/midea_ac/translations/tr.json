@@ -148,6 +148,17 @@
           "pos_5": "Sağ"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Yatay salınım açısı",
+        "state": {
+          "off": "Kapalı",
+          "pos_1": "Sağ",
+          "pos_2": "Sağ-orta",
+          "pos_3": "Orta",
+          "pos_4": "Sol-orta",
+          "pos_5": "Sol"
+        }
+      },
       "rate_select": {
         "name": "Oran seç",
         "state": {

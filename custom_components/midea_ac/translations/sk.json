@@ -148,6 +148,17 @@
           "pos_5": "Vpravo"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontálny uhol výkyvu",
+        "state": {
+          "off": "Vypnuté",
+          "pos_1": "Vpravo",
+          "pos_2": "Vpravo-stred",
+          "pos_3": "Stred",
+          "pos_4": "Vľavo-stred",
+          "pos_5": "Vľavo"
+        }
+      },
       "rate_select": {
         "name": "Výber",
         "state": {

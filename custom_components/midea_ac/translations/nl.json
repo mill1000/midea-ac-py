@@ -118,6 +118,17 @@
           "pos_5": "Rechts"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontale blaasrichting",
+        "state": {
+          "off": "Uit",
+          "pos_1": "Rechts",
+          "pos_2": "Rechts-midden",
+          "pos_3": "Midden",
+          "pos_4": "Links-midden",
+          "pos_5": "Links"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Verticale blaasrichting",
         "state": {

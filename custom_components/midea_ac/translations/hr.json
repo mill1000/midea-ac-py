@@ -146,6 +146,17 @@
           "pos_5": "Desno"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontalni kut zakretanja",
+        "state": {
+          "off": "Off",
+          "pos_1": "Desno",
+          "pos_2": "Desno-centar",
+          "pos_3": "Centar",
+          "pos_4": "Lijevo-centar",
+          "pos_5": "Lijevo"
+        }
+      },
       "rate_select": {
         "name": "Odabir brzine",
         "state": {

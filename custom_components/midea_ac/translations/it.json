@@ -130,6 +130,17 @@
           "pos_5": "Destra"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Angolo di oscillazione orizzontale",
+        "state": {
+          "off": "Spento",
+          "pos_1": "Destra",
+          "pos_2": "Destra-centrale",
+          "pos_3": "Centrale",
+          "pos_4": "Sinistra-centrale",
+          "pos_5": "Sinistra"
+        }
+      },
       "rate_select": {
         "name": "Selezione livello",
         "state": {

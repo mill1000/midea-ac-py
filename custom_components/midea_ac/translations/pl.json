@@ -139,6 +139,17 @@
           "pos_5": "Prawo"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Zakres ruchu w poziomie",
+        "state": {
+          "off": "Wyłączony",
+          "pos_1": "Prawo",
+          "pos_2": "Prawo-środek",
+          "pos_3": "środek",
+          "pos_4": "Lewo-środek",
+          "pos_5": "Lewo"
+        }
+      },
       "rate_select": {
         "name": "Rate select",
         "state": {

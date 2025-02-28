@@ -148,6 +148,17 @@
           "pos_5": "Høyre"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horisontal svingvinkel",
+        "state": {
+          "off": "Av",
+          "pos_1": "Høyre",
+          "pos_2": "Høyre-midt",
+          "pos_3": "Midtstilt",
+          "pos_4": "Venstre-midt",
+          "pos_5": "Venstre"
+        }
+      },
       "rate_select": {
         "name": "Velg modus",
         "state": {

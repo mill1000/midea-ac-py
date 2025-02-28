@@ -127,6 +127,17 @@
           "pos_5": "Vpravo"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontální úhel výkyvu",
+        "state": {
+          "off": "Vypnuto",
+          "pos_1": "Vpravo",
+          "pos_2": "Vpravo-střed",
+          "pos_3": "Střed",
+          "pos_4": "Vlevo-střed",
+          "pos_5": "Vlevo"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Vertikální úhel výkyvu",
         "state": {

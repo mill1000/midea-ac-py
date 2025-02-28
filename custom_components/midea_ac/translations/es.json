@@ -118,6 +118,17 @@
           "pos_5": "Derecha"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Ángulo de oscilación horizontal",
+        "state": {
+          "off": "Apagado",
+          "pos_1": "Derecha",
+          "pos_2": "Centro-derecha",
+          "pos_3": "Centro",
+          "pos_4": "Centro-izquierda",
+          "pos_5": "Izquierda"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Angulo de oscilación vertical",
         "state": {

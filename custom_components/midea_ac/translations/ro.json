@@ -118,6 +118,17 @@
           "pos_5": "Dreapta"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Baleiere orizontală",
+        "state": {
+          "off": "Oprit",
+          "pos_1": "Dreapta",
+          "pos_2": "Centru-dreapta",
+          "pos_3": "Centru",
+          "pos_4": "Centru-stânga",
+          "pos_5": "Stânga"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Baleiere verticală",
         "state": {

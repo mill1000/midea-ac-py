@@ -139,6 +139,17 @@
           "pos_5": "Jobb"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Vízszintes lengési szög",
+        "state": {
+          "off": "Ki",
+          "pos_1": "Jobb",
+          "pos_2": "Jobb-közép",
+          "pos_3": "Közép",
+          "pos_4": "Bal-közép",
+          "pos_5": "Bal"
+        }
+      },
       "rate_select": {
         "name": "Teljesítmény kiválasztása",
         "state": {

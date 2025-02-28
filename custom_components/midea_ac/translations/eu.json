@@ -139,6 +139,17 @@
           "pos_5": "Eskubi"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Swing angelu horizontala",
+        "state": {
+          "off": "Itzalita",
+          "pos_1": "Eskubi",
+          "pos_2": "Eskubi-zentro",
+          "pos_3": "Zentro",
+          "pos_4": "Ezker-zentro",
+          "pos_5": "Ezker"
+        }
+      },
       "rate_select": {
         "name": "Hautatu tasa",
         "state": {

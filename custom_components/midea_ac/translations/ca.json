@@ -139,6 +139,17 @@
           "pos_5": "Dreta"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Angle d'oscil·lació horitzontal",
+        "state": {
+          "off": "Apagat",
+          "pos_1": "Dreta",
+          "pos_2": "Centre-dreta",
+          "pos_3": "Centre",
+          "pos_4": "Centre-esquerra",
+          "pos_5": "Esquerra"
+        }
+      },
       "rate_select": {
         "name": "Sel·lecció de taxa",
         "state": {

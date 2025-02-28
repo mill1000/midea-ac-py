@@ -135,6 +135,17 @@
           "pos_5": "Droite"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "Angle de balancement horizontal",
+        "state": {
+          "off": "Arrêt",
+          "pos_1": "Droite",
+          "pos_2": "Droite-centre",
+          "pos_3": "Centre",
+          "pos_4": "Gauche-centre",
+          "pos_5": "Gauche"
+        }
+      },
       "rate_select": {
         "name": "Sélection du taux",
         "state": {

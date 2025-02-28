@@ -118,6 +118,17 @@
           "pos_5": "右方"
         }
       },
+      "horizontal_swing_angle_rtl": {
+        "name": "橫向擺風",
+        "state": {
+          "off": "停用",
+          "pos_1": "右方",
+          "pos_2": "中右",
+          "pos_3": "中部",
+          "pos_4": "中左",
+          "pos_5": "左方"
+        }
+      },
       "vertical_swing_angle": {
         "name": "垂直擺風",
         "state": {
