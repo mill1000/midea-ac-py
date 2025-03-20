@@ -35,11 +35,12 @@
     },
     "abort": {
       "already_configured": "The device has already been configured.",
-      "cannot_connect": "A connection could not be made.",
+      "cannot_connect": "Device connection could not be made.",
+      "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "No supported devices found on the network."
     },
     "error": {
-      "cannot_connect": "A connection could not be made with these settings.",
+      "cannot_connect": "Device connection could not be made with these settings.",
       "device_not_found": "Device not found on the network.",
       "unsupported_device": "Device is not supported."
     }

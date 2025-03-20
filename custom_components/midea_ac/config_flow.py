@@ -21,7 +21,7 @@ from homeassistant.helpers.selector import (CountrySelector,
                                             TextSelectorType)
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
-from msmart.discover import Discover
+from msmart.discover import Discover, CloudError
 from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
@@ -100,11 +100,15 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
-                if await Discover.connect(device):
-                    return await self._create_entry_from_device(device)
-                else:
-                    # Indicate a connection could not be made
-                    return self.async_abort(reason="cannot_connect")
+                try:
+                    if await Discover.connect(device):
+                        return await self._create_entry_from_device(device)
+                    else:
+                        # Indicate a connection could not be made
+                        return self.async_abort(reason="cannot_connect")
+                except CloudError:
+                    # Catch cloud errors and report to user
+                    return self.async_abort(reason="cloud_connection_failed")
 
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
@@ -139,11 +143,16 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
-                if await Discover.connect(device):
-                    return await self._create_entry_from_device(device)
-                else:
-                    # Indicate a connection could not be made
-                    return self.async_abort(reason="cannot_connect")
+                try:
+                    if await Discover.connect(device):
+                        return await self._create_entry_from_device(device)
+                    else:
+                        # Indicate a connection could not be made
+                        return self.async_abort(reason="cannot_connect")
+                except CloudError:
+                    # Catch discover errors and report to user
+                    return self.async_abort(reason="cloud_connection_failed")
+                
 
         # Create a set of already configured devices by ID
         configured_devices = {
