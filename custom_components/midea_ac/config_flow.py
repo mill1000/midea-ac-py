@@ -21,7 +21,7 @@ from homeassistant.helpers.selector import (CountrySelector,
                                             TextSelectorType)
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
-from msmart.discover import Discover, CloudError
+from msmart.discover import CloudError, Discover
 from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
@@ -152,7 +152,6 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 except CloudError:
                     # Catch cloud errors and report to user
                     return self.async_abort(reason="cloud_connection_failed")
-                
 
         # Create a set of already configured devices by ID
         configured_devices = {
