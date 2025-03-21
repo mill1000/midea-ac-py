@@ -150,7 +150,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                         # Indicate a connection could not be made
                         return self.async_abort(reason="cannot_connect")
                 except CloudError:
-                    # Catch discover errors and report to user
+                    # Catch cloud errors and report to user
                     return self.async_abort(reason="cloud_connection_failed")
                 
 
