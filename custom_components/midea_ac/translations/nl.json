@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
           "additional_operation_modes": "Specificeer extra functies",
-          "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 30)"
+          "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 15)"
         }
       }
     }

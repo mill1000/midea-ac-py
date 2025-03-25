@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Velikost kroku pro nastavení teploty",
           "additional_operation_modes": "Zadejte další provozní režimy",
-          "max_connection_lifetime": "Maximální čas v sekundách, po který se bude používat připojení (minimálně 30 sekund)"
+          "max_connection_lifetime": "Maximální čas v sekundách, po který se bude používat připojení (minimálně 15 sekund)"
         }
       }
     }

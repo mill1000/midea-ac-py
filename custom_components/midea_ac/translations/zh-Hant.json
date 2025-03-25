@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "溫度設置的步進值",
           "additional_operation_modes": "指定額外的執行模式",
-          "max_connection_lifetime": "單次連結的最大有效期(單位為秒，最短30秒)"
+          "max_connection_lifetime": "單次連結的最大有效期(單位為秒，最短15秒)"
         }
       }
     }

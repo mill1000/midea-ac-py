@@ -57,7 +57,7 @@
           "temp_step": "Taille du palier pour le réglage de la température",
           "fan_speed_step": "Taille du palier pour le réglage de la vitesses personnalisé du ventilateur",
           "additional_operation_modes": "Spécifiez des modes de fonctionnement supplémentaires",
-          "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 30 secondes)"
+          "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 15 secondes)"
         }
       }
     }

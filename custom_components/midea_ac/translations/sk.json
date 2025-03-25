@@ -61,7 +61,7 @@
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",
           "fan_speed_step": "Veľkosť kroku voliteľnej rýchlosti ventilátora",
           "additional_operation_modes": "Zadajte ďalšie prevádzkové režimy",
-          "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 30 sekúnd)"
+          "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 15 sekúnd)"
         }
       }
     }

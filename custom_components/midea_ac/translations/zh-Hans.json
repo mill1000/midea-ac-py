@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "温度设定的步进值",
           "additional_operation_modes": "指定额外的运行模式",
-          "max_connection_lifetime": "单次连接的最大有效期(单位为秒，最短30秒)"
+          "max_connection_lifetime": "单次连接的最大有效期(单位为秒，最短15秒)"
         }
       }
     }

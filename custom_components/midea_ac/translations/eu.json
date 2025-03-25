@@ -61,7 +61,7 @@
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
           "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
           "additional_operation_modes": "Zehaztu eragiketa modu osagarriak",
-          "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (30 segundo gutxienez)"
+          "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (15 segundo gutxienez)"
         }
       }
     }

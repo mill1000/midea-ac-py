@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Valor de incremento/decremento para a temperatura",
           "additional_operation_modes": "Especifique Modos de Funcionamento Adicionais",
-          "max_connection_lifetime": "Tempo máximo, em segundos, que uma ligação é usada (mínimo 30 segundos)"
+          "max_connection_lifetime": "Tempo máximo, em segundos, que uma ligação é usada (mínimo 15 segundos)"
         }
       }
     }

@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Velikost koraka za nastavljeno temperaturo",
           "additional_operation_modes": "Določite dodatne načine delovanja",
-          "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 30 sekund)"
+          "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 15 sekund)"
         }
       }
     }

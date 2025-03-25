@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "additional_operation_modes": "Zusätzliche Betriebsmodi angeben",
-          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 30 Sekunden)"
+          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
         }
       }
     }

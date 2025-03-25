@@ -61,7 +61,7 @@
           "temp_step": "A hőmérséklet beállítás lépésköze",
           "fan_speed_step": "A ventilátor sebesség egyéni lépésköze",
           "additional_operation_modes": "Adja meg a további üzemmódokat",
-          "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 30 másodperc)"
+          "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 15 másodperc)"
         }
       }
     }

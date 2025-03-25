@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "온도 조절 간격 설정",
           "additional_operation_modes": "추가 작동 모드를 지정하세요",
-          "max_connection_lifetime": "최대 연결 시간(초), 최소 30초"
+          "max_connection_lifetime": "최대 연결 시간(초), 최소 15초"
         }
       }
     }

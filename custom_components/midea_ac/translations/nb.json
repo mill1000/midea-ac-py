@@ -61,7 +61,7 @@
           "temp_step": "Trinnstørrelse for temperaturinnstilling",
           "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
           "additional_operation_modes": "Spesifiser ekstra driftsmoduser",
-          "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 30 sekunder)"
+          "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 15 sekunder)"
         }
       }
     }

@@ -61,7 +61,7 @@
           "temp_step": "Wielkość kroku dla nastawy temperatury",
           "fan_speed_step": "Rozmiar kroku dla niestandardowych prędkości wentylatora",
           "additional_operation_modes": "Określenie dodatkowych trybów pracy",
-          "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 30 sekund)"
+          "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 15 sekund)"
         }
       }
     }

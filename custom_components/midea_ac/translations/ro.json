@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Mărime pas incremental pentru temperatură",
           "additional_operation_modes": "Specifică moduri adiționale de funcționare",
-          "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 30 de secunde) "
+          "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 15 de secunde) "
         }
       }
     }

@@ -57,7 +57,7 @@
           "temp_step": "Incremento per la configurazione della temperatura",
           "fan_speed_step": "Incremento per la configurazione della velocità della ventola",
           "additional_operation_modes": "Specifica ulteriori modalità aggiuntive",
-          "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 30 secondi)"
+          "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 15 secondi)"
         }
       }
     }

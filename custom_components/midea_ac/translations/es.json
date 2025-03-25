@@ -54,7 +54,7 @@
         "data_description": {
           "temp_step": "Tamaño del escalón para la consigna de temperatura",
           "additional_operation_modes": "Especificar metodos de operación adicionales",
-          "max_connection_lifetime": "Tiempo máximo en segundos que se usará una connexión (mínimo 30 segundos)"
+          "max_connection_lifetime": "Tiempo máximo en segundos que se usará una connexión (mínimo 15 segundos)"
         }
       }
     }

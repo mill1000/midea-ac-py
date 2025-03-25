@@ -61,7 +61,7 @@
           "temp_step": "Sıcaklık ayar noktası için adım boyutu",
           "fan_speed_step": "Özel fan hızı için adım boyutu",
           "additional_operation_modes": "Ek çalışma modlarını belirle",
-          "max_connection_lifetime": "Bir bağlantının maksimum kullanacağı süre (minimum 30 saniye)"
+          "max_connection_lifetime": "Bir bağlantının maksimum kullanacağı süre (minimum 15 saniye)"
         }
       }
     }

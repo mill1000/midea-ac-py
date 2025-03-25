@@ -61,7 +61,7 @@
           "temp_step": "Mida del pas de la consigna de temperatura",
           "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
           "additional_operation_modes": "Especificar modes d'operació addicionals",
-          "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 30 segons)"
+          "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 15 segons)"
         }
       }
     }
