@@ -198,9 +198,13 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         """Handle the show token step of config flow."""
 
-        if user_input is not None or device.version < 3:
-            # User input is discarded and device entry is created
+        # V2 devices don't have a token and key to display
+        if device and device.version < 3:
             return await self._create_entry_from_device(device)
+
+        if user_input is not None:
+            # User input is discarded and device entry is created from saved device
+            return await self._create_entry_from_device(self._device)
 
         # Show the user the token and key so they can be copied down
         data_schema = self.add_suggested_values_to_schema(
@@ -208,7 +212,14 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Optional(CONF_ID): cv.string,
                 vol.Optional(CONF_TOKEN): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
                 vol.Optional(CONF_KEY): cv.string
-            }), user_input)
+            }), {
+                CONF_ID: device.id,
+                CONF_TOKEN: device.token,
+                CONF_KEY: device.key
+            })
+
+        # Save incoming device
+        self._device = device
 
         return self.async_show_form(step_id="show_token_key",
                                     data_schema=data_schema)
