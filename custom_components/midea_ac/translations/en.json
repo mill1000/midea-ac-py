@@ -35,6 +35,7 @@
       "show_token_key": {
         "description": "Save the following token & key for future use. Any input on this form is discarded.",
         "data": {
+          "id": "ID",
           "token": "Token",
           "k1": "Key"
         },
@@ -42,7 +43,7 @@
           "token": "Token for V3 devices",
           "k1": "Key for V3 devices"
         }
-      },
+      }
     },
     "abort": {
       "already_configured": "The device has already been configured.",
