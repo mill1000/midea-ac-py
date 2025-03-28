@@ -102,7 +102,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Finish connection
                 try:
                     if await Discover.connect(device):
-                        return await self._create_entry_from_device(device)
+                        return await self.async_step_show_token_key(device=device)
                     else:
                         # Indicate a connection could not be made
                         return self.async_abort(reason="cannot_connect")
@@ -145,7 +145,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Finish connection
                 try:
                     if await Discover.connect(device):
-                        return await self._create_entry_from_device(device)
+                        return await self.async_step_show_token_key(device=device)
                     else:
                         # Indicate a connection could not be made
                         return self.async_abort(reason="cannot_connect")
@@ -189,6 +189,28 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         })
 
         return self.async_show_form(step_id="pick_device",
+                                    data_schema=data_schema)
+
+    async def async_step_show_token_key(
+        self, user_input: dict[str, Any] | None = None,
+        *,
+        device: AC = None
+    ) -> FlowResult:
+        """Handle the show token step of config flow."""
+
+        if user_input is not None or device.version < 3:
+            # User input is discarded and device entry is created
+            return await self._create_entry_from_device(device)
+
+        # Show the user the token and key so they can be copied down
+        data_schema = self.add_suggested_values_to_schema(
+            vol.Schema({
+                vol.Optional(CONF_ID): cv.string,
+                vol.Optional(CONF_TOKEN): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
+                vol.Optional(CONF_KEY): cv.string
+            }), user_input)
+
+        return self.async_show_form(step_id="show_token_key",
                                     data_schema=data_schema)
 
     async def async_step_manual(self, user_input) -> FlowResult:
