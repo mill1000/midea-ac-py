@@ -28,8 +28,8 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token for V3 devices",
-          "k1": "Key for V3 devices"
+          "token": "Token for V3 devices (hexadecimal)",
+          "k1": "Key for V3 devices (hexadecimal)"
         }
       },
       "show_token_key": {
@@ -50,7 +50,8 @@
     "error": {
       "cannot_connect": "Device connection could not be made with these settings.",
       "device_not_found": "Device not found on the network.",
-      "unsupported_device": "Device is not supported."
+      "unsupported_device": "Device is not supported.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {

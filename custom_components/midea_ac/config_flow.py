@@ -236,14 +236,23 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(str(id))
             self._abort_if_unique_id_configured()
 
-            # Attempt a connection to see if config is valid
-            device = await self._test_manual_connection(user_input)
+            # Validate the hex format of certain fields
+            for field in [CONF_TOKEN, CONF_KEY]:
+                if input := user_input.get(field):
+                    try:
+                        bytes.fromhex(input)
+                    except (ValueError, TypeError):
+                        errors[field] = "invalid_hex_format"
 
-            if device:
-                return await self._create_entry_from_device(device)
+            if not errors:
+                # Attempt a connection to see if config is valid
+                device = await self._test_manual_connection(user_input)
 
-            # Indicate a connection could not be made
-            errors["base"] = "cannot_connect"
+                if device:
+                    return await self._create_entry_from_device(device)
+
+                # Indicate a connection could not be made
+                errors["base"] = "cannot_connect"
 
         user_input = user_input or {}
 
