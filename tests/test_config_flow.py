@@ -118,6 +118,29 @@ async def test_manual_flow(hass: HomeAssistant) -> None:
         # Connection should fail
         assert result["errors"] == {"base": "cannot_connect"}
 
+    # Check that invalid token/keys formats throw an error
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        user_input={
+            CONF_HOST: "localhost",
+            CONF_PORT: 6444,
+            CONF_ID: "1234",
+            CONF_TOKEN: "not_hex_string",
+            CONF_KEY: "also_not_hex"
+
+        }
+    )
+    assert result
+    # Authenticate should be called
+    authenticate_mock.assert_awaited_once()
+    # Refresh should be not called
+    refresh_mock.assert_not_awaited()
+    # Connection should fail
+    assert result["errors"] == {
+        CONF_TOKEN: "invalid_hex_format",
+        CONF_KEY: "invalid_hex_format"
+    }
+
 
 async def test_options_flow_init(hass: HomeAssistant) -> None:
     """Test the integration options flow works and default options are set."""
