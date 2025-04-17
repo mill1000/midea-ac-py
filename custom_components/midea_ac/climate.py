@@ -442,10 +442,13 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the preset mode."""
         self._device.eco = False
-        self._device.ieco = False
         self._device.turbo = False
         self._device.freeze_protection = False
         self._device.sleep = False
+
+        # Clear iECO mode only if supported to avoid generating a SetProperties command
+        if self._device.supports_ieco:
+            self._device.ieco = False
 
         # Enable proper mode
         if preset_mode == PRESET_BOOST:
