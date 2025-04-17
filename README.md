@@ -118,8 +118,8 @@ Name | Description | Required | Example
 **ID** | Device ID | Yes | 123456789012345
 **Host** | Device IP address | Yes | 192.168.1.100
 **Port** | Device port | Yes | 6444
-**Token** | Device token | For V3 devices | ACEDDA53831AE5DC... (Length 128)
-**Key** | Device key | For V3 devices | CFFA10FC... (Length 64)
+**Token** | Device token | For V3 devices | ACEDDA53831AE5DC... (128 character hexadecimal string)
+**Key** | Device key | For V3 devices | CFFA10FC... (64 character hexadecimal string)
 
 ## Integration Options
 Additional options are available to tweak integration behavior per device.
