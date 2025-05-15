@@ -23,3 +23,4 @@ class EnergyFormat(StrEnum):
     DEFAULT = auto()
     ALTERNATE_A = auto()
     ALTERNATE_B = auto()
+    ALTERNATE_C = auto()
