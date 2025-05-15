@@ -82,7 +82,8 @@
       "options": {
         "default": "Default",
         "alternate_a": "Alternate A",
-        "alternate_b": "Alternate B"
+        "alternate_b": "Alternate B",
+        "alternate_c": "Alternate C"
       }
     }
   },
