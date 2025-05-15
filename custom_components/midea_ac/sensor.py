@@ -32,8 +32,11 @@ async def async_setup_entry(
 
     # Configure energy units
     unit_of_energy = UnitOfEnergy.KILO_WATT_HOUR
+    energy_scale = 1.0
 
     if config_entry.options.get(CONF_ENERGY_FORMAT) == EnergyFormat.ALTERNATE_B:
+        energy_scale = 0.1
+    elif config_entry.options.get(CONF_ENERGY_FORMAT) == EnergyFormat.ALTERNATE_C:
         unit_of_energy = UnitOfEnergy.WATT_HOUR
 
     entities = [
@@ -55,13 +58,15 @@ async def async_setup_entry(
                           SensorDeviceClass.ENERGY,
                           unit_of_energy,
                           "total_energy_usage",
-                          state_class=SensorStateClass.TOTAL),
+                          state_class=SensorStateClass.TOTAL,
+                          scale=energy_scale),
         MideaEnergySensor(coordinator,
                           "current_energy_usage",
                           SensorDeviceClass.ENERGY,
                           unit_of_energy,
                           "current_energy_usage",
-                          state_class=SensorStateClass.TOTAL_INCREASING),
+                          state_class=SensorStateClass.TOTAL_INCREASING,
+                          scale=energy_scale),
         MideaEnergySensor(coordinator,
                           "real_time_power_usage",
                           SensorDeviceClass.POWER,
