@@ -42,6 +42,7 @@ See [Getting Device Info](#getting-device-info) to determine if a device is supp
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
   * iECO
   * Auxiliary heating mode
+  * Flash/jet cool
 
 <small>
 

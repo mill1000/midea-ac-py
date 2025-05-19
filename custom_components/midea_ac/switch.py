@@ -34,12 +34,6 @@ async def async_setup_entry(
         MideaDisplaySwitch(coordinator)
     ]
 
-    if coordinator.device.supports_purifier:
-        entities.append(MideaSwitch(coordinator,
-                                    "purifier",
-                                    "purifier",
-                                    entity_category=EntityCategory.CONFIG))
-
     if coordinator.device.supports_breeze_away:
         entities.append(MideaSwitch(coordinator,
                                     "breeze_away",
@@ -54,6 +48,17 @@ async def async_setup_entry(
         entities.append(MideaSwitch(coordinator,
                                     "breezeless",
                                     "breezeless"))
+
+    if coordinator.device.supports_flash_cool:
+        entities.append(MideaSwitch(coordinator,
+                                    "flash_cool",
+                                    "flash_cool"))
+
+    if coordinator.device.supports_purifier:
+        entities.append(MideaSwitch(coordinator,
+                                    "purifier",
+                                    "purifier",
+                                    entity_category=EntityCategory.CONFIG))
 
     add_entities(entities)
 

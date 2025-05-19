@@ -236,6 +236,9 @@
       "display": {
         "name": "Display"
       },
+      "flash_cool": {
+        "name": "Flash cool"
+      },
       "purifier": {
         "name": "Purifier"
       }

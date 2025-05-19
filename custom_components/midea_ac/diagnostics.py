@@ -46,6 +46,7 @@ async def async_get_config_entry_diagnostics(
                 "supports_ieco": device.supports_ieco,
                 "supports_turbo": device.supports_turbo,
                 "supports_freeze_protection": device.supports_freeze_protection,
+                "supports_flash_cool": device.supports_flash_cool,
 
                 "supports_display_control": device.supports_display_control,
                 "supports_filter_reminder": device.supports_filter_reminder,
