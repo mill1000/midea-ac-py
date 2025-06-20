@@ -12,7 +12,10 @@
         "data": {
           "host": "Host"
         },
-        "description": "Lassen Sie das Host-Feld leer, um Geräte im Netzwerk zu erkennen."
+        "description": "Lassen Sie das Host-Feld leer, um Geräte im Netzwerk zu erkennen.",
+        "data_description": {
+          "country_code": "Wählen Sie das Land, das Ihrem Standort am nächsten ist."
+        }
       },
       "manual": {
         "description": "Geben Sie Informationen für Ihr Gerät ein.",
@@ -27,17 +30,27 @@
           "token": "Token für V3-Geräte",
           "k1": "Key für V3-Geräte"
         }
+      },
+      "show_token_key": {
+        "description": "Speichern Sie diesen Token und Key für zukünftige Verwendung.\nAlle Eingaben in diesem Formular werden verworfen.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
+        }
       }
     },
     "abort": {
       "already_configured": "Das Gerät wurde bereits konfiguriert.",
       "cannot_connect": "Es konnte keine Verbindung hergestellt werden.",
+      "cloud_connection_failed": "Es konnte keine Verbindung zur Cloud hergestellt werden.",
       "no_devices_found": "Keine unterstützten Geräte im Netzwerk gefunden."
     },
     "error": {
       "cannot_connect": "Mit diesen Einstellungen konnte keine Verbindung hergestellt werden.",
       "device_not_found": "Gerät im Netzwerk nicht gefunden.",
-      "unsupported_device": "Gerät wird nicht unterstützt."
+      "unsupported_device": "Gerät wird nicht unterstützt.",
+      "invalid_hex_format": "Ungültiges hexadezimales Format."
     }
   },
   "options": {
@@ -45,17 +58,30 @@
       "init": {
         "data": {
           "prompt_tone": "Signalton aktivieren",
-          "temp_step": "Temperaturschritt",
+          "temp_step": "Temperaturschritte",
+          "fan_speed_step": "Lüftergeschwindigkeitsschritte",
           "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden",
           "show_all_presets": "Alle Voreinstellungen anzeigen",
           "additional_operation_modes": "Zusätzliche Betriebsmodi",
-          "max_connection_lifetime": "Maximale Verbindungsdauer"
+          "max_connection_lifetime": "Maximale Verbindungsdauer",
+          "energy_format": "Energieformat",
+          "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
         },
         "data_description": {
           "temp_step": "Schrittgröße für Temperatureinstellung",
+          "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
           "additional_operation_modes": "Zusätzliche Betriebsmodi angeben",
           "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_format": {
+      "options": {
+      "default": "Standard",
+      "alternate_a": "Alternative A",
+      "alternate_b": "Alternative B"
       }
     }
   },
@@ -81,6 +107,7 @@
               "low": "Niedrig",
               "medium": "Mittel",
               "high": "Hoch",
+              "max": "Max",
               "auto": "Auto",
               "custom": "Benutzerdefiniert"
             }
@@ -96,8 +123,35 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filteralarm"
+      },
+      "self_clean": {
+        "name": "Selbstreinigung"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Selbstreinigung starten"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Lüftergeschwindigkeit"
+      }
+    },
     "select": {
+      "aux_mode": {
+        "name": "Zusatzbetriebsart",
+        "state": {
+          "off": "Aus",
+          "aux_heat": "Heizen und Zusatzheizung",
+          "aux_only": "Nur Zusatzheizung"
+        }
+      },
       "horizontal_swing_angle": {
+        "horizontal_swing_angle": "Horizontaler Schwenkwinkel",
         "state": {
           "off": "Aus",
           "pos_1": "Links",
@@ -117,6 +171,19 @@
           "pos_5": "Links"
         }
       },
+      "rate_select": {
+        "name": "Gang-Auswahl",
+        "state": {
+          "off": "Aus",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Stufe 5",
+          "level_4": "Stufe 4",
+          "level_3": "Stufe 3",
+          "level_2": "Stufe 2",
+          "level_1": "Stufe 1"
+        }
+      },
       "vertical_swing_angle": {
         "state": {
           "off": "Aus",
@@ -126,6 +193,34 @@
           "pos_4": "Unten-mitte",
           "pos_5": "Unten"
         }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Aktueller Energieverbrauch"
+      },
+      "indoor_humidity": {
+        "name": "Luftfeuchtigkeit innen"
+      },
+      "indoor_temperature": {
+        "name": "Innentemperatur"
+      },
+      "outdoor_temperature": {
+        "name": "Außentemperatur"
+      },
+      "real_time_power_usage": {
+        "name": "Leistungsaufnahme"
+      },
+      "total_energy_usage": {
+        "name": "Gesamtenergieverbrauch"
+      }
+    },
+    "switch": {
+      "display": {
+        "name": "Geräteanzeige"
+      },
+      "purifier": {
+        "name": "Luftreiniger"
       }
     }
   }
