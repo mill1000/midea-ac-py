@@ -59,6 +59,12 @@ async def async_setup_entry(
                                         options=supported_aux_modes
                                         ))
 
+    if coordinator.device.supports_cascade:
+        entities.append(MideaEnumSelect(coordinator,
+                                        "cascade",
+                                        AC.CascadeMode
+                                        ))
+
     add_entities(entities)
 
 

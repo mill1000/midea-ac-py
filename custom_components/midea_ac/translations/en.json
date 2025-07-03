@@ -156,6 +156,14 @@
           "aux_only": "Aux only"
         }
       },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Off",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horizontal swing angle",
         "state": {
