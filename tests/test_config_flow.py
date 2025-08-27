@@ -135,7 +135,7 @@ async def test_manual_flow(hass: HomeAssistant) -> None:
     authenticate_mock.assert_awaited_once()
     # Refresh should be not called
     refresh_mock.assert_not_awaited()
-    # Connection should fail
+    # Inputs should be marked as invalid
     assert result["errors"] == {
         CONF_TOKEN: "invalid_hex_format",
         CONF_KEY: "invalid_hex_format"
@@ -189,3 +189,92 @@ async def test_options_flow_init(hass: HomeAssistant) -> None:
         CONF_BEEP: False,
     }
     assert len(mock_setup_entry.mock_calls) == 1
+
+
+async def test_reconfigure_flow(hass: HomeAssistant) -> None:
+    """Test the reconfigure flow validates input and failed connections return errors."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_RECONFIGURE}
+    )
+    assert result
+
+    invalid_input = [
+        {
+            CONF_HOST: None
+        },
+        {
+            CONF_HOST: "localhost",
+            CONF_PORT: None
+        }
+    ]
+    for input in invalid_input:
+        with pytest.raises(InvalidData):
+            result = await hass.config_entries.flow.async_configure(
+                result["flow_id"],
+                user_input=input
+            )
+
+    with (patch("custom_components.midea_ac.config_flow.AC.refresh",
+                return_value=False) as refresh_mock,
+          patch("custom_components.midea_ac.config_flow.AC.authenticate",
+                side_effect=AuthenticationError) as authenticate_mock):
+        # Check manually configuring a V2 device
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+            }
+        )
+        assert result
+        # Refresh should be called
+        refresh_mock.assert_awaited_once()
+        # Authenticate shouldn't be called
+        authenticate_mock.assert_not_awaited()
+        # Connection should fail
+        assert result["errors"] == {"base": "cannot_connect"}
+
+        refresh_mock.reset_mock()
+        authenticate_mock.reset_mock()
+
+        # Check manually configuring a V3 device
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+                CONF_TOKEN: "1234",
+                CONF_KEY: "1234"
+
+            }
+        )
+        assert result
+        # Authenticate should be called
+        authenticate_mock.assert_awaited_once()
+        # Refresh should be not called
+        refresh_mock.assert_not_awaited()
+        # Connection should fail
+        assert result["errors"] == {"base": "cannot_connect"}
+
+    # Check that invalid token/keys formats throw an error
+    result = await hass.config_entries.flow.async_configure(
+        result["flow_id"],
+        user_input={
+            CONF_HOST: "localhost",
+            CONF_PORT: 6444,
+            CONF_ID: "1234",
+            CONF_TOKEN: "not_hex_string",
+            CONF_KEY: "also_not_hex"
+
+        }
+    )
+    assert result
+    # Authenticate should be called
+    authenticate_mock.assert_awaited_once()
+    # Refresh should be not called
+    refresh_mock.assert_not_awaited()
+    # Inputs should be marked as invalid
+    assert result["errors"] == {
+        CONF_TOKEN: "invalid_hex_format",
+        CONF_KEY: "invalid_hex_format"
+    }

@@ -121,8 +121,11 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 ),
             }), user_input)
 
-        return self.async_show_form(step_id="discover",
-                                    data_schema=data_schema, errors=errors)
+        return self.async_show_form(
+            step_id="discover",
+            data_schema=data_schema,
+            errors=errors
+        )
 
     async def async_step_pick_device(
         self, user_input: dict[str, Any] | None = None,
@@ -188,8 +191,10 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             vol.Required(CONF_ID): vol.In(devices_name)
         })
 
-        return self.async_show_form(step_id="pick_device",
-                                    data_schema=data_schema)
+        return self.async_show_form(
+            step_id="pick_device",
+            data_schema=data_schema
+        )
 
     async def async_step_show_token_key(
         self, user_input: dict[str, Any] | None = None,
@@ -221,8 +226,10 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         # Save incoming device
         self._device = device
 
-        return self.async_show_form(step_id="show_token_key",
-                                    data_schema=data_schema)
+        return self.async_show_form(
+            step_id="show_token_key",
+            data_schema=data_schema
+        )
 
     async def async_step_manual(self, user_input) -> FlowResult:
         """Handle the manual step of config flow."""
@@ -265,8 +272,62 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Optional(CONF_KEY): cv.string
             }), user_input)
 
-        return self.async_show_form(step_id="manual",
-                                    data_schema=data_schema, errors=errors)
+        return self.async_show_form(
+            step_id="manual",
+            data_schema=data_schema,
+            errors=errors
+        )
+
+    async def async_step_reconfigure(self, user_input) -> FlowResult:
+        """Handle the reconfiguration step of config flow."""
+        errors = {}
+
+        if user_input is not None:
+            # Validate the hex format of certain fields
+            for field in [CONF_TOKEN, CONF_KEY]:
+                if input := user_input.get(field):
+                    try:
+                        bytes.fromhex(input)
+                    except (ValueError, TypeError):
+                        errors[field] = "invalid_hex_format"
+
+            if not errors:
+                # Copy ID from existing entry
+                config_entry = self._get_reconfigure_entry()
+                user_input[CONF_ID] = config_entry.data[CONF_ID]
+
+                # Ensure key & token are in dict
+                user_input.setdefault(CONF_KEY, None)
+                user_input.setdefault(CONF_TOKEN, None)
+
+                # Attempt a connection to see if config is valid
+                device = await self._test_manual_connection(user_input)
+
+                if device:
+                    return self.async_update_reload_and_abort(
+                        self._get_reconfigure_entry(),
+                        data_updates=user_input,
+                    )
+
+                # Indicate a connection could not be made
+                errors["base"] = "cannot_connect"
+
+        # Use existing config entry data if no user input
+        user_input = user_input or self._get_reconfigure_entry().data
+
+        data_schema = self.add_suggested_values_to_schema(
+            vol.Schema({
+                vol.Required(CONF_HOST): cv.string,
+                vol.Required(CONF_PORT, default=6444): cv.port,
+                vol.Optional(CONF_TOKEN): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
+                vol.Optional(CONF_KEY): cv.string
+            }), user_input)
+
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=data_schema,
+            errors=errors
+        )
 
     def _get_async_client(self, *args, **kwargs) -> httpx.AsyncClient:
         """Create an httpx AsyncClient in a HA friendly way."""
