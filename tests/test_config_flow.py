@@ -193,8 +193,35 @@ async def test_options_flow_init(hass: HomeAssistant) -> None:
 
 async def test_reconfigure_flow(hass: HomeAssistant) -> None:
     """Test the reconfigure flow validates input and failed connections return errors."""
+
+    # Create a mock config entry
+    mock_config_entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_ID: "1234",
+            CONF_HOST: "localhost",
+            CONF_PORT: 6444,
+            CONF_TOKEN: None,
+            CONF_KEY: None,
+        }
+    )
+
+    # Patch refresh and get_capabilities calls to allow integration to setup
+    with (patch("custom_components.midea_ac.config_flow.AC.get_capabilities"),
+          patch("custom_components.midea_ac.config_flow.AC.refresh")):
+        # Add mock config entry to HASS and setup integration
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert mock_config_entry.entry_id in hass.data[DOMAIN]
+    assert mock_config_entry.state is ConfigEntryState.LOADED
+
     result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_RECONFIGURE}
+        DOMAIN, context={
+            "source": config_entries.SOURCE_RECONFIGURE,
+            "entry_id": mock_config_entry.entry_id,
+        }
     )
     assert result
 
@@ -262,7 +289,6 @@ async def test_reconfigure_flow(hass: HomeAssistant) -> None:
         user_input={
             CONF_HOST: "localhost",
             CONF_PORT: 6444,
-            CONF_ID: "1234",
             CONF_TOKEN: "not_hex_string",
             CONF_KEY: "also_not_hex"
 
