@@ -43,11 +43,11 @@ async def async_setup_entry(
     # Configure energy format
     energy_data_format, energy_scale = _get_energy_config(CONF_ENERGY_SENSOR)
     _LOGGER.info(
-        "Using energy format %s (scale: %f) for device ID %s.", energy_data_format, energy_scale, coordinator.device.id)
+        "Using energy format %r (scale: %f) for device ID %s.", energy_data_format, energy_scale, coordinator.device.id)
 
     power_data_format, power_scale = _get_energy_config(CONF_POWER_SENSOR)
     _LOGGER.info(
-        "Using power format %s (scale: %f) for device ID %s.", power_data_format, power_scale, coordinator.device.id)
+        "Using power format %r (scale: %f) for device ID %s.", power_data_format, power_scale, coordinator.device.id)
 
     entities = [
         # Temperature sensors
