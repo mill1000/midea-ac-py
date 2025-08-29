@@ -131,14 +131,19 @@ Additional options are available to tweak integration behavior per device.
 Name | Default | Description 
 :--- | :--- | :--- 
 **Beep** | True | Enable beep on setting changes.
+**Reverse Horizontal Swing Angle** | False | Reverse the order of horizontal swing angles from left-to-right to right-to-left.
 **Temperature Step** | 1.0 | Step size for temperature set point.
 **Fan Speed Step** | 1 | Step size for custom fan speeds.
-**Use Fan-only Workaround** | False | Enable this option if device updates cause the device to turn on and switch to fan-only.
-**Show All Presets** | False | Show all presets regardless of device's reported capabilities.
-**Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.
 **Maximum Connection Lifetime** | Empty | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
-**Energy Format** | Default | Select alternative data formats for decoding energy and power data from the device.<br> Options: <ul><li>`Default` - BCD format</li><li>`Alternate A` - Binary format</li><li>`Alternate B` - Binary format, energy scaled by 1/10</li></ul>
-**Reverse Horizontal Swing Angle** | False | Reverse the order of horizontal swing angles from left-to-right to right-to-left.
+**Energy Sensor Format > Data Format** | BCD | Select the data format for decoding energy data from the device.
+**Energy Sensor Format > Scale** | 1.0 | Select the data scale for reporting energy data from the device.
+**Power Sensor Format > Data Format** | BCD | Select the data format for decoding power data from the device.
+**Power Sensor Format > Scale** | 1.0 | Select the data scale for reporting power data from the device.
+**Workarounds > Use Fan-only Workaround** | False | Enable this option if device updates cause the device to turn on and switch to fan-only.
+**Workarounds > Show All Presets** | False | Show all presets regardless of device's reported capabilities.
+**Workarounds > Additional Operation Modes** | Empty | Additional HVAC modes to make available in case the device's capabilities are incorrect.
+
+
 
 ## Resolving Connectivity Issues
 Some users have reported issue with their devices periodically becoming unavailable, and with logs full of warnings and errors. This is almost always due to the device terminating the existing connection and briefly rejecting new connections. 
