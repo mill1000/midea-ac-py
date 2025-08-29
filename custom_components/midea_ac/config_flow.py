@@ -420,9 +420,9 @@ class MideaOptionsFlow(OptionsFlow):
 
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
-                vol.Required(CONF_BEEP): cv.boolean,
-                vol.Required(CONF_SWING_ANGLE_RTL): cv.boolean,
-                vol.Required(CONF_TEMP_STEP): NumberSelector(
+                vol.Optional(CONF_BEEP): cv.boolean,
+                vol.Optional(CONF_SWING_ANGLE_RTL): cv.boolean,
+                vol.Optional(CONF_TEMP_STEP): NumberSelector(
                     NumberSelectorConfig(
                         min=.5,
                         max=5,
@@ -430,19 +430,19 @@ class MideaOptionsFlow(OptionsFlow):
                         unit_of_measurement=DEGREE
                     )
                 ),
-                vol.Required(CONF_FAN_SPEED_STEP): NumberSelector(
+                vol.Optional(CONF_FAN_SPEED_STEP): NumberSelector(
                     NumberSelectorConfig(min=1, max=20, step=1)
                 ),
                 vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(
                     vol.Coerce(int),
                     vol.Range(min=UPDATE_INTERVAL)
                 ),
-                vol.Required(CONF_ENERGY_SENSOR): self._ENERGY_SENSOR_SCHEMA,
-                vol.Required(CONF_POWER_SENSOR): self._ENERGY_SENSOR_SCHEMA,
-                vol.Required(CONF_WORKAROUNDS): section(
+                vol.Optional(CONF_ENERGY_SENSOR): self._ENERGY_SENSOR_SCHEMA,
+                vol.Optional(CONF_POWER_SENSOR): self._ENERGY_SENSOR_SCHEMA,
+                vol.Optional(CONF_WORKAROUNDS): section(
                     vol.Schema({
-                        vol.Required(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
-                        vol.Required(CONF_SHOW_ALL_PRESETS): cv.boolean,
+                        vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
+                        vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
                         vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
                     }),
                     {"collapsed": True},
