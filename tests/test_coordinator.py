@@ -5,12 +5,13 @@ import logging
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from custom_components.midea_ac.const import CONF_KEY, DOMAIN
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant
 from msmart.lan import _LanProtocol
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+from custom_components.midea_ac.const import CONF_KEY, DOMAIN
 
 
 async def _setup_integration(hass: HomeAssistant) -> MockConfigEntry:

@@ -22,7 +22,8 @@ from msmart.device import AirConditioner as AC
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, PRESET_IECO, CONF_WORKAROUNDS)
+                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
+                    PRESET_IECO)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)

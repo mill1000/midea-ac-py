@@ -5,24 +5,18 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from custom_components.midea_ac import async_migrate_entry
+from homeassistant.core import HomeAssistant
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
 from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
-                                              CONF_BEEP,
                                               CONF_ENERGY_DATA_FORMAT,
                                               CONF_ENERGY_DATA_SCALE,
-                                              CONF_ENERGY_SENSOR, CONF_KEY,
+                                              CONF_ENERGY_SENSOR,
                                               CONF_POWER_SENSOR,
                                               CONF_SHOW_ALL_PRESETS,
                                               CONF_USE_FAN_ONLY_WORKAROUND,
                                               CONF_WORKAROUNDS, DOMAIN,
                                               EnergyFormat)
-from homeassistant import config_entries
-from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResultType, InvalidData
-from msmart.lan import AuthenticationError
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)

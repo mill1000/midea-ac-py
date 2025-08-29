@@ -210,7 +210,7 @@ class MideaEnergySensor(MideaSensor):
     @property
     def native_value(self) -> float | None:
         """Return the scaled native value."""
-        # Manually prepend 'get_' to the property. 
+        # Manually prepend 'get_' to the property.
         # This is so we don't have to change prop which causes unique ids to change
         get_method = getattr(self._device, f"get_{self._prop}", None)
         if get_method and callable(get_method):
