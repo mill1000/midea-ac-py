@@ -139,7 +139,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
                 CONF_USE_FAN_ONLY_WORKAROUND: new_options.pop(CONF_USE_FAN_ONLY_WORKAROUND, False),
                 CONF_SHOW_ALL_PRESETS: new_options.pop(CONF_SHOW_ALL_PRESETS, False),
                 CONF_ADDITIONAL_OPERATION_MODES: new_options.pop(
-                    CONF_ADDITIONAL_OPERATION_MODES, "")
+                    CONF_ADDITIONAL_OPERATION_MODES, None) or ""
             }
 
             hass.config_entries.async_update_entry(
