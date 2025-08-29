@@ -14,7 +14,7 @@
           "host": "Amfitrió",
           "country_code": "Regió del núvol"
         },
-        "data_description":{
+        "data_description": {
           "country_code": "Selecciona el país més proper a la teva ubicació."
         }
       },
@@ -28,41 +28,105 @@
           "k1": "Clau"
         },
         "data_description": {
-          "token": "Token per a dispositius V3",
-          "k1": "Clau per a dispositius V3"
+          "token": "Token per a dispositius V3 (hexadecimal)",
+          "k1": "Clau per a dispositius V3 (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Amfitrió",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Clau"
+        },
+        "data_description": {
+          "token": "Token per a dispositius V3 (hexadecimal)",
+          "k1": "Clau per a dispositius V3 (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Clau"
         }
       }
     },
     "abort": {
       "already_configured": "El dispositiu ja ha estat configurat.",
       "cannot_connect": "No s'ha pogut realitzar una connexió.",
-      "no_devices_found": "No s'han trobat dispositius compatibles a la xarxa."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "No s'han trobat dispositius compatibles a la xarxa.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "No s'ha pogut realitzar una connexió amb aquesta configuració.",
       "device_not_found": "No s'ha pogut trobar el dispositiu a la xarxa.",
-      "unsupported_device": "El dispositiu no és compatible."
+      "unsupported_device": "El dispositiu no és compatible.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activar so",
           "temp_step": "Mida del pas de temperatura",
           "fan_speed_step": "Mida del pas de velocitat del ventilador",
-          "use_fan_only_workaround": "Utilitzar l'alternativa \"només ventilador\"",
-          "show_all_presets": "Mostrar tots els preajustaments",
-          "additional_operation_modes": "Mètodes d'operació addicionals",
           "max_connection_lifetime": "Temps màxim de connexió",
-          "energy_format": "Utilitzar format d'energia alternatiu"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Mida del pas de la consigna de temperatura",
           "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
-          "additional_operation_modes": "Especificar modes d'operació addicionals",
           "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 15 segons)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Utilitzar l'alternativa \"només ventilador\"",
+              "show_all_presets": "Mostrar tots els preajustaments",
+              "additional_operation_modes": "Mètodes d'operació addicionals"
+            },
+            "data_description": {
+              "additional_operation_modes": "Especificar modes d'operació addicionals"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -128,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Apagat",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Apagat",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Angle d'oscil·lació horitzontal",
         "state": {
@@ -156,7 +236,7 @@
           "off": "Apagat",
           "gear_75": "75%",
           "gear_50": "50%",
-          "level_5": "Nivell 5",	
+          "level_5": "Nivell 5",
           "level_4": "Nivell 4",
           "level_3": "Nivell 3",
           "level_2": "Nivell 2",
@@ -207,6 +287,9 @@
       },
       "display": {
         "name": "Pantalla"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Purificador"

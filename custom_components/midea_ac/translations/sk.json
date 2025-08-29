@@ -14,7 +14,7 @@
           "host": "Host",
           "country_code": "Cloud región"
         },
-        "data_description":{
+        "data_description": {
           "country_code": "Vyberte krajinu, ktorá je najbližšie k vašej polohe."
         }
       },
@@ -28,50 +28,105 @@
           "k1": "Kľúč"
         },
         "data_description": {
-          "token": "Token pre V3 zariadenia",
-          "k1": "K1 pre V3 zariadenia"
+          "token": "Token pre V3 zariadenia (hexadecimal)",
+          "k1": "K1 pre V3 zariadenia (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Kľúč"
+        },
+        "data_description": {
+          "token": "Token pre V3 zariadenia (hexadecimal)",
+          "k1": "K1 pre V3 zariadenia (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Kľúč"
         }
       }
     },
     "abort": {
       "already_configured": "ID zariadenia už bolo nakonfigurované.",
       "cannot_connect": "Nepodarilo sa vytvoriť spojenie.",
-      "no_devices_found": "V sieti sa nenašli žiadne podporované zariadenia."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "V sieti sa nenašli žiadne podporované zariadenia.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "S týmito nastaveniami sa nepodarilo nadviazať spojenie.",
       "device_not_found": "Zariadenie sa v sieti nenašlo.",
-      "unsupported_device": "Zariadenie nie je podporované."
+      "unsupported_device": "Zariadenie nie je podporované.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Tón výzvy",
           "temp_step": "Teplotný krok",
           "fan_speed_step": "Krok rýchlosti ventilátora",
-          "use_fan_only_workaround": "Použite alternatívne riešenie pre ventilátor",
-          "show_all_presets": "Zobraziť všetky predvoľby",
-          "additional_operation_modes": "Ďalšie prevádzkové režimy",
           "max_connection_lifetime": "Maximálna životnosť pripojenia",
-          "energy_format": "Použiť alternatívny formát energie"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",
           "fan_speed_step": "Veľkosť kroku voliteľnej rýchlosti ventilátora",
-          "additional_operation_modes": "Zadajte ďalšie prevádzkové režimy",
           "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 15 sekúnd)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Použite alternatívne riešenie pre ventilátor",
+              "show_all_presets": "Zobraziť všetky predvoľby",
+              "additional_operation_modes": "Ďalšie prevádzkové režimy"
+            },
+            "data_description": {
+              "additional_operation_modes": "Zadajte ďalšie prevádzkové režimy"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-        "default": "Predvolené",
-        "alternate_a": "Alternatíva A",
-        "alternate_b": "Alternatíva B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -137,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Vypnuté",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Vypnuté",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horizontálny uhol výkyvu",
         "state": {
@@ -216,6 +287,9 @@
       },
       "display": {
         "name": "Zobraziť"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Čistička"

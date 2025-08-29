@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Laat dit veld leeg om apparaten op het netwerk automatisch te detecteren.",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Region"
         },
-        "description": "Laat dit veld leeg om apparaten op het netwerk automatisch te detecteren."
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Voer de gegevens van uw apparaat in.",
@@ -24,38 +28,105 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token voor V3-apparaten",
-          "k1": "Steutel voor V3-apparaten"
+          "token": "Token voor V3-apparaten (hexadecimal)",
+          "k1": "Steutel voor V3-apparaten (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token voor V3-apparaten (hexadecimal)",
+          "k1": "Steutel voor V3-apparaten (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
         }
       }
     },
     "abort": {
       "already_configured": "Dit apparaat is al ingesteld.",
       "cannot_connect": "Er kon geen verbinding worden gemaakt.",
-      "no_devices_found": "Geen ondersteunde apparaten gevonden op het netwerk."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Geen ondersteunde apparaten gevonden op het netwerk.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Met deze instellingen kon geen verbinding worden gemaakt.",
       "device_not_found": "Apparaat niet gevonden op het netwerk.",
-      "unsupported_device": "Dit apparaat wordt niet ondersteund."
+      "unsupported_device": "Dit apparaat wordt niet ondersteund.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Piep inschakelen",
           "temp_step": "Stapgrootte voor temperatuur",
-          "use_fan_only_workaround": "Fan-only workaround gebruiken",
-          "show_all_presets": "Alle presets tonen",
-          "additional_operation_modes": "Extra functies",
-          "max_connection_lifetime": "Maximale verbindingsduur"
+          "fan_speed_step": "Fan Speed Step",
+          "max_connection_lifetime": "Maximale verbindingsduur",
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
-          "additional_operation_modes": "Specificeer extra functies",
+          "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 15)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Fan-only workaround gebruiken",
+              "show_all_presets": "Alle presets tonen",
+              "additional_operation_modes": "Extra functies"
+            },
+            "data_description": {
+              "additional_operation_modes": "Specificeer extra functies"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -81,8 +152,14 @@
               "low": "Laag",
               "medium": "Medium",
               "high": "Hoog",
+              "max": "Max",
               "auto": "Auto",
               "custom": "Zelf instellen"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -99,6 +176,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Filterwaarschuwing"
+      },
+      "self_clean": {
+        "name": "Self clean"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
       }
     },
     "number": {
@@ -107,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Uit",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Uit",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horizontale blaasrichting",
         "state": {
@@ -129,6 +230,19 @@
           "pos_5": "Links"
         }
       },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Uit",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Verticale blaasrichting",
         "state": {
@@ -142,16 +256,40 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
       "indoor_temperature": {
         "name": "Binnentemperatuur"
       },
       "outdoor_temperature": {
         "name": "Buitentemperatuur"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
       "display": {
         "name": "Display"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Luchtreiniger"

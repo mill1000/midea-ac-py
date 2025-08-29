@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Оставете адреса празен, за да откриете устройство(ата) в мрежата.",
         "data": {
-          "host": "Адрес"
+          "host": "Адрес",
+          "country_code": "Cloud Region"
         },
-        "description": "Оставете адреса празен, за да откриете устройство(ата) в мрежата."
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Въведете информация за вашето устройство.",
@@ -24,38 +28,105 @@
           "k1": "Ключ"
         },
         "data_description": {
-          "token": "Токън за V3 устройства",
-          "k1": "Ключ за V3 устройства"
+          "token": "Токън за V3 устройства (hexadecimal)",
+          "k1": "Ключ за V3 устройства (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Адрес",
+          "port": "Порт",
+          "token": "Токън",
+          "k1": "Ключ"
+        },
+        "data_description": {
+          "token": "Токън за V3 устройства (hexadecimal)",
+          "k1": "Ключ за V3 устройства (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ИД",
+          "token": "Токън",
+          "k1": "Ключ"
         }
       }
     },
     "abort": {
       "already_configured": "Устройството вече е конфигурирано.",
       "cannot_connect": "Не можа да се осъществи връзка.",
-      "no_devices_found": "Няма намерени поддържани устройства в мрежата."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Няма намерени поддържани устройства в мрежата.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Не може да се осъществи връзка с тези настройки.",
       "device_not_found": "Не е намерено устройство в мрежата.",
-      "unsupported_device": "Устройството не се поддържа."
+      "unsupported_device": "Устройството не се поддържа.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Включи Beep сигнал",
           "temp_step": "Интервал на температурата",
-          "use_fan_only_workaround": "Използвай само Вентилатор",
-          "show_all_presets": "Показване на всички предварително зададени настройки",
-          "additional_operation_modes": "Допълнителни режими на работа",
-          "max_connection_lifetime": "Максимален живот на връзката"
+          "fan_speed_step": "Fan Speed Step",
+          "max_connection_lifetime": "Максимален живот на връзката",
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Размер на интервала за зададената температура",
-          "additional_operation_modes": "Посочете допълнителни режими на работа",
+          "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Максимално време в секунди, за което ще се използва връзка (минимум 15 секунди)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Използвай само Вентилатор",
+              "show_all_presets": "Показване на всички предварително зададени настройки",
+              "additional_operation_modes": "Допълнителни режими на работа"
+            },
+            "data_description": {
+              "additional_operation_modes": "Посочете допълнителни режими на работа"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -81,8 +152,14 @@
               "low": "Слаб",
               "medium": "Среден",
               "high": "Висок",
+              "max": "Max",
               "auto": "Автоматично",
               "custom": "По избор"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -96,8 +173,43 @@
         }
       }
     },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filter alert"
+      },
+      "self_clean": {
+        "name": "Self clean"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Fan speed"
+      }
+    },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Изключен",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Изключен",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
+        "name": "Horizontal swing angle",
         "state": {
           "off": "Изключен",
           "pos_1": "Вляво",
@@ -108,6 +220,7 @@
         }
       },
       "horizontal_swing_angle_rtl": {
+        "name": "Horizontal swing angle",
         "state": {
           "off": "Изключен",
           "pos_1": "Вдясно",
@@ -117,7 +230,21 @@
           "pos_5": "Вляво"
         }
       },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Изключен",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
       "vertical_swing_angle": {
+        "name": "Vertical swing angle",
         "state": {
           "off": "Изключен",
           "pos_1": "Горе",
@@ -126,6 +253,46 @@
           "pos_4": "Долу - в центъра",
           "pos_5": "Долу"
         }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
+      "display": {
+        "name": "Display"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
+      },
+      "purifier": {
+        "name": "Purifier"
       }
     }
   }

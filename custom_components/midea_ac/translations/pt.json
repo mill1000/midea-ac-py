@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Deixe o Host em branco para procurar dispositivos na sua rede.",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Region"
         },
-        "description": "Deixe o Host em branco para procurar dispositivos na sua rede."
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Insira a informação do seu dispositivo.",
@@ -24,38 +28,105 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token para modelos V3",
-          "k1": "Key para modelos V3"
+          "token": "Token para modelos V3 (hexadecimal)",
+          "k1": "Key para modelos V3 (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token para modelos V3 (hexadecimal)",
+          "k1": "Key para modelos V3 (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
         }
       }
     },
     "abort": {
       "already_configured": "O dispositivo já está configurado.",
       "cannot_connect": "Não foi possível conectar.",
-      "no_devices_found": "Não foram encontrados dispositivos compatíveis na sua rede."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Não foram encontrados dispositivos compatíveis na sua rede.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Não foi possível conectar utilizando as atuais configurações.",
       "device_not_found": "Dispositivo não encontrado na rede.",
-      "unsupported_device": "Dispositivo não suportado."
+      "unsupported_device": "Dispositivo não suportado.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Ativar Beeps",
           "temp_step": "Valor de incremento/decremento de temperatura",
-          "use_fan_only_workaround": "Modo só com ventoinha",
-          "show_all_presets": "Mostrar todos os Modos",
-          "additional_operation_modes": "Modos de Funcionamento Adicionais",
-          "max_connection_lifetime": "Tempo máximo de ligação"
+          "fan_speed_step": "Fan Speed Step",
+          "max_connection_lifetime": "Tempo máximo de ligação",
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Valor de incremento/decremento para a temperatura",
-          "additional_operation_modes": "Especifique Modos de Funcionamento Adicionais",
+          "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Tempo máximo, em segundos, que uma ligação é usada (mínimo 15 segundos)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Modo só com ventoinha",
+              "show_all_presets": "Mostrar todos os Modos",
+              "additional_operation_modes": "Modos de Funcionamento Adicionais"
+            },
+            "data_description": {
+              "additional_operation_modes": "Especifique Modos de Funcionamento Adicionais"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -81,8 +152,14 @@
               "low": "Baixo",
               "medium": "Médio",
               "high": "Alto",
+              "max": "Max",
               "auto": "Automático",
               "custom": "Customizado"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -94,6 +171,128 @@
             }
           }
         }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filter alert"
+      },
+      "self_clean": {
+        "name": "Self clean"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Fan speed"
+      }
+    },
+    "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Desligar",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Desligar",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
+      "horizontal_swing_angle": {
+        "name": "Horizontal swing angle",
+        "state": {
+          "off": "Desligar",
+          "pos_1": "Left",
+          "pos_2": "Left-center",
+          "pos_3": "Center",
+          "pos_4": "Right-center",
+          "pos_5": "Right"
+        }
+      },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontal swing angle",
+        "state": {
+          "off": "Desligar",
+          "pos_1": "Right",
+          "pos_2": "Right-center",
+          "pos_3": "Center",
+          "pos_4": "Left-center",
+          "pos_5": "Left"
+        }
+      },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Desligar",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Vertical swing angle",
+        "state": {
+          "off": "Desligar",
+          "pos_1": "Top",
+          "pos_2": "Top-center",
+          "pos_3": "Center",
+          "pos_4": "Bottom-center",
+          "pos_5": "Bottom"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
+      "display": {
+        "name": "Display"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
+      },
+      "purifier": {
+        "name": "Purifier"
       }
     }
   }

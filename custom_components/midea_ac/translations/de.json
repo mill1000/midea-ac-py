@@ -9,10 +9,11 @@
         }
       },
       "discover": {
-        "data": {
-          "host": "Host"
-        },
         "description": "Lassen Sie das Host-Feld leer, um Geräte im Netzwerk zu erkennen.",
+        "data": {
+          "host": "Host",
+          "country_code": "Cloud Region"
+        },
         "data_description": {
           "country_code": "Wählen Sie das Land, das Ihrem Standort am nächsten ist."
         }
@@ -27,8 +28,21 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token für V3-Geräte",
-          "k1": "Key für V3-Geräte"
+          "token": "Token für V3-Geräte (hexadezimal)",
+          "k1": "Key für V3-Geräte (hexadezimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token für V3-Geräte (hexadezimal)",
+          "k1": "Key für V3-Geräte (hexadezimal)"
         }
       },
       "show_token_key": {
@@ -44,7 +58,8 @@
       "already_configured": "Das Gerät wurde bereits konfiguriert.",
       "cannot_connect": "Es konnte keine Verbindung hergestellt werden.",
       "cloud_connection_failed": "Es konnte keine Verbindung zur Cloud hergestellt werden.",
-      "no_devices_found": "Keine unterstützten Geräte im Netzwerk gefunden."
+      "no_devices_found": "Keine unterstützten Geräte im Netzwerk gefunden.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Mit diesen Einstellungen konnte keine Verbindung hergestellt werden.",
@@ -56,32 +71,62 @@
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Signalton aktivieren",
           "temp_step": "Temperaturschritte",
           "fan_speed_step": "Lüftergeschwindigkeitsschritte",
-          "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden",
-          "show_all_presets": "Alle Voreinstellungen anzeigen",
-          "additional_operation_modes": "Zusätzliche Betriebsmodi",
           "max_connection_lifetime": "Maximale Verbindungsdauer",
-          "energy_format": "Energieformat",
           "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
         },
         "data_description": {
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
-          "additional_operation_modes": "Zusätzliche Betriebsmodi angeben",
           "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden",
+              "show_all_presets": "Alle Voreinstellungen anzeigen",
+              "additional_operation_modes": "Zusätzliche Betriebsmodi"
+            },
+            "data_description": {
+              "additional_operation_modes": "Zusätzliche Betriebsmodi angeben"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-      "default": "Standard",
-      "alternate_a": "Alternative A",
-      "alternate_b": "Alternative B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -110,6 +155,11 @@
               "max": "Max",
               "auto": "Auto",
               "custom": "Benutzerdefiniert"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -150,8 +200,16 @@
           "aux_only": "Nur Zusatzheizung"
         }
       },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Aus",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
-        "horizontal_swing_angle": "Horizontaler Schwenkwinkel",
+        "name": "Horizontaler Schwenkwinkel",
         "state": {
           "off": "Aus",
           "pos_1": "Links",
@@ -162,6 +220,7 @@
         }
       },
       "horizontal_swing_angle_rtl": {
+        "name": "Horizontaler Schwenkwinkel",
         "state": {
           "off": "Aus",
           "pos_1": "Rechts",
@@ -185,6 +244,7 @@
         }
       },
       "vertical_swing_angle": {
+        "name": "Vertical swing angle",
         "state": {
           "off": "Aus",
           "pos_1": "Oben",
@@ -216,8 +276,20 @@
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
       "display": {
         "name": "Geräteanzeige"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Luftreiniger"
