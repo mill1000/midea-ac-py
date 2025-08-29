@@ -69,7 +69,7 @@ async def async_setup_entry(
         # Energy sensors
         MideaEnergySensor(
             coordinator,
-            "get_total_energy_usage",
+            "total_energy_usage",
             SensorDeviceClass.ENERGY,
             UnitOfEnergy.KILO_WATT_HOUR,
             "total_energy_usage",
@@ -79,7 +79,7 @@ async def async_setup_entry(
         ),
         MideaEnergySensor(
             coordinator,
-            "get_current_energy_usage",
+            "current_energy_usage",
             SensorDeviceClass.ENERGY,
             UnitOfEnergy.KILO_WATT_HOUR,
             "current_energy_usage",
@@ -89,7 +89,7 @@ async def async_setup_entry(
         ),
         MideaEnergySensor(
             coordinator,
-            "get_real_time_power_usage",
+            "real_time_power_usage",
             SensorDeviceClass.POWER,
             UnitOfPower.WATT,
             "real_time_power_usage",
@@ -210,7 +210,9 @@ class MideaEnergySensor(MideaSensor):
     @property
     def native_value(self) -> float | None:
         """Return the scaled native value."""
-        get_method = getattr(self._device, self._prop, None)
+        # Manually prepend 'get_' to the property. 
+        # This is so we don't have to change prop which causes unique ids to change
+        get_method = getattr(self._device, f"get_{self._prop}", None)
         if get_method and callable(get_method):
             value = get_method(self._format)
         else:
