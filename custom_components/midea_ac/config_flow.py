@@ -431,7 +431,7 @@ class MideaOptionsFlow(OptionsFlow):
                     )
                 ),
                 vol.Required(CONF_FAN_SPEED_STEP): NumberSelector(
-                    NumberSelectorConfig(min=1, max=20)
+                    NumberSelectorConfig(min=1, max=20, step=1)
                 ),
                 vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(
                     vol.Coerce(int),
