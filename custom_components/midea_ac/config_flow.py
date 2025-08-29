@@ -69,7 +69,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 4
 
-    async def async_step_user(self, user_input = None) -> ConfigFlowResult:
+    async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
         return self.async_show_menu(
             step_id="user",
