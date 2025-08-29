@@ -14,7 +14,7 @@
           "host": "Vert",
           "country_code": "Sky-region"
         },
-        "data_description":{
+        "data_description": {
           "country_code": "Velg det landet som er nærmest der du er."
         }
       },
@@ -28,50 +28,105 @@
           "k1": "Nøkkel"
         },
         "data_description": {
-          "token": "Token for V3 enheter",
-          "k1": "Nøkkel for V3 enheter"
+          "token": "Token for V3 enheter (hexadecimal)",
+          "k1": "Nøkkel for V3 enheter (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Vert",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Nøkkel"
+        },
+        "data_description": {
+          "token": "Token for V3 enheter (hexadecimal)",
+          "k1": "Nøkkel for V3 enheter (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Nøkkel"
         }
       }
     },
     "abort": {
       "already_configured": "Enheten er allerede konfigurert.",
       "cannot_connect": "Det kunne ikke opprettes en forbindelse.",
-      "no_devices_found": "Finner ingen støttede enheter på nettverket."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Finner ingen støttede enheter på nettverket.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Det kunne ikke opprettes en forbindelse med disse innstillingene.",
       "device_not_found": "Finner ikke enheten på nettverket.",
-      "unsupported_device": "Enheten støttes ikke."
+      "unsupported_device": "Enheten støttes ikke.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Aktiver lydsignal",
           "temp_step": "Temperaturtrinn",
           "fan_speed_step": "Viftehastighetstrinn",
-          "use_fan_only_workaround": "Bruk Kun-vifte løsning",
-          "show_all_presets": "Vis alle forhåndsinnstillinger",
-          "additional_operation_modes": "Ytterligere driftsmoduser",
           "max_connection_lifetime": "Maksimal tilkoblingstid",
-          "energy_format": "Energiformat"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Trinnstørrelse for temperaturinnstilling",
           "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
-          "additional_operation_modes": "Spesifiser ekstra driftsmoduser",
           "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 15 sekunder)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Bruk Kun-vifte løsning",
+              "show_all_presets": "Vis alle forhåndsinnstillinger",
+              "additional_operation_modes": "Ytterligere driftsmoduser"
+            },
+            "data_description": {
+              "additional_operation_modes": "Spesifiser ekstra driftsmoduser"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-        "default": "Standard",
-        "alternate_a": "Alternativ A",
-        "alternate_b": "Alternativ B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -137,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Av",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Av",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horisontal svingvinkel",
         "state": {
@@ -216,6 +287,9 @@
       },
       "display": {
         "name": "Skjerm/LED-display"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Renser"

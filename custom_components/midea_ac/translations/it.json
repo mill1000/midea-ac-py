@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Lasciare Host vuoto per trovare dispositivi nella rete",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Region"
         },
-        "description": "Lasciare Host vuoto per trovare dispositivi nella rete"
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Inserisci le informazioni del tuo dispositivo.",
@@ -24,41 +28,105 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token per dispositivi V3",
-          "k1": "Chiave per dispositivi V3"
+          "token": "Token per dispositivi V3 (hexadecimal)",
+          "k1": "Chiave per dispositivi V3 (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Porta",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token per dispositivi V3 (hexadecimal)",
+          "k1": "Chiave per dispositivi V3 (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
         }
       }
     },
     "abort": {
       "already_configured": "Il dispositivo è già stato configurato.",
       "cannot_connect": "Connessione non riuscita.",
-      "no_devices_found": "Nessun dispositivo supportato è stato trovato nella rete."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Nessun dispositivo supportato è stato trovato nella rete.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Connessione non riuscita con queste impostazioni.",
       "device_not_found": "Nessun dispositivo supportato è stato trovato nella rete.",
-      "unsupported_device": "Dispositivo non supportato."
+      "unsupported_device": "Dispositivo non supportato.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Abilita Beep",
           "temp_step": "Incremento temperatura",
           "fan_speed_step": "Incremento velocità della ventola",
-          "use_fan_only_workaround": "Usa un metodo alternativo per modalità Solo Ventola",
-          "show_all_presets": "Mostra tutte le preimpostazioni",
-          "additional_operation_modes": "Modalità aggiuntive",
           "max_connection_lifetime": "Durata massima della connessione",
-          "energy_format": "Usa formato alternativo per l'energia"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Incremento per la configurazione della temperatura",
           "fan_speed_step": "Incremento per la configurazione della velocità della ventola",
-          "additional_operation_modes": "Specifica ulteriori modalità aggiuntive",
           "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 15 secondi)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Usa un metodo alternativo per modalità Solo Ventola",
+              "show_all_presets": "Mostra tutte le preimpostazioni",
+              "additional_operation_modes": "Modalità aggiuntive"
+            },
+            "data_description": {
+              "additional_operation_modes": "Specifica ulteriori modalità aggiuntive"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -87,6 +155,11 @@
               "max": "Massima",
               "auto": "Automatica",
               "custom": "Personalizzata"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -119,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Spento",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Spento",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Angolo di oscillazione orizzontale",
         "state": {
@@ -198,6 +287,9 @@
       },
       "display": {
         "name": "Schermo"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Depuratore"

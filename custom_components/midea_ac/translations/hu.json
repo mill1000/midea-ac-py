@@ -14,7 +14,7 @@
           "host": "Hoszt",
           "country_code": "Felhő régió"
         },
-        "data_description":{
+        "data_description": {
           "country_code": "Válassza ki az Önhöz legközelebbi országot."
         }
       },
@@ -28,41 +28,105 @@
           "k1": "Kulcs"
         },
         "data_description": {
-          "token": "Token a V3 eszközökhöz",
-          "k1": "Kulcs a V3 eszközökhöz"
+          "token": "Token a V3 eszközökhöz (hexadecimal)",
+          "k1": "Kulcs a V3 eszközökhöz (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Hoszt",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Kulcs"
+        },
+        "data_description": {
+          "token": "Token a V3 eszközökhöz (hexadecimal)",
+          "k1": "Kulcs a V3 eszközökhöz (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Kulcs"
         }
       }
     },
     "abort": {
       "already_configured": "Az eszköz már konfigurálva lett.",
       "cannot_connect": "Nem sikerült a csatlakozás.",
-      "no_devices_found": "Nem található támogatott eszköz a hálózaton."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Nem található támogatott eszköz a hálózaton.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Nem sikerült a csatlakozás ezekkel a beállításokkal.",
       "device_not_found": "Az eszköz nem található a hálózaton.",
-      "unsupported_device": "Az eszköz nem támogatott."
+      "unsupported_device": "Az eszköz nem támogatott.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Hangjelzés engedélyezése",
           "temp_step": "Hőmérséklet lépésköz",
           "fan_speed_step": "Ventilátor sebesség lépésköz",
-          "use_fan_only_workaround": "Csak ventilátor mód hiba megoldása",
-          "show_all_presets": "Minden előbeállítás megjelenítése",
-          "additional_operation_modes": "További üzemmódok",
           "max_connection_lifetime": "Maximális kapcsolat időtartama",
-          "energy_format": "Alternatív energia formátum használata"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "A hőmérséklet beállítás lépésköze",
           "fan_speed_step": "A ventilátor sebesség egyéni lépésköze",
-          "additional_operation_modes": "Adja meg a további üzemmódokat",
           "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 15 másodperc)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Csak ventilátor mód hiba megoldása",
+              "show_all_presets": "Minden előbeállítás megjelenítése",
+              "additional_operation_modes": "További üzemmódok"
+            },
+            "data_description": {
+              "additional_operation_modes": "Adja meg a további üzemmódokat"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -128,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Ki",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Ki",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Vízszintes lengési szög",
         "state": {
@@ -207,6 +287,9 @@
       },
       "display": {
         "name": "Kijelző"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Légtisztító"

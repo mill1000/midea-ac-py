@@ -14,7 +14,7 @@
           "host": "Sunucu",
           "country_code": "Sunucu Bölgesi"
         },
-        "data_description":{
+        "data_description": {
           "country_code": "Konumunuza en yakın ülkeyi seçin."
         }
       },
@@ -28,50 +28,105 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "V3 cihazları için Token",
-          "k1": "V3 cihazları için Key"
+          "token": "V3 cihazları için Token (hexadecimal)",
+          "k1": "V3 cihazları için Key (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Sunucu",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "V3 cihazları için Token (hexadecimal)",
+          "k1": "V3 cihazları için Key (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
         }
       }
     },
     "abort": {
       "already_configured": "Cihaz zaten yapılandırılmış.",
       "cannot_connect": "Bağlantı kurulamadı.",
-      "no_devices_found": "Ağda desteklenen bir cihaz bulunamadı."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Ağda desteklenen bir cihaz bulunamadı.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Bu ayarlar ile bir bağlantı kurulamadı.",
       "device_not_found": "Cihaz ağda bulunamadı.",
-      "unsupported_device": "Cihaz desteklenmiyor."
+      "unsupported_device": "Cihaz desteklenmiyor.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Bip Sesini Etkinleştir",
           "temp_step": "Sıcaklık Adımı",
           "fan_speed_step": "Fan Hızı Adımı",
-          "use_fan_only_workaround": "Sadece Fan Modu Kullan",
-          "show_all_presets": "Tüm Ön Tanımları Göster",
-          "additional_operation_modes": "Ek Çalışma Modları",
           "max_connection_lifetime": "Maksimum Bağlantısı Süresi",
-          "energy_format": "Enerji Formatı"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Sıcaklık ayar noktası için adım boyutu",
           "fan_speed_step": "Özel fan hızı için adım boyutu",
-          "additional_operation_modes": "Ek çalışma modlarını belirle",
           "max_connection_lifetime": "Bir bağlantının maksimum kullanacağı süre (minimum 15 saniye)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Sadece Fan Modu Kullan",
+              "show_all_presets": "Tüm Ön Tanımları Göster",
+              "additional_operation_modes": "Ek Çalışma Modları"
+            },
+            "data_description": {
+              "additional_operation_modes": "Ek çalışma modlarını belirle"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-        "default": "Varsayılan",
-        "alternate_a": "Alternatif A",
-        "alternate_b": "Alternatif B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -137,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Kapalı",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Kapalı",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Yatay salınım açısı",
         "state": {
@@ -216,6 +287,9 @@
       },
       "display": {
         "name": "Gösterge"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Temizleyici"

@@ -28,49 +28,105 @@
           "k1": "Ključ"
         },
         "data_description": {
-          "token": "Token za V3 uređaje",
-          "k1": "Ključ za V3 uređaje"
+          "token": "Token za V3 uređaje (hexadecimal)",
+          "k1": "Ključ za V3 uređaje (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Ključ"
+        },
+        "data_description": {
+          "token": "Token za V3 uređaje (hexadecimal)",
+          "k1": "Ključ za V3 uređaje (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Ključ"
         }
       }
     },
     "abort": {
       "already_configured": "Uređaj je već konfiguriran.",
       "cannot_connect": "Nije bilo moguće uspostaviti vezu.",
-      "no_devices_found": "Na mreži nisu pronađeni podržani uređaji."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Na mreži nisu pronađeni podržani uređaji.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Nije moguće uspostaviti vezu s ovim postavkama.",
       "device_not_found": "Uređaj nije pronađen na mreži.",
-      "unsupported_device": "Uređaj nije podržan."
+      "unsupported_device": "Uređaj nije podržan.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Omogući zvučni signal",
           "temp_step": "Temperaturni korak",
-          "use_fan_only_workaround": "Koristite zaobilazno rješenje samo za ventilatore",
-          "show_all_presets": "Prikaži sve unaprijed postavljene postavke",
-          "additional_operation_modes": "Dodatni načini rada",
+          "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "max_connection_lifetime": "Maksimalno trajanje veze",
-          "energy_format": "Format energije"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Veličina koraka za zadanu vrijednost temperature",
           "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
-          "additional_operation_modes": "Navedite dodatne načine rada",
           "max_connection_lifetime": "Maksimalno vrijeme u sekundama tijekom kojeg će se veza koristiti (najmanje 15 sekundi)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Koristite zaobilazno rješenje samo za ventilatore",
+              "show_all_presets": "Prikaži sve unaprijed postavljene postavke",
+              "additional_operation_modes": "Dodatni načini rada"
+            },
+            "data_description": {
+              "additional_operation_modes": "Navedite dodatne načine rada"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-        "default": "Zadano",
-        "alternate_a": "Zamjenski A",
-        "alternate_b": "Zamjenski B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -96,6 +152,7 @@
               "low": "Nisko",
               "medium": "Srednje",
               "high": "Visoko",
+              "max": "Max",
               "auto": "Auto",
               "custom": "Prilagođeno"
             }
@@ -135,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Off",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Off",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Horizontalni kut zakretanja",
         "state": {
@@ -214,6 +287,9 @@
       },
       "display": {
         "name": "Zaslon"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Pročistač"

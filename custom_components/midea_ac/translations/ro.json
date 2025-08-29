@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "Lasă câmpul „Host” liber pentru a descoperi dispozitivul/dispozitivele în rețea.",
         "data": {
-          "host": "Host"
+          "host": "Host",
+          "country_code": "Cloud Region"
         },
-        "description": "Lasă câmpul „Host” liber pentru a descoperi dispozitivul/dispozitivele în rețea."
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "Introdu informațiile pentru dispozitivul tău.",
@@ -24,38 +28,105 @@
           "k1": "Key"
         },
         "data_description": {
-          "token": "Token pentru dispozitivele V3",
-          "k1": "Key pentru dispozitivele V3 "
+          "token": "Token pentru dispozitivele V3 (hexadecimal)",
+          "k1": "Key pentru dispozitivele V3 (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token",
+          "k1": "Key"
+        },
+        "data_description": {
+          "token": "Token pentru dispozitivele V3 (hexadecimal)",
+          "k1": "Key pentru dispozitivele V3 (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Key"
         }
       }
     },
     "abort": {
       "already_configured": "Dispozitivul este deja configurat.",
       "cannot_connect": "Nu s-a putut realiza conexiunea.",
-      "no_devices_found": "Nu s-au găsit dispozitive compatibile în rețea."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Nu s-au găsit dispozitive compatibile în rețea.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Nu s-a putut realiza o conexiune cu aceste setări.",
       "device_not_found": "Dispozitivul nu a fost găsit în rețea.",
-      "unsupported_device": "Dispozitivul nu este compatibil."
+      "unsupported_device": "Dispozitivul nu este compatibil.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activează beep-ul",
           "temp_step": "Pas de temperatură",
-          "use_fan_only_workaround": "Folosește soluția ocolitoare „Doar ventilator”",
-          "show_all_presets": "Arată toate setările prestabilite",
-          "additional_operation_modes": "Moduri de oprare suplimentare",
-          "max_connection_lifetime": "Durata maximă a conexiunii"
+          "fan_speed_step": "Fan Speed Step",
+          "max_connection_lifetime": "Durata maximă a conexiunii",
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Mărime pas incremental pentru temperatură",
-          "additional_operation_modes": "Specifică moduri adiționale de funcționare",
+          "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 15 de secunde) "
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Folosește soluția ocolitoare „Doar ventilator”",
+              "show_all_presets": "Arată toate setările prestabilite",
+              "additional_operation_modes": "Moduri de oprare suplimentare"
+            },
+            "data_description": {
+              "additional_operation_modes": "Specifică moduri adiționale de funcționare"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -81,8 +152,14 @@
               "low": "Scăzut",
               "medium": "Medium",
               "high": "Ridicat",
+              "max": "Max",
               "auto": "Automat",
               "custom": "Personalizat"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -99,6 +176,14 @@
     "binary_sensor": {
       "filter_alert": {
         "name": "Alertă filtru"
+      },
+      "self_clean": {
+        "name": "Self clean"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
       }
     },
     "number": {
@@ -107,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Oprit",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Oprit",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Baleiere orizontală",
         "state": {
@@ -129,6 +230,19 @@
           "pos_5": "Stânga"
         }
       },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "Oprit",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
       "vertical_swing_angle": {
         "name": "Baleiere verticală",
         "state": {
@@ -142,16 +256,40 @@
       }
     },
     "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
       "indoor_temperature": {
         "name": "Temperatură interioară"
       },
       "outdoor_temperature": {
         "name": "Temperatură exterioară"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
       }
     },
     "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
       "display": {
         "name": "Afișaj"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Purificator"

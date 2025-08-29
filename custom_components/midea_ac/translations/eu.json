@@ -28,41 +28,105 @@
           "k1": "Gakoa"
         },
         "data_description": {
-          "token": "V3 gailuetarako tokena",
-          "k1": "V3 gailuetarako Gakoa"
+          "token": "V3 gailuetarako tokena (hexadecimal)",
+          "k1": "V3 gailuetarako Gakoa (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "Ostalari",
+          "port": "Portu",
+          "token": "Token",
+          "k1": "Gakoa"
+        },
+        "data_description": {
+          "token": "V3 gailuetarako tokena (hexadecimal)",
+          "k1": "V3 gailuetarako Gakoa (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "ID",
+          "token": "Token",
+          "k1": "Gakoa"
         }
       }
     },
     "abort": {
       "already_configured": "Gailua dagoeneko konfiguratuta dago.",
       "cannot_connect": "Ezin izan da konexiorik egin.",
-      "no_devices_found": "Ez da onartutako gailurik aurkitu sarean."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "Ez da onartutako gailurik aurkitu sarean.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "Ezin izan da konexiorik egin ezarpen hauekin.",
       "device_not_found": "Ez da gailua sarean aurkitu.",
-      "unsupported_device": "Gailua ez da onartzen."
+      "unsupported_device": "Gailua ez da onartzen.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Beepa gaitu",
           "temp_step": "Tenperatura Urratsa",
           "fan_speed_step": "Haizagailu Abiadura Pausuak",
-          "use_fan_only_workaround": "Erabili Fan-only konponbidea",
-          "show_all_presets": "Erakutsi Aurrezarpen Guztiak",
-          "additional_operation_modes": "Eragiketa-Modu Gehigarriak",
           "max_connection_lifetime": "Gehienezko Konexio-Denbora",
-          "energy_format": "Erabili Ordezko Energia Formatua"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
           "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
-          "additional_operation_modes": "Zehaztu eragiketa modu osagarriak",
           "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (15 segundo gutxienez)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Erabili Fan-only konponbidea",
+              "show_all_presets": "Erakutsi Aurrezarpen Guztiak",
+              "additional_operation_modes": "Eragiketa-Modu Gehigarriak"
+            },
+            "data_description": {
+              "additional_operation_modes": "Zehaztu eragiketa modu osagarriak"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -128,6 +192,22 @@
       }
     },
     "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "Itzalita",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "Itzalita",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "horizontal_swing_angle": {
         "name": "Swing angelu horizontala",
         "state": {
@@ -207,6 +287,9 @@
       },
       "display": {
         "name": "Bistaratzea"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
       },
       "purifier": {
         "name": "Purifikatzailea"

@@ -9,10 +9,14 @@
         }
       },
       "discover": {
+        "description": "네트워크상의 장치를 찾으려면 호스트 필드를 비워 두세요.",
         "data": {
-          "host": "호스트"
+          "host": "호스트",
+          "country_code": "Cloud Region"
         },
-        "description": "네트워크상의 장치를 찾으려면 호스트 필드를 비워 두세요."
+        "data_description": {
+          "country_code": "Select closest country to your location."
+        }
       },
       "manual": {
         "description": "기기 정보를 입력하세요.",
@@ -24,38 +28,105 @@
           "k1": "키(key)"
         },
         "data_description": {
-          "token": "V3 장치용 토큰",
-          "k1": "V3 장치용 키"
+          "token": "V3 장치용 토큰 (hexadecimal)",
+          "k1": "V3 장치용 키 (hexadecimal)"
+        }
+      },
+      "reconfigure": {
+        "description": "Reconfigure your device.",
+        "data": {
+          "host": "호스트(host)",
+          "port": "포트(port)",
+          "token": "토큰(token)",
+          "k1": "키(key)"
+        },
+        "data_description": {
+          "token": "V3 장치용 토큰 (hexadecimal)",
+          "k1": "V3 장치용 키 (hexadecimal)"
+        }
+      },
+      "show_token_key": {
+        "description": "Save this token and key for future use.\nAll input on this form is discarded.",
+        "data": {
+          "id": "아이디(ID)",
+          "token": "토큰(token)",
+          "k1": "키(key)"
         }
       }
     },
     "abort": {
       "already_configured": "기기가 이미 설정되었습니다.",
       "cannot_connect": "연결을 할 수 없습니다.",
-      "no_devices_found": "네트워크상에서 지원되는 기기를 찾을 수 없습니다."
+      "cloud_connection_failed": "Cloud connection could not be made.",
+      "no_devices_found": "네트워크상에서 지원되는 기기를 찾을 수 없습니다.",
+      "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
       "cannot_connect": "이 설정으로는 연결을 할 수 없습니다.",
       "device_not_found": "네트워크상에서 기기를 찾을 수 없습니다.",
-      "unsupported_device": "지원되지 않는 기기입니다."
+      "unsupported_device": "지원되지 않는 기기입니다.",
+      "invalid_hex_format": "Invalid hexadecimal format."
     }
   },
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "삐 소리 활성화",
           "temp_step": "온도 조절 간격",
-          "use_fan_only_workaround": "팬 전용 우회 사용",
-          "show_all_presets": "모든 사전 설정 보기",
-          "additional_operation_modes": "추가 작동 모드",
-          "max_connection_lifetime": "최대 연결 시간"
+          "fan_speed_step": "Fan Speed Step",
+          "max_connection_lifetime": "최대 연결 시간",
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "온도 조절 간격 설정",
-          "additional_operation_modes": "추가 작동 모드를 지정하세요",
+          "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "최대 연결 시간(초), 최소 15초"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "팬 전용 우회 사용",
+              "show_all_presets": "모든 사전 설정 보기",
+              "additional_operation_modes": "추가 작동 모드"
+            },
+            "data_description": {
+              "additional_operation_modes": "추가 작동 모드를 지정하세요"
+            }
+          }
         }
+      }
+    }
+  },
+  "selector": {
+    "energy_data_format": {
+      "options": {
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },
@@ -81,8 +152,14 @@
               "low": "낮음",
               "medium": "중간",
               "high": "높음",
+              "max": "Max",
               "auto": "자동",
               "custom": "사용자 정의"
+            }
+          },
+          "preset_mode": {
+            "state": {
+              "ieco": "iECO"
             }
           },
           "swing_mode": {
@@ -94,6 +171,128 @@
             }
           }
         }
+      }
+    },
+    "binary_sensor": {
+      "filter_alert": {
+        "name": "Filter alert"
+      },
+      "self_clean": {
+        "name": "Self clean"
+      }
+    },
+    "button": {
+      "self_clean": {
+        "name": "Start self clean"
+      }
+    },
+    "number": {
+      "fan_speed": {
+        "name": "Fan speed"
+      }
+    },
+    "select": {
+      "aux_mode": {
+        "name": "Auxiliary heat mode",
+        "state": {
+          "off": "끄기",
+          "aux_heat": "Heat & Aux",
+          "aux_only": "Aux only"
+        }
+      },
+      "cascade": {
+        "name": "Cascade mode",
+        "state": {
+          "off": "끄기",
+          "up": "Up",
+          "down": "Down"
+        }
+      },
+      "horizontal_swing_angle": {
+        "name": "Horizontal swing angle",
+        "state": {
+          "off": "끄기",
+          "pos_1": "Left",
+          "pos_2": "Left-center",
+          "pos_3": "Center",
+          "pos_4": "Right-center",
+          "pos_5": "Right"
+        }
+      },
+      "horizontal_swing_angle_rtl": {
+        "name": "Horizontal swing angle",
+        "state": {
+          "off": "끄기",
+          "pos_1": "Right",
+          "pos_2": "Right-center",
+          "pos_3": "Center",
+          "pos_4": "Left-center",
+          "pos_5": "Left"
+        }
+      },
+      "rate_select": {
+        "name": "Rate select",
+        "state": {
+          "off": "끄기",
+          "gear_75": "75%",
+          "gear_50": "50%",
+          "level_5": "Level 5",
+          "level_4": "Level 4",
+          "level_3": "Level 3",
+          "level_2": "Level 2",
+          "level_1": "Level 1"
+        }
+      },
+      "vertical_swing_angle": {
+        "name": "Vertical swing angle",
+        "state": {
+          "off": "끄기",
+          "pos_1": "Top",
+          "pos_2": "Top-center",
+          "pos_3": "Center",
+          "pos_4": "Bottom-center",
+          "pos_5": "Bottom"
+        }
+      }
+    },
+    "sensor": {
+      "current_energy_usage": {
+        "name": "Current energy"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "real_time_power_usage": {
+        "name": "Power"
+      },
+      "total_energy_usage": {
+        "name": "Total energy"
+      }
+    },
+    "switch": {
+      "breeze_away": {
+        "name": "Breeze away"
+      },
+      "breeze_mild": {
+        "name": "Breeze mild"
+      },
+      "breezeless": {
+        "name": "Breezeless"
+      },
+      "display": {
+        "name": "Display"
+      },
+      "flash_cool": {
+        "name": "Flash cool"
+      },
+      "purifier": {
+        "name": "Purifier"
       }
     }
   }
