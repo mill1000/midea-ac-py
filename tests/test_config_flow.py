@@ -4,6 +4,7 @@ import logging
 from unittest.mock import patch
 
 import pytest
+from custom_components.midea_ac.const import CONF_BEEP, CONF_KEY, DOMAIN
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
@@ -11,8 +12,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
-
-from custom_components.midea_ac.const import CONF_BEEP, CONF_KEY, DOMAIN
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)

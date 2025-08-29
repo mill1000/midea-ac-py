@@ -64,7 +64,6 @@ async def async_get_config_entry_diagnostics(
                 "supports_breeze_away": device.supports_breeze_away,
 
                 "enable_energy_usage_requests": device.enable_energy_usage_requests,
-                "use_alternate_energy_format": device.use_alternate_energy_format,
 
                 "_supported_properties": device._supported_properties,
             }

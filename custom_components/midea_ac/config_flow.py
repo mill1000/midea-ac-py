@@ -8,13 +8,15 @@ import httpx
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
-                                 CONF_PORT, CONF_TOKEN)
+                                 CONF_PORT, CONF_TOKEN, DEGREE)
 from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult
+from homeassistant.data_entry_flow import FlowResult, section
 from homeassistant.helpers import httpx_client
 from homeassistant.helpers.selector import (CountrySelector,
                                             CountrySelectorConfig,
-                                            SelectSelector,
+                                            NumberSelector,
+                                            NumberSelectorConfig,
+                                            NumberSelectorMode, SelectSelector,
                                             SelectSelectorConfig,
                                             SelectSelectorMode, TextSelector,
                                             TextSelectorConfig,
@@ -26,22 +28,32 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
-                    CONF_ENERGY_FORMAT, CONF_FAN_SPEED_STEP, CONF_KEY,
-                    CONF_MAX_CONNECTION_LIFETIME, CONF_SHOW_ALL_PRESETS,
-                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, UPDATE_INTERVAL,
-                    EnergyFormat)
+                    CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+                    CONF_ENERGY_SENSOR, CONF_FAN_SPEED_STEP, CONF_KEY,
+                    CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
+                    CONF_SHOW_ALL_PRESETS, CONF_SWING_ANGLE_RTL,
+                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, CONF_WORKAROUNDS,
+                    UPDATE_INTERVAL, EnergyFormat)
 
 _DEFAULT_OPTIONS = {
     CONF_BEEP: True,
     CONF_TEMP_STEP: 1.0,
     CONF_FAN_SPEED_STEP: 1,
-    CONF_USE_FAN_ONLY_WORKAROUND: False,
-    CONF_SHOW_ALL_PRESETS: False,
-    CONF_ADDITIONAL_OPERATION_MODES: None,
     CONF_MAX_CONNECTION_LIFETIME: None,
-    CONF_ENERGY_FORMAT: EnergyFormat.DEFAULT,
-    CONF_SWING_ANGLE_RTL: False
+    CONF_SWING_ANGLE_RTL: False,
+    CONF_ENERGY_SENSOR: {
+        CONF_ENERGY_DATA_FORMAT: EnergyFormat.BCD,
+        CONF_ENERGY_DATA_SCALE: 1.0
+    },
+    CONF_POWER_SENSOR: {
+        CONF_ENERGY_DATA_FORMAT: EnergyFormat.BCD,
+        CONF_ENERGY_DATA_SCALE: 1.0
+    },
+    CONF_WORKAROUNDS: {
+        CONF_USE_FAN_ONLY_WORKAROUND: False,
+        CONF_SHOW_ALL_PRESETS: False,
+        CONF_ADDITIONAL_OPERATION_MODES: None,
+    }
 }
 
 _CLOUD_CREDENTIALS = {
@@ -54,7 +66,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 3
+    MINOR_VERSION = 4
 
     async def async_step_user(self, _) -> FlowResult:
         """Handle a config flow initialized by the user."""
@@ -381,6 +393,26 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 class MideaOptionsFlow(OptionsFlow):
     """Options flow from Midea Smart AC."""
 
+    _ENERGY_SENSOR_SCHEMA = section(
+        vol.Schema(
+            {
+                vol.Required(CONF_ENERGY_DATA_FORMAT): SelectSelector(
+                    SelectSelectorConfig(
+                        options=[e.value for e in
+                                 [EnergyFormat.BCD, EnergyFormat.BINARY]],
+                        translation_key="energy_data_format",
+                        mode=SelectSelectorMode.DROPDOWN,
+                    ),
+                ),
+                vol.Required(CONF_ENERGY_DATA_SCALE): NumberSelector(
+                    NumberSelectorConfig(
+                        min=.001, step="any", mode=NumberSelectorMode.BOX)
+                ),
+            }
+        ),
+        {"collapsed": True}
+    )
+
     async def async_step_init(self, user_input=None) -> FlowResult:
         """Handle the options flow."""
         if user_input is not None:
@@ -388,21 +420,34 @@ class MideaOptionsFlow(OptionsFlow):
 
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
-                vol.Optional(CONF_BEEP): cv.boolean,
-                vol.Optional(CONF_TEMP_STEP): vol.All(vol.Coerce(float), vol.Range(min=0.5, max=5)),
-                vol.Optional(CONF_FAN_SPEED_STEP): vol.All(vol.Coerce(float), vol.Range(min=1, max=20)),
-                vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
-                vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
-                vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
-                vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(vol.Coerce(int), vol.Range(min=UPDATE_INTERVAL)),
-                vol.Optional(CONF_ENERGY_FORMAT): SelectSelector(
-                    SelectSelectorConfig(
-                        options=[e.value for e in EnergyFormat],
-                        translation_key="energy_format",
-                        mode=SelectSelectorMode.DROPDOWN,
+                vol.Required(CONF_BEEP): cv.boolean,
+                vol.Required(CONF_SWING_ANGLE_RTL): cv.boolean,
+                vol.Required(CONF_TEMP_STEP): NumberSelector(
+                    NumberSelectorConfig(
+                        min=.5,
+                        max=5,
+                        step=.5,
+                        unit_of_measurement=DEGREE
                     )
                 ),
-                vol.Optional(CONF_SWING_ANGLE_RTL): cv.boolean,
+                vol.Required(CONF_FAN_SPEED_STEP): NumberSelector(
+                    NumberSelectorConfig(min=1, max=20)
+                ),
+                vol.Optional(CONF_MAX_CONNECTION_LIFETIME): vol.All(
+                    vol.Coerce(int),
+                    vol.Range(min=UPDATE_INTERVAL)
+                ),
+                vol.Required(CONF_ENERGY_SENSOR): self._ENERGY_SENSOR_SCHEMA,
+                vol.Required(CONF_POWER_SENSOR): self._ENERGY_SENSOR_SCHEMA,
+                vol.Required(CONF_WORKAROUNDS): section(
+                    vol.Schema({
+                        vol.Required(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
+                        vol.Required(CONF_SHOW_ALL_PRESETS): cv.boolean,
+                        vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
+                    }),
+                    {"collapsed": True},
+                )
+
             }), self.config_entry.options)
 
         return self.async_show_form(step_id="init", data_schema=data_schema)

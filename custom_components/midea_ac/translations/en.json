@@ -32,7 +32,7 @@
           "k1": "Key for V3 devices (hexadecimal)"
         }
       },
-       "reconfigure": {
+      "reconfigure": {
         "description": "Reconfigure your device.",
         "data": {
           "host": "Host",
@@ -71,32 +71,62 @@
   "options": {
     "step": {
       "init": {
+        "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Enable Beep",
           "temp_step": "Temperature Step",
           "fan_speed_step": "Fan Speed Step",
-          "use_fan_only_workaround": "Use Fan-only Workaround",
-          "show_all_presets": "Show All Presets",
-          "additional_operation_modes": "Additional Operation Modes",
           "max_connection_lifetime": "Maximum Connection Lifetime",
-          "energy_format": "Energy Format",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
-          "additional_operation_modes": "Specify additional operational modes",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)"
+        },
+        "sections": {
+          "energy_sensor": {
+            "name": "Energy Sensor Format",
+            "description": "Customize energy sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported energy usage"
+            }
+          },
+          "power_sensor": {
+            "name": "Power Sensor Format",
+            "description": "Customize power sensor format",
+            "data": {
+              "energy_data_format": "Data Format",
+              "energy_data_scale": "Scale"
+            },
+            "data_description": {
+              "energy_data_scale": "Factor to scale reported power usage"
+            }
+          },
+          "workarounds": {
+            "name": "Workarounds",
+            "data": {
+              "use_fan_only_workaround": "Use Fan-only Workaround",
+              "show_all_presets": "Show All Presets",
+              "additional_operation_modes": "Additional Operation Modes"
+            },
+            "data_description": {
+              "additional_operation_modes": "Specify additional operational modes"
+            }
+          }
         }
       }
     }
   },
   "selector": {
-    "energy_format": {
+    "energy_data_format": {
       "options": {
-        "default": "Default",
-        "alternate_a": "Alternate A",
-        "alternate_b": "Alternate B"
+        "bcd": "BCD",
+        "binary": "Binary"
       }
     }
   },

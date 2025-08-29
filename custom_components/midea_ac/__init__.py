@@ -12,8 +12,11 @@ from msmart import __version__ as MSMART_VERISON
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ENERGY_FORMAT, CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
-                    DOMAIN, EnergyFormat)
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_ENERGY_DATA_FORMAT,
+                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
+                    CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
+                    CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
+                    CONF_WORKAROUNDS, DOMAIN, EnergyFormat)
 from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -49,12 +52,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         _LOGGER.info(
             "Setting maximum connection lifetime to %s seconds for device ID %s.", lifetime, device.id)
         device.set_max_connection_lifetime(lifetime)
-
-    # Configure energy format
-    if (energy_format := config_entry.options.get(CONF_ENERGY_FORMAT)) != EnergyFormat.DEFAULT:
-        _LOGGER.info(
-            "Using alternate energy format %s for device ID %s.", energy_format, device.id)
-        device.use_alternate_energy_format = True
 
     # Configure token and k1 as needed
     token = config_entry.data[CONF_TOKEN]
@@ -107,12 +104,46 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
         if config_entry.minor_version == 2:
             new_options = {**config_entry.options}
             if new_options.pop("use_alternate_energy_format", False):
-                new_options[CONF_ENERGY_FORMAT] = EnergyFormat.ALTERNATE_B
+                new_options["energy_format"] = EnergyFormat._ALTERNATE_B
             else:
-                new_options[CONF_ENERGY_FORMAT] = EnergyFormat.DEFAULT
+                new_options["energy_format"] = EnergyFormat._DEFAULT
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=3)
+
+        # 1.3 -> 1.4:
+        # Convert alternate energy enum to custom fields
+        # Group workarounds into section
+        if config_entry.minor_version == 3:
+            new_options = {**config_entry.options}
+            old_energy_format = new_options.pop(
+                "energy_format", EnergyFormat._DEFAULT)
+
+            # Old default format was BCD, alternates A/B were binary
+            data_format = (EnergyFormat.BCD if old_energy_format ==
+                           EnergyFormat._DEFAULT else EnergyFormat.BINARY)
+
+            # Setup energy and power sensor configs
+            new_options[CONF_ENERGY_SENSOR] = {
+                CONF_ENERGY_DATA_FORMAT: data_format,
+                # Scale energy by 1/10 to match Alternate B
+                CONF_ENERGY_DATA_SCALE:  0.1 if old_energy_format == EnergyFormat._ALTERNATE_B else 1.0
+            }
+            new_options[CONF_POWER_SENSOR] = {
+                CONF_ENERGY_DATA_FORMAT: data_format,
+                CONF_ENERGY_DATA_SCALE: 1
+            }
+
+            # Migrate workarounds into a section
+            new_options[CONF_WORKAROUNDS] = {
+                CONF_USE_FAN_ONLY_WORKAROUND: new_options.pop(CONF_USE_FAN_ONLY_WORKAROUND, False),
+                CONF_SHOW_ALL_PRESETS: new_options.pop(CONF_SHOW_ALL_PRESETS, False),
+                CONF_ADDITIONAL_OPERATION_MODES: new_options.pop(
+                    CONF_ADDITIONAL_OPERATION_MODES, None)
+            }
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=4)
 
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)

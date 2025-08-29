@@ -22,7 +22,7 @@ from msmart.device import AirConditioner as AC
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, PRESET_IECO)
+                    CONF_USE_FAN_ONLY_WORKAROUND, DOMAIN, PRESET_IECO, CONF_WORKAROUNDS)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -93,8 +93,6 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Apply options
         self._device.beep = options.get(CONF_BEEP, False)
         self._target_temperature_step = options.get(CONF_TEMP_STEP)
-        self._use_fan_only_workaround = options.get(
-            CONF_USE_FAN_ONLY_WORKAROUND, False)
 
         # Setup default supported features
         self._supported_features = (
@@ -110,8 +108,13 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         except AttributeError:
             pass
 
+        # Get workarounds
+        workarounds = options.get(CONF_WORKAROUNDS, {})
+        self._use_fan_only_workaround = workarounds.get(
+            CONF_USE_FAN_ONLY_WORKAROUND, False)
+
         # Setup supported presets
-        if options.get(CONF_SHOW_ALL_PRESETS):
+        if workarounds.get(CONF_SHOW_ALL_PRESETS, False):
             # Add all presets
             self._preset_modes = [PRESET_NONE, PRESET_SLEEP, PRESET_AWAY,
                                   PRESET_ECO, PRESET_BOOST]
@@ -148,7 +151,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         self._hvac_modes.append(HVACMode.OFF)
 
         # Append additional operation modes as needed
-        additional_modes = options.get(CONF_ADDITIONAL_OPERATION_MODES) or ""
+        additional_modes = workarounds.get(
+            CONF_ADDITIONAL_OPERATION_MODES) or ""
         for mode in filter(None, additional_modes.split(" ")):
             if mode not in self._hvac_modes:
                 _LOGGER.info("Adding additional mode '%s'.", mode)

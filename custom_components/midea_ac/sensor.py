@@ -11,8 +11,11 @@ from homeassistant.const import (PERCENTAGE, UnitOfEnergy, UnitOfPower,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from msmart.device import AirConditioner as AC
 
-from .const import CONF_ENERGY_FORMAT, DOMAIN, EnergyFormat
+from .const import (CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+                    CONF_ENERGY_SENSOR, CONF_POWER_SENSOR, DOMAIN,
+                    EnergyFormat)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,52 +33,79 @@ async def async_setup_entry(
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
+    def _get_energy_config(key: str) -> tuple[EnergyFormat, float]:
+        config = config_entry.options.get(key)
+        format = AC.EnergyDataFormat.get_from_name(
+            config.get(CONF_ENERGY_DATA_FORMAT).upper())
+        scale = config.get(CONF_ENERGY_DATA_SCALE)
+        return format, scale
+
     # Configure energy format
-    energy_scale = 1.0
-    if config_entry.options.get(CONF_ENERGY_FORMAT) == EnergyFormat.ALTERNATE_B:
-        energy_scale = .1
+    energy_data_format, energy_scale = _get_energy_config(CONF_ENERGY_SENSOR)
+    _LOGGER.info(
+        "Using energy format %s (scale: %f) for device ID %s.", energy_data_format, energy_scale, coordinator.device.id)
+
+    power_data_format, power_scale = _get_energy_config(CONF_POWER_SENSOR)
+    _LOGGER.info(
+        "Using power format %s (scale: %f) for device ID %s.", power_data_format, power_scale, coordinator.device.id)
 
     entities = [
         # Temperature sensors
-        MideaSensor(coordinator,
-                    "indoor_temperature",
-                    SensorDeviceClass.TEMPERATURE,
-                    UnitOfTemperature.CELSIUS,
-                    "indoor_temperature"),
-        MideaSensor(coordinator,
-                    "outdoor_temperature",
-                    SensorDeviceClass.TEMPERATURE,
-                    UnitOfTemperature.CELSIUS,
-                    "outdoor_temperature"),
+        MideaSensor(
+            coordinator,
+            "indoor_temperature",
+            SensorDeviceClass.TEMPERATURE,
+            UnitOfTemperature.CELSIUS,
+            "indoor_temperature",
+        ),
+        MideaSensor(
+            coordinator,
+            "outdoor_temperature",
+            SensorDeviceClass.TEMPERATURE,
+            UnitOfTemperature.CELSIUS,
+            "outdoor_temperature",
+        ),
 
         # Energy sensors
-        MideaEnergySensor(coordinator,
-                          "total_energy_usage",
-                          SensorDeviceClass.ENERGY,
-                          UnitOfEnergy.KILO_WATT_HOUR,
-                          "total_energy_usage",
-                          state_class=SensorStateClass.TOTAL,
-                          scale=energy_scale),
-        MideaEnergySensor(coordinator,
-                          "current_energy_usage",
-                          SensorDeviceClass.ENERGY,
-                          UnitOfEnergy.KILO_WATT_HOUR,
-                          "current_energy_usage",
-                          state_class=SensorStateClass.TOTAL_INCREASING,
-                          scale=energy_scale),
-        MideaEnergySensor(coordinator,
-                          "real_time_power_usage",
-                          SensorDeviceClass.POWER,
-                          UnitOfPower.WATT,
-                          "real_time_power_usage")
+        MideaEnergySensor(
+            coordinator,
+            "get_total_energy_usage",
+            SensorDeviceClass.ENERGY,
+            UnitOfEnergy.KILO_WATT_HOUR,
+            "total_energy_usage",
+            format=energy_data_format,
+            scale=energy_scale,
+            state_class=SensorStateClass.TOTAL,
+        ),
+        MideaEnergySensor(
+            coordinator,
+            "get_current_energy_usage",
+            SensorDeviceClass.ENERGY,
+            UnitOfEnergy.KILO_WATT_HOUR,
+            "current_energy_usage",
+            format=energy_data_format,
+            scale=energy_scale,
+            state_class=SensorStateClass.TOTAL_INCREASING,
+        ),
+        MideaEnergySensor(
+            coordinator,
+            "get_real_time_power_usage",
+            SensorDeviceClass.POWER,
+            UnitOfPower.WATT,
+            "real_time_power_usage",
+            format=power_data_format,
+            scale=power_scale,
+        )
     ]
 
     if coordinator.device.supports_humidity:
-        entities.append(MideaSensor(coordinator,
-                                    "indoor_humidity",
-                                    SensorDeviceClass.HUMIDITY,
-                                    PERCENTAGE,
-                                    "indoor_humidity"))
+        entities.append(MideaSensor(
+            coordinator,
+            "indoor_humidity",
+            SensorDeviceClass.HUMIDITY,
+            PERCENTAGE,
+            "indoor_humidity",
+        ))
 
     add_entities(entities)
 
@@ -91,7 +121,7 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
                  translation_key: Optional[str] = None,
                  *,
                  state_class: SensorStateClass = SensorStateClass.MEASUREMENT,
-                 scale: float = 1.0) -> None:
+                 ) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
@@ -99,7 +129,6 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
         self._state_class = state_class
         self._unit = unit
         self._attr_translation_key = translation_key
-        self._scale = scale
 
     @property
     def device_info(self) -> dict:
@@ -145,20 +174,21 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> float | None:
         """Return the current native value."""
-        value = getattr(self._device, self._prop, None)
-
-        if value is None:
-            return None
-
-        return value * self._scale
+        return getattr(self._device, self._prop, None)
 
 
 class MideaEnergySensor(MideaSensor):
     """Energy sensor class for Midea AC."""
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self,
+                 *args,
+                 format: AC.EnergyDataFormat,
+                 scale: float = 1.0,
+                 **kwargs) -> None:
         MideaSensor.__init__(self, *args, **kwargs)
 
+        self._format = format
+        self._scale = scale
         self._attr_entity_registry_enabled_default = False
 
     async def async_added_to_hass(self) -> None:
@@ -176,3 +206,17 @@ class MideaEnergySensor(MideaSensor):
 
         # Unregister energy sensor with coordinator
         self.coordinator.unregister_energy_sensor()
+
+    @property
+    def native_value(self) -> float | None:
+        """Return the scaled native value."""
+        get_method = getattr(self._device, self._prop, None)
+        if get_method and callable(get_method):
+            value = get_method(self._format)
+        else:
+            value = None
+
+        if value is None:
+            return None
+
+        return value * self._scale
