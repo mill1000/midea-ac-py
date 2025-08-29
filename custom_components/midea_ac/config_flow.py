@@ -6,11 +6,12 @@ from typing import Any, Optional, cast
 import homeassistant.helpers.config_validation as cv
 import httpx
 import voluptuous as vol
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
+from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
+                                          ConfigFlowResult, OptionsFlow)
 from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
                                  CONF_PORT, CONF_TOKEN, DEGREE)
 from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult, section
+from homeassistant.data_entry_flow import section
 from homeassistant.helpers import httpx_client
 from homeassistant.helpers.selector import (CountrySelector,
                                             CountrySelectorConfig,
@@ -68,7 +69,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 4
 
-    async def async_step_user(self, _) -> FlowResult:
+    async def async_step_user(self, user_input = None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
         return self.async_show_menu(
             step_id="user",
@@ -77,7 +78,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_discover(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the discovery step of config flow."""
         errors = {}
 
@@ -114,7 +115,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Finish connection
                 try:
                     if await Discover.connect(device):
-                        return await self.async_step_show_token_key(device=device)
+                        return await self.async_step_show_token_key(device=cast(AC, device))
                     else:
                         # Indicate a connection could not be made
                         return self.async_abort(reason="cannot_connect")
@@ -143,7 +144,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None,
         *,
         country_code: str = CONF_DEFAULT_CLOUD_COUNTRY
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the pick device step of config flow."""
 
         if user_input is not None:
@@ -160,7 +161,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Finish connection
                 try:
                     if await Discover.connect(device):
-                        return await self.async_step_show_token_key(device=device)
+                        return await self.async_step_show_token_key(device=cast(AC, device))
                     else:
                         # Indicate a connection could not be made
                         return self.async_abort(reason="cannot_connect")
@@ -211,8 +212,8 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_show_token_key(
         self, user_input: dict[str, Any] | None = None,
         *,
-        device: AC = None
-    ) -> FlowResult:
+        device: Optional[AC] = None
+    ) -> ConfigFlowResult:
         """Handle the show token step of config flow."""
 
         # V2 devices don't have a token and key to display
@@ -243,7 +244,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=data_schema
         )
 
-    async def async_step_manual(self, user_input) -> FlowResult:
+    async def async_step_manual(self, user_input) -> ConfigFlowResult:
         """Handle the manual step of config flow."""
         errors = {}
 
@@ -290,7 +291,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors
         )
 
-    async def async_step_reconfigure(self, user_input) -> FlowResult:
+    async def async_step_reconfigure(self, user_input) -> ConfigFlowResult:
         """Handle the reconfiguration step of config flow."""
         errors = {}
 
@@ -367,7 +368,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         return device if success else None
 
-    async def _create_entry_from_device(self, device) -> FlowResult:
+    async def _create_entry_from_device(self, device) -> ConfigFlowResult:
         # Save the device into global data
         self.hass.data.setdefault(DOMAIN, {})
 
@@ -413,7 +414,7 @@ class MideaOptionsFlow(OptionsFlow):
         {"collapsed": True}
     )
 
-    async def async_step_init(self, user_input=None) -> FlowResult:
+    async def async_step_init(self, user_input=None) -> ConfigFlowResult:
         """Handle the options flow."""
         if user_input is not None:
             return self.async_create_entry(data=user_input)
