@@ -268,11 +268,15 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if device:
+                if not device:
+                    # Indicate a connection could not be made
+                    errors["base"] = "cannot_connect"
+                elif device.type != DeviceType.AIR_CONDITIONER:
+                    # Indicate unsupported device type
+                    errors["base"] = "unsupported_device"
+                else:
+                    # Create entry from valid device
                     return await self._create_entry_from_device(device)
-
-                # Indicate a connection could not be made
-                errors["base"] = "cannot_connect"
 
         user_input = user_input or {}
 
@@ -316,14 +320,18 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if device:
+                if not device:
+                    # Indicate a connection could not be made
+                    errors["base"] = "cannot_connect"
+                elif device.type != DeviceType.AIR_CONDITIONER:
+                    # Indicate unsupported device type
+                    errors["base"] = "unsupported_device"
+                else:
+                    # Update entry
                     return self.async_update_reload_and_abort(
                         self._get_reconfigure_entry(),
                         data_updates=user_input,
                     )
-
-                # Indicate a connection could not be made
-                errors["base"] = "cannot_connect"
 
         # Use existing config entry data if no user input
         user_input = user_input or self._get_reconfigure_entry().data
