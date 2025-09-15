@@ -1,4 +1,6 @@
 name: Validate with hassfest
+permissions:
+  contents: read
 
 on:
   push:

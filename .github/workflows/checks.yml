@@ -1,4 +1,6 @@
 name: Code Quality Checks
+permissions:
+  contents: read
 
 on:
   push:
