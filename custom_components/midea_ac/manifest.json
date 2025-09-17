@@ -13,7 +13,7 @@
     "msmart"
   ],
   "requirements": [
-    "msmart-ng==2025.9.0"
+    "msmart-ng@git+https://github.com/mill1000/midea-msmart@feature/cc_device_support"
   ],
   "version": "2025.9.0"
 }
