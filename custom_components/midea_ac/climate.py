@@ -234,7 +234,8 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         """Return device specific state attributes."""
 
         return {
-            "follow_me": self._device.follow_me
+            "follow_me": f"{self._device.follow_me}",
+            "error_code": f"{self._device.error_code}",
         }
 
     async def async_set_follow_me(self, enabled: bool) -> None:
