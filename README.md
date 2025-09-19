@@ -32,6 +32,8 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
 * Support for sleep, eco, boost (turbo), and away (freeze protection) presets.
 * Minimum and maximum target temperatures provided by the device.
 * Switch for device display<sup>1</sup>.
+* Device error codes as an attribute.
+* Selectable data format and scale for energy and power sensors.<sup>3</sup>
 * Advanced controls (when supported by the device):
   * Purifier (Ionizer/UV)
   * Device filter alert
@@ -39,14 +41,14 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
   * Service to enable the "Follow Me" function<sup>2</sup>
   * Swing angle (fan position)
   * Indoor humidity sensor
-  * Target humidity in Dry mode
-  * Energy and power sensors<sup>3</sup>
+  * Target humidity in Dry mode
   * Start and monitor self-cleaning
   * Rate selection (Gear mode)
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
   * iECO
   * Auxiliary heating mode
   * Flash/jet cool
+  * Cascade
 
 <small>
 
