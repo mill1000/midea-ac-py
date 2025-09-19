@@ -268,12 +268,12 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if device and device.supported == False:
-                    # Indicate unsupported device type
-                    errors["base"] = "unsupported_device"
-                elif not device or device.online == False:
+                if not device or device.online == False:
                     # Indicate a connection could not be made
                     errors["base"] = "cannot_connect"
+                elif device and device.supported == False:
+                    # Indicate unsupported device type
+                    errors["base"] = "unsupported_device"
                 else:
                     # Create entry from valid device
                     return await self._create_entry_from_device(device)
@@ -320,12 +320,12 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if device and device.supported == False:
-                    # Indicate unsupported device type
-                    errors["base"] = "unsupported_device"
-                elif not device or device.online == False:
+                if not device or device.online == False:
                     # Indicate a connection could not be made
                     errors["base"] = "cannot_connect"
+                elif device and device.supported == False:
+                    # Indicate unsupported device type
+                    errors["base"] = "unsupported_device"
                 else:
                     # Update entry
                     return self.async_update_reload_and_abort(
