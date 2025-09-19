@@ -268,12 +268,12 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if not device:
-                    # Indicate a connection could not be made
-                    errors["base"] = "cannot_connect"
-                elif device.type != DeviceType.AIR_CONDITIONER:
+                if device and device.supported == False:
                     # Indicate unsupported device type
                     errors["base"] = "unsupported_device"
+                elif not device or device.online == False:
+                    # Indicate a connection could not be made
+                    errors["base"] = "cannot_connect"
                 else:
                     # Create entry from valid device
                     return await self._create_entry_from_device(device)
@@ -320,12 +320,12 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 # Attempt a connection to see if config is valid
                 device = await self._test_manual_connection(user_input)
 
-                if not device:
-                    # Indicate a connection could not be made
-                    errors["base"] = "cannot_connect"
-                elif device.type != DeviceType.AIR_CONDITIONER:
+                if device and device.supported == False:
                     # Indicate unsupported device type
                     errors["base"] = "unsupported_device"
+                elif not device or device.online == False:
+                    # Indicate a connection could not be made
+                    errors["base"] = "cannot_connect"
                 else:
                     # Update entry
                     return self.async_update_reload_and_abort(
@@ -361,20 +361,19 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         port = config.get(CONF_PORT)
         device = AC(ip=host, port=port, device_id=int(id))
 
-        # Configure token and key as needed
+        # Authenticate with device as needed
         token = config.get(CONF_TOKEN)
         key = config.get(CONF_KEY)
         if token and key:
             try:
                 await device.authenticate(token, key)
-                success = True
             except AuthenticationError:
-                success = False
-        else:
-            await device.refresh()
-            success = device.online
+                return None
 
-        return device if success else None
+        # Attempt to refresh device state
+        await device.refresh()
+
+        return device
 
     async def _create_entry_from_device(self, device) -> ConfigFlowResult:
         # Save the device into global data
