@@ -33,15 +33,15 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
 * Minimum and maximum target temperatures provided by the device.
 * Switch for device display<sup>1</sup>.
 * Device error codes as an attribute.
-* Selectable data format and scale for energy and power sensors.<sup>3</sup>
+* Selectable data format and scale for energy and power sensors.<sup>2</sup>
 * Advanced controls (when supported by the device):
   * Purifier (Ionizer/UV)
   * Device filter alert
   * Custom fan speeds
-  * Service to enable the "Follow Me" function<sup>2</sup>
+  * Service to enable the "Follow Me" function<sup>3</sup>
   * Swing angle (fan position)
   * Indoor humidity sensor
-  * Target humidity in Dry mode
+  * Target humidity in Dry mode
   * Start and monitor self-cleaning
   * Rate selection (Gear mode)
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
@@ -53,8 +53,8 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
 <small>
 
 1. Device dependent. Some devices only support display control via IR.
-2. Experimental. "Follow Me" requires the IR remote to transmit temperature data. More info [here](https://github.com/mill1000/midea-msmart/pull/91).
-3. Sensors must be manually enabled on the device page. A device may not support all energy sensors.
+2. Sensors must be manually enabled on the device page. A device may not support all energy sensors.
+3. Experimental. "Follow Me" requires the IR remote to transmit temperature data. More info [here](https://github.com/mill1000/midea-msmart/pull/91).
 </small>
 
 ## Translations
