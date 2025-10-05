@@ -30,7 +30,8 @@ from msmart.lan import AuthenticationError
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
-                    CONF_ENERGY_SENSOR, CONF_FAN_SPEED_STEP, CONF_KEY,
+                    CONF_ENERGY_SENSOR, CONF_EXTERNAL_TEMP_SENSOR,
+                    CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_SWING_ANGLE_RTL,
                     CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
@@ -42,6 +43,7 @@ _DEFAULT_OPTIONS = {
     CONF_FAN_SPEED_STEP: 1,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
+    CONF_EXTERNAL_TEMP_SENSOR: None,
     CONF_ENERGY_SENSOR: {
         CONF_ENERGY_DATA_FORMAT: EnergyFormat.BCD,
         CONF_ENERGY_DATA_SCALE: 1.0
@@ -430,6 +432,7 @@ class MideaOptionsFlow(OptionsFlow):
             vol.Schema({
                 vol.Optional(CONF_BEEP): cv.boolean,
                 vol.Optional(CONF_SWING_ANGLE_RTL): cv.boolean,
+                vol.Optional(CONF_EXTERNAL_TEMP_SENSOR): cv.string,
                 vol.Optional(CONF_TEMP_STEP): NumberSelector(
                     NumberSelectorConfig(
                         min=.5,

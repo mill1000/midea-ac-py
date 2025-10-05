@@ -14,16 +14,17 @@ from homeassistant.components.climate.const import (ATTR_HVAC_MODE,
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED,
                                  UnitOfTemperature)
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, State
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.device import AirConditioner as AC
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
-                    CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
-                    PRESET_IECO)
+                    CONF_EXTERNAL_TEMP_SENSOR, CONF_SHOW_ALL_PRESETS, 
+                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND, 
+                    CONF_WORKAROUNDS, DOMAIN, PRESET_IECO)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -94,6 +95,7 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
         # Apply options
         self._device.beep = options.get(CONF_BEEP, False)
         self._target_temperature_step = options.get(CONF_TEMP_STEP)
+        self._external_temp_sensor = options.get(CONF_EXTERNAL_TEMP_SENSOR)
 
         # Setup default supported features
         self._supported_features = (
@@ -233,10 +235,20 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     def extra_state_attributes(self) -> dict[str, str]:
         """Return device specific state attributes."""
 
-        return {
+        attributes = {
             "follow_me": f"{self._device.follow_me}",
             "error_code": f"{self._device.error_code}",
+            "internal_temperature": f"{self._device.indoor_temperature}",
         }
+        
+        # Add external temperature sensor info if configured
+        if self._external_temp_sensor:
+            attributes["external_temp_sensor"] = self._external_temp_sensor
+            sensor_state = self.hass.states.get(self._external_temp_sensor)
+            if sensor_state:
+                attributes["external_temp_sensor_state"] = sensor_state.state
+        
+        return attributes
 
     async def async_set_follow_me(self, enabled: bool) -> None:
         """Set 'follow me' mode."""
@@ -277,6 +289,24 @@ class MideaClimateACDevice(MideaCoordinatorEntity, ClimateEntity):
     @property
     def current_temperature(self) -> float | None:
         """Return the current temperature."""
+        # Use external temperature sensor if configured
+        if self._external_temp_sensor:
+            try:
+                # Get the state of the external temperature sensor
+                sensor_state = self.hass.states.get(self._external_temp_sensor)
+                if sensor_state and sensor_state.state not in ("unknown", "unavailable"):
+                    external_temp = float(sensor_state.state)
+                    _LOGGER.debug("Using external temperature sensor '%s': %s°C", 
+                                self._external_temp_sensor, external_temp)
+                    return external_temp
+                else:
+                    _LOGGER.warning("External temperature sensor '%s' is unavailable or has invalid state, falling back to internal sensor", 
+                                  self._external_temp_sensor)
+            except (ValueError, TypeError) as e:
+                _LOGGER.warning("Failed to read external temperature sensor '%s': %s, falling back to internal sensor", 
+                              self._external_temp_sensor, e)
+        
+        # Fall back to device's internal temperature sensor
         return self._device.indoor_temperature
 
     @property

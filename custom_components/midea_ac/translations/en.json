@@ -74,12 +74,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Enable Beep",
+          "external_temp_sensor": "External Temperature Sensor",
           "temp_step": "Temperature Step",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Maximum Connection Lifetime",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "external_temp_sensor": "Entity ID of external temperature sensor to use instead of internal sensor (e.g., sensor.room_temperature)",
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)"
