@@ -93,3 +93,34 @@ async def test_concurrent_network_access_exception(
     task2 = asyncio.create_task(coordinator.apply())
     await task1
     task2.cancel()
+
+
+async def test_refresh_apply_race_condition(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test that race conditions between refresh() and apply() exist."""
+
+    # Setup the integration
+    await _setup_integration(hass, mock_config_entry)
+
+    # Fetch the coordinator
+    coordinator = hass.data[DOMAIN][mock_config_entry.entry_id]
+    device = coordinator.device
+
+    # Setup a mock LAN protocol
+    _mock_lan_protocol(device._lan)
+
+    logging.getLogger("msmart").setLevel(logging.DEBUG)
+    logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
+
+    
+
+    # Check that concurrent calls to network actions don't throw
+    task1 = asyncio.create_task(coordinator.async_request_refresh())
+    await asyncio.sleep(3)
+    task2 = asyncio.create_task(coordinator.apply())
+    await task1
+    task2.cancel()
+
+    assert False
