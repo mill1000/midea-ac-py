@@ -114,8 +114,6 @@ async def test_refresh_apply_race_condition(
     logging.getLogger("msmart").setLevel(logging.DEBUG)
     logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
 
-    
-
     # Check that concurrent calls to network actions don't throw
     task1 = asyncio.create_task(coordinator.async_request_refresh())
     await asyncio.sleep(3)

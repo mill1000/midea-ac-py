@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, Mapping, Sequence
+from typing import Any, ClassVar, Generic, Mapping, Sequence, Type
 
 import voluptuous as vol
 from homeassistant.components.climate import ClimateEntity
@@ -90,6 +90,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
     _HVAC_MODE_TO_OPERATIONAL_MODE: ClassVar[Mapping[HVACMode, Any]]
 
     def __init__(self,
+                 device_class: Type[MideaDevice],
                  hass: HomeAssistant,
                  coordinator: MideaDeviceUpdateCoordinator[MideaDevice],
                  config: ClimateConfig
@@ -100,7 +101,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self.hass = hass
 
         # Save device class
-        self._device_class = self._device.device_class
+        self._device_class = device_class
 
         # Set temperature config
         self._target_temperature_step = config.temperature_step
@@ -400,7 +401,7 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             supported_preset_modes=preset_modes,
         )
 
-        MideaClimateDevice.__init__(self, hass, coordinator, config)
+        MideaClimateDevice.__init__(self, AC, hass, coordinator, config)
 
         # Apply misc options
         self._device.beep = options.get(CONF_BEEP, False)
@@ -633,7 +634,7 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             supported_preset_modes=preset_modes,
         )
 
-        MideaClimateDevice.__init__(self, hass, coordinator, config)
+        MideaClimateDevice.__init__(self, CC, hass, coordinator, config)
 
     @property
     def supported_features(self) -> int:
