@@ -100,7 +100,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self.hass = hass
 
         # Save device class
-        self._device_class = type(self._device)
+        self._device_class = self._device.device_class
 
         # Set temperature config
         self._target_temperature_step = config.temperature_step

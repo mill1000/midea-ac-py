@@ -3,7 +3,7 @@
 import datetime
 import logging
 from asyncio import Lock
-from typing import Any, Generic, NoReturn
+from typing import Any, Generic, Type
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
@@ -33,8 +33,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator,  Generic[MideaDevice])
         )
 
         self._lock = Lock()
-        # self._device: MideaDevice = device
-        self._proxy: MideaDeviceProxy = MideaDeviceProxy(device)
+        self._proxy = MideaDeviceProxy(device)
         self._energy_sensors = 0
 
     async def _async_update_data(self) -> None:
@@ -43,8 +42,8 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator,  Generic[MideaDevice])
             await self._proxy.refresh()
 
     @property
-    def device(self) -> MideaDeviceProxy:
-        """Fetch the device proxy."""
+    def device(self) -> MideaDeviceProxy[MideaDevice]:
+        """Return the device proxy typed as the device."""
         return self._proxy
 
     async def apply(self) -> None:
@@ -85,7 +84,7 @@ class MideaCoordinatorEntity(CoordinatorEntity[MideaDeviceUpdateCoordinator], Ge
         super().__init__(coordinator)
 
         # Save reference to device
-        self._device: MideaDeviceProxy = coordinator.device
+        self._device: MideaDeviceProxy[MideaDevice] = coordinator.device
 
     @property
     def available(self) -> bool:
@@ -93,36 +92,30 @@ class MideaCoordinatorEntity(CoordinatorEntity[MideaDeviceUpdateCoordinator], Ge
         return self._device.online
 
 
-class MideaDeviceProxy:
-    """A proxy that stages state changes and prevents direct access to the device."""
+class MideaDeviceProxy(Generic[MideaDevice]):
+    """A device proxy that stages state changes and prevents direct access to the device."""
 
-    def __init__(self, device) -> None:
-        # Create _device and _stage attributes using super's setattr to avoid a call to our own setattr
-        super().__setattr__("_device", device)
-        super().__setattr__("_staged", {})
+    # Use __slots__ to prevent accidental attribute creation
+    __slots__ = ("_device", "_staged")
 
-        # Dynamically create properties for all device's properties
-        def _make_property(name: str) -> property:
-            def fget(self):
-                return self.get(name)
+    def __init__(self, device: MideaDevice) -> None:
+        self._device: MideaDevice = device
+        self._staged: dict[str, Any] = {}
 
-            def fset(self, value):
-                self.set(name, value)
-
-            return property(fget, fset)
-
+        # Dynamically create proxy properties for each device property
         for attr_name, attr_value in device.__class__.__dict__.items():
             # Only proxy device properties when they won't overwrite existing proxy properties
             if not isinstance(attr_value, property) or hasattr(self.__class__, attr_name):
                 continue
 
-            # Create a property in the proxy
-            setattr(self.__class__, attr_name, _make_property(attr_name))
-
-    def __setattr__(self, name: str, _) -> NoReturn:
-        """Prevent setting any attributes on the proxy."""
-        raise AttributeError(
-            f"Cannot modify '{name}' directly. Use proxy.set()")
+            setattr(
+                self.__class__,
+                attr_name,
+                property(
+                    fget=lambda self, a=attr_name: self.get(a),
+                    fset=lambda self, value, a=attr_name: self.set(a, value),
+                ),
+            )
 
     def get(self, attr: str, default: Any = None) -> Any:
         """Get a property from the device."""
@@ -143,11 +136,17 @@ class MideaDeviceProxy:
         await self._device.refresh()
 
     async def apply(self) -> None:
-        """Apply changes to the device and update HA state."""
-        # Apply changes to local device state
+        """Apply changes to the device."""
+        # Apply staged changes to local device state
         for prop, value in self._staged.items():
             setattr(self._device, prop, value)
 
         # Apply state to device
         await self._device.apply()
+
+        # Clear staged changes
         self._staged.clear()
+
+    @property
+    def device_class(self) -> Type[MideaDevice]:
+        return type(self._device)
