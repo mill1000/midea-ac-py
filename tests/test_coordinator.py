@@ -114,11 +114,19 @@ async def test_refresh_apply_race_condition(
     logging.getLogger("msmart").setLevel(logging.DEBUG)
     logging.getLogger("custom_components.midea_ac").setLevel(logging.DEBUG)
 
+    assert device.beep is False
+
     # Check that concurrent calls to network actions don't throw
     task1 = asyncio.create_task(coordinator.async_request_refresh())
-    await asyncio.sleep(3)
-    task2 = asyncio.create_task(coordinator.apply())
-    await task1
-    task2.cancel()
+    # await asyncio.sleep(1)
 
-    assert False
+    device.beep = True
+    assert device.beep is True
+
+    await coordinator.apply()
+
+    assert device.beep is True
+
+    # task2 = asyncio.create_task(coordinator.apply())
+    await task1
+    # task2.cancel()

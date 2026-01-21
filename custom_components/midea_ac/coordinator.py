@@ -18,41 +18,24 @@ _LOGGER = logging.getLogger(__name__)
 class MideaDeviceProxy(Generic[MideaDevice]):
     """A device proxy that stages state changes and prevents direct access to the device."""
 
-    # Use __slots__ to prevent accidental attribute creation
-    __slots__ = ("_device", "_staged")
-
     def __init__(self, device: MideaDevice) -> None:
-        self._device: MideaDevice = device
-        self._staged: dict[str, Any] = {}
+        # Create attributes with super() to avoid calling __setattr__
+        super().__setattr__("_device", device)
+        super().__setattr__("_staged", {})
 
-        # Dynamically create proxy properties for each device property
-        for attr_name, attr_value in device.__class__.__dict__.items():
-            # Only proxy device properties when they won't overwrite existing proxy properties
-            if not isinstance(attr_value, property) or hasattr(self.__class__, attr_name):
-                continue
-
-            setattr(
-                self.__class__,
-                attr_name,
-                property(
-                    fget=lambda self, a=attr_name: self.get(a),
-                    fset=lambda self, value, a=attr_name: self.set(a, value),
-                ),
-            )
-
-    def get(self, attr: str, default: Any = None) -> Any:
+    def __getattr__(self, name: str) -> Any:
         """Get a property from the device."""
         # Return staged value if present
-        if attr in self._staged:
-            return self._staged[attr]
+        if name in self._staged:
+            return self._staged[name]
 
         # Otherwise return current device value
-        return getattr(self._device, attr, default)
+        return getattr(self._device, name)
 
-    def set(self, attr: str, value: Any) -> None:
+    def __setattr__(self, name: str, value: Any) -> None:
         """Stage a property change."""
         # Save value as pending change
-        self._staged[attr] = value
+        self._staged[name] = value
 
     async def refresh(self) -> None:
         """Update the device data."""
@@ -98,9 +81,9 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
             await self._proxy.refresh()
 
     @property
-    def device(self) -> MideaDevice:
+    def device(self) -> MideaDeviceProxy[MideaDevice]:
         """Return the device proxy typed as the device."""
-        return cast(MideaDevice, self._proxy)
+        return self._proxy
 
     async def apply(self) -> None:
         """Apply changes to the device and update HA state."""
@@ -140,7 +123,7 @@ class MideaCoordinatorEntity(CoordinatorEntity[MideaDeviceUpdateCoordinator], Ge
         super().__init__(coordinator)
 
         # Save reference to device
-        self._device: MideaDevice = coordinator.device
+        self._device: MideaDeviceProxy[MideaDevice] = coordinator.device
 
     @property
     def available(self) -> bool:
