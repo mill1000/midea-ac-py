@@ -266,7 +266,7 @@ async def test_manual_flow_ac_device(hass: HomeAssistant) -> None:
     )
     assert result
 
-    # Patch CC device refresh method
+    # Patch AC device refresh method
     with (patch("custom_components.midea_ac.config_flow.AC.refresh") as refresh_mock,
           patch("custom_components.midea_ac.config_flow.AC.online", new_callable=PropertyMock) as online_mock,
           patch("custom_components.midea_ac.config_flow.AC.supported", new_callable=PropertyMock) as supported_mock
@@ -276,7 +276,7 @@ async def test_manual_flow_ac_device(hass: HomeAssistant) -> None:
         online_mock.return_value = True
         supported_mock.return_value = True
 
-        # Configure CC device
+        # Configure AC device
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             user_input={
