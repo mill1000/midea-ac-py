@@ -3,7 +3,7 @@
 import datetime
 import logging
 from asyncio import Lock
-from typing import Any, Generic, cast
+from typing import Any, Generic
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
@@ -19,7 +19,7 @@ class MideaDeviceProxy(Generic[MideaDevice]):
     """A device proxy that stages state changes and prevents direct access to the device."""
 
     def __init__(self, device: MideaDevice) -> None:
-        # Create attributes with super() to avoid calling __setattr__
+        # Create attributes via super() to avoid calling the overridden __setattr__
         super().__setattr__("_device", device)
         super().__setattr__("_staged", {})
 
@@ -34,6 +34,16 @@ class MideaDeviceProxy(Generic[MideaDevice]):
 
     def __setattr__(self, name: str, value: Any) -> None:
         """Stage a property change."""
+        # Throw if trying to create an attribute
+        if not hasattr(self._device, name):
+            raise AttributeError(f"Cannot set attribute '{name}'")
+
+        # Check if it's a property and has a setter
+        device_attr = getattr(type(self._device), name, None)
+        if isinstance(device_attr, property):
+            if device_attr.fset is None:
+                raise AttributeError(f"Cannot set read-only property '{name}'")
+
         # Save value as pending change
         self._staged[name] = value
 
@@ -44,8 +54,8 @@ class MideaDeviceProxy(Generic[MideaDevice]):
     async def apply(self) -> None:
         """Apply changes to the device."""
         # Apply staged changes to local device state
-        for prop, value in self._staged.items():
-            setattr(self._device, prop, value)
+        for name, value in self._staged.items():
+            setattr(self._device, name, value)
 
         # Apply state to device
         await self._device.apply()
