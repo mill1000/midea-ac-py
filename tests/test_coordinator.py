@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from typing import NoReturn
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -22,13 +23,19 @@ def _mock_lan_protocol(lan) -> None:
     lan._read_available.__aiter__.return_value = None
 
     # Mock connect and protocol objects so network won't be used
-    async def mock_connect():
+    async def mock_connect() -> None:
         lan._protocol = _LanProtocol()
         lan._protocol._peer = "127.0.0.1:6444"
 
         # Mock the transport so connection wil be seen as alive
         lan._protocol._transport = MagicMock()
         lan._protocol._transport.is_closing = MagicMock(return_value=False)
+
+        async def _read_timeout() -> NoReturn:
+            await asyncio.sleep(.25)
+            raise TimeoutError
+
+        lan._protocol.read = AsyncMock(side_effect=_read_timeout)
 
     lan._connect = mock_connect
 
@@ -60,11 +67,19 @@ async def test_concurrent_network_access_exception(
                          MagicMock(return_value=None))
     ):
         # Assert exception is thrown when concurrent access occurs
+        # An exception is thrown when the timed out refresh() destroys the protocol
+        # and the still running apply() attempts to reference it
         with pytest.raises(AttributeError):
-            task1 = asyncio.create_task(coordinator.async_request_refresh())
-            await asyncio.sleep(3)
-            task2 = asyncio.create_task(coordinator.apply())
-            await asyncio.gather(task1, task2)
+            # Start refresh()
+            refresh_task = asyncio.create_task(
+                coordinator.async_request_refresh())
+
+            # Start concurrent apply()
+            await asyncio.sleep(.5)
+            await coordinator.apply()
+
+            # Wait for refresh to finish
+            await refresh_task
 
 
 async def test_concurrent_network_access_with_lock(
@@ -81,12 +96,15 @@ async def test_concurrent_network_access_with_lock(
     # Setup a mock LAN protocol
     _mock_lan_protocol(device._lan)
 
-    # Check that concurrent calls to network actions don't throw
-    task1 = asyncio.create_task(coordinator.async_request_refresh())
-    await asyncio.sleep(3)
-    task2 = asyncio.create_task(coordinator.apply())
-    await task1
-    task2.cancel()
+    # Check that concurrent calls to network actions don't throw when protected with a lock
+    refresh_task = asyncio.create_task(coordinator.async_request_refresh())
+
+    # Start concurrent apply()
+    await asyncio.sleep(.5)
+    await coordinator.apply()
+
+    # Wait for refresh to finish
+    await refresh_task
 
 
 async def test_refresh_apply_race_condition(
