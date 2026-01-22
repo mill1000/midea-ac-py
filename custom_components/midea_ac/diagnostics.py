@@ -7,6 +7,9 @@ from homeassistant.components.diagnostics.util import async_redact_data
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_TOKEN
 from homeassistant.core import HomeAssistant
+from msmart.const import DeviceType
+from msmart.device import AirConditioner as AC
+from msmart.device import CommercialAirConditioner as CC
 
 from .const import CONF_KEY, DOMAIN
 
@@ -27,7 +30,10 @@ async def async_get_config_entry_diagnostics(
     device = coordinator.device
 
     # Get base device for basic info
-    base_info = super(type(device), device).to_dict()
+    if device.type == DeviceType.AIR_CONDITIONER:
+        base_info = super(AC, device).to_dict()
+    elif device.type == DeviceType.COMMERCIAL_AC:
+        base_info = super(CC, device).to_dict()
 
     feature_info = device.capabilities_dict()
 
