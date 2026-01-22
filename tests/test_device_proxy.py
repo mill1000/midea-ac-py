@@ -8,7 +8,7 @@ import pytest
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 
-from custom_components.midea_ac.coordinator import MideaDeviceProxy
+from custom_components.midea_ac.device_proxy import MideaDeviceProxy
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
