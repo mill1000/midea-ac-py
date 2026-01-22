@@ -113,11 +113,8 @@ async def test_refresh_apply_race_condition(
     """Test that a race conditions exists between refresh() and apply()."""
 
     async def _slow_refresh() -> None:
-        _LOGGER.info(f"Slow refresh start")
         await asyncio.sleep(1)
-
         mock_device.target_temperature = 20
-        _LOGGER.info(f"Slow refresh done")
 
     # Create a dummy device with a slow refresh
     mock_device = MagicMock()
@@ -135,7 +132,6 @@ async def test_refresh_apply_race_condition(
     await asyncio.sleep(0.5)
 
     # Attempt to set an attribute during slow refresh
-    _LOGGER.info(f"Set target temp")
     coordinator.device.target_temperature = 10
     assert coordinator.device.target_temperature == 10
     await coordinator.apply()
@@ -153,11 +149,8 @@ async def test_refresh_apply_race_condition_with_proxy(
     """Test that no race conditions exsits refresh() and apply() when using a device proxy."""
 
     async def _slow_refresh() -> None:
-        _LOGGER.info(f"Slow refresh start")
         await asyncio.sleep(1)
-
         mock_device.target_temperature = 20
-        _LOGGER.info(f"Slow refresh done")
 
     # Create a dummy device with a slow refresh
     mock_device = MagicMock()
@@ -173,7 +166,6 @@ async def test_refresh_apply_race_condition_with_proxy(
     await asyncio.sleep(0.5)
 
     # Attempt to set an attribute during slow refresh
-    _LOGGER.info(f"Set target temp")
     coordinator.device.target_temperature = 10
     assert coordinator.device.target_temperature == 10
     await coordinator.apply()
