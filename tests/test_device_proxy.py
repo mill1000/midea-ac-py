@@ -35,7 +35,7 @@ async def test_device_proxy() -> None:
     with pytest.raises(AttributeError, match="Cannot set read-only property"):
         proxy.indoor_humidity = 2
 
-    # Assert that accessing a nonexist attribute still throws
+    # Assert that accessing a nonexistent attribute still throws
     with pytest.raises(AttributeError, match="object has no attribute"):
         assert proxy.another_nonexistent_attribute == None
 
