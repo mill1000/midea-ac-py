@@ -98,3 +98,19 @@ async def test_device_proxy_enum() -> None:
 
     assert device.FanSpeed.AUTO == proxy.FanSpeed.AUTO
     assert device.OperationalMode.DRY == proxy.OperationalMode.DRY
+
+
+async def test_device_proxy_hasattr() -> None:
+    """Test that hasattr is proxied"""
+
+    # Create dummy device
+    device = AC("0.0.0.0", 0, 0)
+
+    # Create proxy
+    proxy = MideaDeviceProxy(device)
+
+    # Assert that hasattr for device matches proxy
+    assert hasattr(device, "enable_energy_usage_requests") == hasattr(
+        proxy, "enable_energy_usage_requests")
+    assert hasattr(device, "fake_attribute") == hasattr(
+        proxy, "fake_attribute")
