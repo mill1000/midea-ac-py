@@ -42,11 +42,6 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         async with self._lock:
             await self._proxy.refresh()
 
-    @property
-    def device(self) -> MideaDeviceProxy[MideaDevice]:
-        """Return the device proxy typed as the device."""
-        return self._proxy
-
     async def apply(self) -> None:
         """Apply changes to the device and update HA state."""
         async with self._lock:
@@ -54,6 +49,11 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
 
         # Update state
         await self.async_request_refresh()
+
+    @property
+    def device(self) -> MideaDeviceProxy[MideaDevice]:
+        """Return the device proxy typed as the device."""
+        return self._proxy
 
     def register_energy_sensor(self) -> None:
         """Record that an energy sensor is active."""
