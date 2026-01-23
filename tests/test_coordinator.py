@@ -145,7 +145,7 @@ async def test_refresh_apply_race_condition(
     # Wait for refresh to complete
     await refresh_task
 
-    # Assert that set attribute was replaced by teh refresh value
+    # Assert that set attribute was replaced by the refresh value
     assert coordinator.device.target_temperature == 20
 
     # Clean up coordinator
@@ -155,7 +155,7 @@ async def test_refresh_apply_race_condition(
 async def test_refresh_apply_race_condition_with_proxy(
     hass: HomeAssistant,
 ) -> None:
-    """Test that no race conditions exsits refresh() and apply() when using a device proxy."""
+    """Test that no race condition exists between refresh() and apply() when using a device proxy."""
 
     async def _slow_refresh() -> None:
         await asyncio.sleep(1)
