@@ -81,6 +81,9 @@ async def test_concurrent_network_access_exception(
             # Wait for refresh to finish
             await refresh_task
 
+        # Clean up coordinator
+        await coordinator.async_shutdown()
+
 
 async def test_concurrent_network_access_with_lock(
     hass: HomeAssistant,
@@ -105,6 +108,9 @@ async def test_concurrent_network_access_with_lock(
 
     # Wait for refresh to finish
     await refresh_task
+
+    # Clean up coordinator
+    await coordinator.async_shutdown()
 
 
 async def test_refresh_apply_race_condition(
@@ -142,6 +148,9 @@ async def test_refresh_apply_race_condition(
     # Assert that set attribute was replaced by teh refresh value
     assert coordinator.device.target_temperature == 20
 
+    # Clean up coordinator
+    await coordinator.async_shutdown()
+
 
 async def test_refresh_apply_race_condition_with_proxy(
     hass: HomeAssistant,
@@ -175,3 +184,6 @@ async def test_refresh_apply_race_condition_with_proxy(
 
     # Assert that attribute was set correctly
     assert coordinator.device.target_temperature == 10
+
+    # Clean up coordinator
+    await coordinator.async_shutdown()
