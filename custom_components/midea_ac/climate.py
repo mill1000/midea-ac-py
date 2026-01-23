@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, ClassVar, Generic, Mapping, Sequence, Type
+from typing import Any, ClassVar, Generic, Mapping, Sequence
 
 import voluptuous as vol
 from homeassistant.components.climate import ClimateEntity
