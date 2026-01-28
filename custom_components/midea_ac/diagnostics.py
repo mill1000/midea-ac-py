@@ -31,9 +31,9 @@ async def async_get_config_entry_diagnostics(
 
     # Get base device for basic info
     if device.type == DeviceType.AIR_CONDITIONER:
-        base_info = super(AC, device).to_dict()
+        base_info = super(AC, device._device).to_dict()
     elif device.type == DeviceType.COMMERCIAL_AC:
-        base_info = super(CC, device).to_dict()
+        base_info = super(CC, device._device).to_dict()
 
     feature_info = device.capabilities_dict()
 
