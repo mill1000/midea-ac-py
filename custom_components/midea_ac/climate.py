@@ -99,9 +99,6 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         self.hass = hass
 
-        # Save device class
-        self._device_class = type(self._device)
-
         # Set temperature config
         self._target_temperature_step = config.temperature_step
         self._min_temperature = config.min_target_temperature
@@ -140,7 +137,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self._preset_modes = config.supported_preset_modes
 
         # If device supports any swing mode, add it to supported features
-        if config.supported_swing_modes != [self._device_class.SwingMode.OFF]:
+        if config.supported_swing_modes != [self._device.SwingMode.OFF]:
             self._supported_features |= ClimateEntityFeature.SWING_MODE
 
         # Convert swing modes to strings
@@ -261,7 +258,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
     async def async_set_swing_mode(self, swing_mode: str) -> None:
         """Set the swing mode."""
-        self._device.swing_mode = self._device_class.SwingMode.get_from_name(
+        self._device.swing_mode = self._device.SwingMode.get_from_name(
             swing_mode.upper(), self._device.swing_mode)
 
         await self._apply()
@@ -279,7 +276,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
     async def async_set_fan_mode(self, fan_mode: str) -> None:
         """Set the fan mode."""
 
-        self._device.fan_speed = self._device_class.FanSpeed.get_from_name(
+        self._device.fan_speed = self._device.FanSpeed.get_from_name(
             fan_mode.upper())
         await self._apply()
 
