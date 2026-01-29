@@ -33,9 +33,8 @@ class MideaDeviceProxy(Generic[MideaDevice]):
 
         # Check if it's a property and has a setter
         device_attr = getattr(type(self._device), name, None)
-        if isinstance(device_attr, property):
-            if device_attr.fset is None:
-                raise AttributeError(f"Cannot set read-only property '{name}'")
+        if isinstance(device_attr, property) and device_attr.fset is None:
+            raise AttributeError(f"Cannot set read-only property '{name}'")
 
         # Save value as pending change
         self._staged[name] = value
@@ -55,3 +54,16 @@ class MideaDeviceProxy(Generic[MideaDevice]):
 
         # Clear staged changes
         self._staged.clear()
+
+    def set_direct(self, name: str, value: Any) -> None:
+        """Directly set a device attribute bypassing the staging."""
+        # Throw if trying to create an attribute
+        if not hasattr(self._device, name):
+            raise AttributeError(f"Cannot set attribute '{name}'")
+
+        # Check if it's a property and has a setter
+        device_attr = getattr(type(self._device), name, None)
+        if isinstance(device_attr, property) and device_attr.fset is None:
+            raise AttributeError(f"Cannot set read-only property '{name}'")
+
+        setattr(self._device, name, value)

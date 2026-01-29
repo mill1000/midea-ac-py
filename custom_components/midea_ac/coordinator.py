@@ -64,7 +64,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         self._energy_sensors += 1
 
         # Enable requests
-        self._proxy.enable_energy_usage_requests = True
+        self._proxy.set_direct("enable_energy_usage_requests", True)
 
     def unregister_energy_sensor(self) -> None:
         """Record that an energy sensor is inactive."""
@@ -75,7 +75,8 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         self._energy_sensors -= 1
 
         # Disable requests if last sensor
-        self._proxy.enable_energy_usage_requests = self._energy_sensors > 0
+        self._proxy.set_direct(
+            "enable_energy_usage_requests", self._energy_sensors > 0)
 
 
 class MideaCoordinatorEntity(CoordinatorEntity[MideaDeviceUpdateCoordinator], Generic[MideaDevice]):
