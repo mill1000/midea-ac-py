@@ -2,7 +2,3 @@ pytest
 pytest-homeassistant-custom-component
 
 msmart-ng
-
-# Pin pycares to compatible version for aiodns
-# https://github.com/aio-libs/aiodns/issues/214
-pycares<5.0.0
