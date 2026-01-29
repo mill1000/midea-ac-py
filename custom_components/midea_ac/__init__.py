@@ -8,7 +8,7 @@ from homeassistant.const import (CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN,
                                  Platform)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
-from msmart import __version__ as MSMART_VERISON
+from msmart import __version__ as MSMART_VERSION
 from msmart.base_device import Device
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
@@ -47,7 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     port = config_entry.data[CONF_PORT]
 
     _LOGGER.info("Starting midea-ac-py for device type %02X ID %s (%s:%d). Using msmart-ng version %s.",
-                 device_type, id, host, port, MSMART_VERISON)
+                 device_type, id, host, port, MSMART_VERSION)
 
     # Construct the device
     device = Device.construct(

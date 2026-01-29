@@ -1,8 +1,8 @@
 MIT License
 
-Copyright (c) 2022-2026 Tucker Kern  
-Copyright (c) 2020 Mac_Zhou (@mac-zhou)  
-Copyright (c) 2019 Josh Anderson (@andersonshatch)  
+Copyright (c) 2022-2026 Tucker Kern
+Copyright (c) 2020 Mac_Zhou (@mac-zhou)
+Copyright (c) 2019 Josh Anderson (@andersonshatch)
 Copyright (c) 2018 NeoAcheron
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
