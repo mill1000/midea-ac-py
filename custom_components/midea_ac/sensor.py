@@ -64,7 +64,7 @@ async def async_setup_entry(
     if hasattr(device, "enable_energy_usage_requests"):
         def _get_energy_config(key: str) -> tuple[EnergyFormat, float]:
             config = config_entry.options.get(key)
-            format = type(device).EnergyDataFormat.get_from_name(
+            format = device.EnergyDataFormat.get_from_name(
                 config.get(CONF_ENERGY_DATA_FORMAT).upper())
             scale = config.get(CONF_ENERGY_DATA_SCALE)
             return format, scale

@@ -96,7 +96,7 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
         speed = self._device.fan_speed
 
         # Convert enum to integer
-        if isinstance(speed, type(self._device).FanSpeed):
+        if isinstance(speed, self._device.FanSpeed):
             speed = speed.value
 
         return speed

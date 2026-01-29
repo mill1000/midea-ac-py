@@ -28,20 +28,19 @@ async def async_setup_entry(
     # Fetch coordinator from global data
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     device = coordinator.device
-    device_class = type(device)
 
     # Create entities for supported features
     entities = []
     if hasattr(device, "vertical_swing_angle") and getattr(device, "supports_vertical_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
                                         "vertical_swing_angle",
-                                        device_class.SwingAngle
+                                        device.SwingAngle
                                         ))
 
     if hasattr(device, "horizontal_swing_angle") and getattr(device, "supports_horizontal_swing_angle", False):
         entities.append(MideaEnumSelect(coordinator,
                                         "horizontal_swing_angle",
-                                        device_class.SwingAngle,
+                                        device.SwingAngle,
                                         translation_key="horizontal_swing_angle_rtl" if config_entry.options.get(
                                             CONF_SWING_ANGLE_RTL) else None
                                         ))
@@ -50,7 +49,7 @@ async def async_setup_entry(
     if hasattr(device, "rate_select") and len(supported_rates) > 1:
         entities.append(MideaEnumSelect(coordinator,
                                         "rate_select",
-                                        device_class.RateSelect,
+                                        device.RateSelect,
                                         options=supported_rates
                                         ))
 
@@ -58,14 +57,14 @@ async def async_setup_entry(
     if hasattr(device, "aux_mode") and len(supported_aux_modes) > 1:
         entities.append(MideaEnumSelect(coordinator,
                                         "aux_mode",
-                                        device_class.AuxHeatMode,
+                                        device.AuxHeatMode,
                                         options=supported_aux_modes
                                         ))
 
     if hasattr(device, "cascade") and getattr(device, "supports_cascade", False):
         entities.append(MideaEnumSelect(coordinator,
                                         "cascade",
-                                        device_class.CascadeMode
+                                        device.CascadeMode
                                         ))
 
     # Add select for purifier with 3 or more modes
@@ -73,7 +72,7 @@ async def async_setup_entry(
     if hasattr(device, "purifier") and len(supported_purifier_modes) > 2:
         entities.append(MideaEnumSelect(coordinator,
                                         "purifier",
-                                        device_class.PurifierMode,
+                                        device.PurifierMode,
                                         options=supported_purifier_modes
                                         ))
 

@@ -2,32 +2,17 @@
 
 import asyncio
 import logging
+from typing import NoReturn
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
+from msmart.device import AirConditioner as AC
 from msmart.lan import _LanProtocol
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import DOMAIN
+from custom_components.midea_ac.coordinator import MideaDeviceUpdateCoordinator
 
-
-async def _setup_integration(hass: HomeAssistant, mock_config_entry: MockConfigEntry) -> MockConfigEntry:
-    """Set up the integration with a mock config entry."""
-
-    # Patch refresh and get_capabilities calls to allow integration to setup
-    with (patch("custom_components.midea_ac.config_flow.AC.get_capabilities"),
-          patch("custom_components.midea_ac.config_flow.AC.refresh")):
-        # Add mock config entry to HASS and setup integration
-        mock_config_entry.add_to_hass(hass)
-        await hass.config_entries.async_setup(mock_config_entry.entry_id)
-        await hass.async_block_till_done()
-
-    assert mock_config_entry.entry_id in hass.data[DOMAIN]
-    assert mock_config_entry.state is ConfigEntryState.LOADED
-
-    return mock_config_entry
+_LOGGER = logging.getLogger(__name__)
 
 
 def _mock_lan_protocol(lan) -> None:
@@ -38,7 +23,7 @@ def _mock_lan_protocol(lan) -> None:
     lan._read_available.__aiter__.return_value = None
 
     # Mock connect and protocol objects so network won't be used
-    async def mock_connect():
+    async def mock_connect() -> None:
         lan._protocol = _LanProtocol()
         lan._protocol._peer = "127.0.0.1:6444"
 
@@ -46,21 +31,25 @@ def _mock_lan_protocol(lan) -> None:
         lan._protocol._transport = MagicMock()
         lan._protocol._transport.is_closing = MagicMock(return_value=False)
 
+        async def _read_timeout() -> NoReturn:
+            await asyncio.sleep(.25)
+            raise TimeoutError
+
+        lan._protocol.read = AsyncMock(side_effect=_read_timeout)
+
     lan._connect = mock_connect
 
 
 async def test_concurrent_network_access_exception(
     hass: HomeAssistant,
-    mock_config_entry: MockConfigEntry,
 ) -> None:
     """Test concurrent network access can cause an exception."""
 
-    # Setup the integration
-    await _setup_integration(hass, mock_config_entry)
+    # Create dummy device
+    device = AC("0.0.0.0", 0, 0)
 
-    # Fetch the coordinator
-    coordinator = hass.data[DOMAIN][mock_config_entry.entry_id]
-    device = coordinator.device
+    # Create coordinator
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
 
     # Setup a mock LAN protocol
     _mock_lan_protocol(device._lan)
@@ -78,18 +67,123 @@ async def test_concurrent_network_access_exception(
                          MagicMock(return_value=None))
     ):
         # Assert exception is thrown when concurrent access occurs
+        # An exception is thrown when the timed out refresh() destroys the protocol
+        # and the still running apply() attempts to reference it
         with pytest.raises(AttributeError):
-            task1 = asyncio.create_task(coordinator.async_request_refresh())
-            await asyncio.sleep(3)
-            task2 = asyncio.create_task(coordinator.apply())
-            await asyncio.gather(task1, task2)
+            # Start refresh()
+            refresh_task = asyncio.create_task(
+                coordinator.async_request_refresh())
 
-    # Reconstruct mock LAN protocol
+            # Start concurrent apply()
+            await asyncio.sleep(.5)
+            await coordinator.apply()
+
+            # Wait for refresh to finish
+            await refresh_task
+
+        # Clean up coordinator
+        await coordinator.async_shutdown()
+
+
+async def test_concurrent_network_access_with_lock(
+    hass: HomeAssistant,
+) -> None:
+    """Test concurrent network access is prevented via the lock."""
+
+    # Create dummy device
+    device = AC("0.0.0.0", 0, 0)
+
+    # Create coordinator
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
+
+    # Setup a mock LAN protocol
     _mock_lan_protocol(device._lan)
 
-    # Check that concurrent calls to network actions don't throw
-    task1 = asyncio.create_task(coordinator.async_request_refresh())
-    await asyncio.sleep(3)
-    task2 = asyncio.create_task(coordinator.apply())
-    await task1
-    task2.cancel()
+    # Check that concurrent calls to network actions don't throw when protected with a lock
+    refresh_task = asyncio.create_task(coordinator.async_request_refresh())
+
+    # Start concurrent apply()
+    await asyncio.sleep(.5)
+    await coordinator.apply()
+
+    # Wait for refresh to finish
+    await refresh_task
+
+    # Clean up coordinator
+    await coordinator.async_shutdown()
+
+
+async def test_refresh_apply_race_condition(
+    hass: HomeAssistant,
+) -> None:
+    """Test that a race conditions exists between refresh() and apply()."""
+
+    async def _slow_refresh() -> None:
+        await asyncio.sleep(1)
+        mock_device.target_temperature = 20
+
+    # Create a dummy device with a slow refresh
+    mock_device = MagicMock()
+    mock_device.refresh = _slow_refresh
+    mock_device.apply = AsyncMock()
+    mock_device.target_temperature = 17
+
+    # Create our coordinator without using a device proxy
+    with patch("custom_components.midea_ac.coordinator.MideaDeviceProxy") as mock_proxy:
+        mock_proxy.return_value = mock_device
+        coordinator = MideaDeviceUpdateCoordinator(hass, mock_device)
+
+    # Start a slow refresh
+    refresh_task = asyncio.create_task(coordinator.async_request_refresh())
+    await asyncio.sleep(0.5)
+
+    # Attempt to set an attribute during slow refresh
+    coordinator.device.target_temperature = 10
+    assert coordinator.device.target_temperature == 10
+    await coordinator.apply()
+
+    # Wait for refresh to complete
+    await refresh_task
+
+    # Assert that set attribute was replaced by the refresh value
+    assert coordinator.device.target_temperature == 20
+
+    # Clean up coordinator
+    await coordinator.async_shutdown()
+
+
+async def test_refresh_apply_race_condition_with_proxy(
+    hass: HomeAssistant,
+) -> None:
+    """Test that no race condition exists between refresh() and apply() when using a device proxy."""
+
+    async def _slow_refresh() -> None:
+        await asyncio.sleep(1)
+        mock_device.target_temperature = 20
+
+    # Create a dummy device with a slow refresh
+    mock_device = MagicMock()
+    mock_device.refresh = _slow_refresh
+    mock_device.apply = AsyncMock()
+    mock_device.target_temperature = 17
+
+    # Create coordinator with proxy object
+    coordinator = MideaDeviceUpdateCoordinator(hass, mock_device)
+
+    # Start a slow refresh
+    refresh_task = asyncio.create_task(coordinator.async_request_refresh())
+    await asyncio.sleep(0.5)
+
+    # Attempt to set an attribute during slow refresh
+    coordinator.device.target_temperature = 10
+    assert coordinator.device.target_temperature == 10
+    await coordinator.apply()
+
+    # Wait for refresh to complete
+    await refresh_task
+
+    # Assert that attribute was set correctly
+    assert coordinator.device.target_temperature == 10
+
+    # Clean up coordinator
+    await coordinator.async_shutdown()
