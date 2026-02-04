@@ -52,7 +52,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
 
     @property
     def device(self) -> MideaDeviceProxy[MideaDevice]:
-        """Return the device proxy typed as the device."""
+        """Return the device proxy."""
         return self._proxy
 
     def register_energy_sensor(self) -> None:
