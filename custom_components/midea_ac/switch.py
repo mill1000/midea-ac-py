@@ -56,13 +56,12 @@ async def async_setup_entry(
 
         # Create switch for CC purifier if only 2 modes supported
         if len(getattr(device, "supported_purifier_modes", [])) == 2:
-            device_class = type(device)
             entities.append(MideaSwitch(coordinator,
                                         "purifier",
                                         entity_category=EntityCategory.CONFIG,
                                         state_map={
-                                            False: device_class.PurifierMode.OFF,
-                                            True: device_class.PurifierMode.ON,
+                                            False: device.PurifierMode.OFF,
+                                            True: device.PurifierMode.ON,
                                         }))
 
     add_entities(entities)
