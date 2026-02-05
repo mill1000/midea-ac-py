@@ -318,6 +318,9 @@
       },
       "purifier": {
         "name": "Purifier"
+      },
+      "follow_me": {
+        "name": "Follow me"
       }
     }
   }
