@@ -188,6 +188,9 @@
       },
       "self_clean": {
         "name": "Self clean"
+      },
+      "defrost": {
+        "name": "Defrost"
       }
     },
     "button": {

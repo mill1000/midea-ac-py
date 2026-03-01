@@ -45,6 +45,14 @@ async def async_setup_entry(
                                           "self_clean",
                                           entity_category=EntityCategory.DIAGNOSTIC,
                                           ))
+
+    if hasattr(device, "defrost_active"):
+        entities.append(MideaBinarySensor(coordinator,
+                                          "defrost_active",
+                                          BinarySensorDeviceClass.RUNNING,
+                                          "defrost",
+                                          entity_category=EntityCategory.DIAGNOSTIC,
+                                          ))
     add_entities(entities)
 
 
