@@ -1,6 +1,7 @@
 """Config flow for Midea Smart AC."""
 from __future__ import annotations
 
+import logging
 from typing import Any, cast
 
 import homeassistant.helpers.config_validation as cv
@@ -39,6 +40,8 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     UPDATE_INTERVAL, EnergyFormat)
+
+_LOGGER = logging.getLogger(__name__)
 
 _DEFAULT_OPTIONS = {
     CONF_TEMP_STEP: 1.0,
@@ -523,8 +526,12 @@ class MideaOptionsFlow(OptionsFlow):
                     if not isinstance(overrides, dict):
                         raise ValueError()
 
-                except (yaml.YAMLError, ValueError) as e:
-                    errors[CONF_CAPABILITY_OVERRIDES] = "invalid_yaml"
+                except yaml.YAMLError as e:
+                    _LOGGER.error("Failed to parse capability overrides YAML: %s", e)
+                    errors[CONF_CAPABILITY_OVERRIDES] = "override_yaml_parse_error"
+                except ValueError as e:
+                    _LOGGER.error("Expected dict for capability overrides.")
+                    errors[CONF_CAPABILITY_OVERRIDES] = "override_yaml_format_error"
 
             if not errors:
                 return self.async_create_entry(data=user_input)
