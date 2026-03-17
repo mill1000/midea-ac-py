@@ -201,6 +201,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
                         f'supported_modes: [{", ".join(modes)}]')
 
             new_options[CONF_CAPABILITY_OVERRIDES] = "\n".join(overrides)
+            new_options[CONF_MERGE_CAPABILITY_OVERRIDES] = True
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=6)
