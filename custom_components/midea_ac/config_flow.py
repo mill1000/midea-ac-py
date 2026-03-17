@@ -37,7 +37,7 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
                     CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
-                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
+                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP, CONF_MERGE_CAPABILITY_OVERRIDES,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     UPDATE_INTERVAL, EnergyFormat)
 
@@ -47,7 +47,8 @@ _DEFAULT_OPTIONS = {
     CONF_TEMP_STEP: 1.0,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
-    CONF_CAPABILITY_OVERRIDES: None
+    CONF_CAPABILITY_OVERRIDES: None,
+    CONF_MERGE_CAPABILITY_OVERRIDES: True
 }
 
 _DEFAULT_AC_OPTIONS = {
@@ -76,7 +77,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 5
+    MINOR_VERSION = 6
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -468,6 +469,7 @@ class MideaOptionsFlow(OptionsFlow):
                     type=TextSelectorType.TEXT
                 )
             ),
+            vol.Optional(CONF_MERGE_CAPABILITY_OVERRIDES): cv.boolean,
         }
     )
 
@@ -527,7 +529,8 @@ class MideaOptionsFlow(OptionsFlow):
                         raise ValueError()
 
                 except yaml.YAMLError as e:
-                    _LOGGER.error("Failed to parse capability overrides YAML: %s", e)
+                    _LOGGER.error(
+                        "Failed to parse capability overrides YAML: %s", e)
                     errors[CONF_CAPABILITY_OVERRIDES] = "override_yaml_parse_error"
                 except ValueError as e:
                     _LOGGER.error("Expected dict for capability overrides.")

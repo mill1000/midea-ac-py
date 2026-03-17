@@ -16,7 +16,7 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES, CONF_MERGE_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
@@ -83,9 +83,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)) is not None:
         try:
             overrides = yaml.safe_load(yaml_input)
+            merge = config_entry.options.get(
+                CONF_MERGE_CAPABILITY_OVERRIDES, True)
             _LOGGER.info(
-                "Applying capability overrides for device ID %s: %s", device.id, overrides)
-            device.override_capabilities(overrides)
+                "%s capability overrides for device ID %s: %s", "Merging" if merge else "Applying", device.id, overrides)
+            device.override_capabilities(overrides, merge=merge)
         except (yaml.YAMLError, ValueError) as e:
             _LOGGER.error(
                 "Failed to apply capability overrides for device ID %s: %s", device.id, e)
@@ -178,6 +180,30 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
                 },
                 minor_version=5,
             )
+
+        # 1.5 -> 1.6: Migrate workarounds to capability overrides
+        if config_entry.minor_version == 5:
+            new_options = {**config_entry.options}
+
+            overrides = []
+            if (workarounds := new_options.get(CONF_WORKAROUNDS)) is not None:
+                all_presets = workarounds.pop(CONF_SHOW_ALL_PRESETS, False)
+                if all_presets:
+                    overrides.append(
+                        'additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]')
+
+                additional_modes = workarounds.pop(
+                    CONF_ADDITIONAL_OPERATION_MODES, None)
+                if additional_modes:
+                    modes = [f'"{m}"' for m in filter(
+                        None, additional_modes.split(" "))]
+                    overrides.append(
+                        f'supported_modes: [{", ".join(modes)}]')
+
+            new_options[CONF_CAPABILITY_OVERRIDES] = "\n".join(overrides)
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=6)
 
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)
