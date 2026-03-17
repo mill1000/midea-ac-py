@@ -79,13 +79,15 @@
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Maximum Connection Lifetime",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle",
-          "capability_overrides": "Capability Overrides"
+          "capability_overrides": "Capability Overrides",
+          "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",
-          "capability_overrides": "YAML device capability overrides"
+          "capability_overrides": "Device capability overrides in YAML format",
+          "merge_capability_overrides": "Merge overrides with existing device capabilities"
         },
         "sections": {
           "energy_sensor": {
