@@ -78,12 +78,16 @@
           "temp_step": "Temperature Step",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Maximum Connection Lifetime",
-          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle",
+          "capability_overrides": "Capability Overrides",
+          "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
-          "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)"
+          "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",
+          "capability_overrides": "Device capability overrides in YAML format",
+          "merge_capability_overrides": "Merge overrides with existing device capabilities"
         },
         "sections": {
           "energy_sensor": {
@@ -111,9 +115,7 @@
           "workarounds": {
             "name": "Workarounds",
             "data": {
-              "use_fan_only_workaround": "Use Fan-only Workaround",
-              "show_all_presets": "Show All Presets",
-              "additional_operation_modes": "Additional Operation Modes"
+              "use_fan_only_workaround": "Use Fan-only Workaround"
             },
             "data_description": {
               "additional_operation_modes": "Specify additional operational modes"
@@ -121,6 +123,10 @@
           }
         }
       }
+    },
+    "error": {
+      "override_yaml_parse_error": "Failed to parse YAML.",
+      "override_yaml_format_error": "Overrides must be a dictionary."
     }
   },
   "selector": {

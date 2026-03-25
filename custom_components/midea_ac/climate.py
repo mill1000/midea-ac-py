@@ -25,10 +25,9 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.utils import MideaIntEnum
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
-                    CONF_SHOW_ALL_PRESETS, CONF_TEMP_STEP,
-                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
-                    PRESET_IECO, PRESET_SILENT, MideaDevice)
+from .const import (CONF_BEEP, CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
+                    CONF_WORKAROUNDS, DOMAIN, PRESET_IECO, PRESET_SILENT,
+                    MideaDevice)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -370,15 +369,13 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         workarounds = options.get(CONF_WORKAROUNDS, {})
 
         # Get supported preset list
-        all_presets = workarounds.get(CONF_SHOW_ALL_PRESETS, False)
         preset_modes = [
             p for p, cond in [
                 (PRESET_NONE, True),  # Always supported
                 (PRESET_SLEEP, True),  # Always supported
-                (PRESET_AWAY, device.supports_freeze_protection or all_presets),
-                (PRESET_ECO, device.supports_eco or all_presets),
-                (PRESET_BOOST, device.supports_turbo or all_presets),
-                # Only show iECO if device truly supports it
+                (PRESET_AWAY, device.supports_freeze_protection),
+                (PRESET_ECO, device.supports_eco),
+                (PRESET_BOOST, device.supports_turbo),
                 (PRESET_IECO, device.supports_ieco),
             ] if cond
         ]
@@ -404,14 +401,6 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
 
         self._use_fan_only_workaround = workarounds.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)
-
-        # Append additional operation modes as needed
-        additional_modes = workarounds.get(
-            CONF_ADDITIONAL_OPERATION_MODES) or ""
-        for mode in filter(None, additional_modes.split(" ")):
-            if mode not in self._hvac_modes:
-                _LOGGER.info("Adding additional mode '%s'.", mode)
-                self._hvac_modes.append(mode)
 
     @property
     def assumed_state(self) -> bool:
