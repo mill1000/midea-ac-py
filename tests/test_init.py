@@ -10,6 +10,7 @@ from msmart.const import DeviceType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
+                                              CONF_CAPABILITY_OVERRIDES,
                                               CONF_DEVICE_TYPE,
                                               CONF_ENERGY_DATA_FORMAT,
                                               CONF_ENERGY_DATA_SCALE,
@@ -18,7 +19,6 @@ from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
                                               CONF_SHOW_ALL_PRESETS,
                                               CONF_USE_FAN_ONLY_WORKAROUND,
                                               CONF_WORKAROUNDS, DOMAIN,
-                                              CONF_CAPABILITY_OVERRIDES,
                                               EnergyFormat)
 
 logging.basicConfig(level=logging.DEBUG)

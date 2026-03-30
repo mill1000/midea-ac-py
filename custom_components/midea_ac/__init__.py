@@ -16,10 +16,11 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES, CONF_MERGE_CAPABILITY_OVERRIDES,
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
-                    CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
+                    CONF_MAX_CONNECTION_LIFETIME,
+                    CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
                     CONF_WORKAROUNDS, DOMAIN, EnergyFormat)
 from .coordinator import MideaDeviceUpdateCoordinator
