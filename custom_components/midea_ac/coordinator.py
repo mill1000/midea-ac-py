@@ -88,7 +88,7 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         self._group5_entities += 1
 
         # Enable requests
-        self._proxy.set_direct("enable_energy_usage_requests", True)
+        self._proxy.set_direct("enable_group5_data_requests", True)
 
     def unregister_group5_entity(self) -> None:
         """Record that a group5 data entity is inactive."""
@@ -125,6 +125,8 @@ class MideaGroup5Entity(MideaCoordinatorEntity):
         """Run when entity about to be added to hass."""
         # Call super method to ensure lifecycle is properly handled
         await super().async_added_to_hass()
+
+        print("hellloooo")
 
         # Register group 5 sensor with coordinator
         self.coordinator.register_group5_entity()
