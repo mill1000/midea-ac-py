@@ -86,7 +86,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             merge = config_entry.options.get(
                 CONF_MERGE_CAPABILITY_OVERRIDES, True)
             _LOGGER.info(
-                "%s capability overrides for device ID %s: %s", "Merging" if merge else "Applying", device.id, overrides)
+                "Applying capability overrides (merge: %s) for device ID %s: %s", merge, device.id,  overrides)
             device.override_capabilities(overrides, merge=merge)
         except (yaml.YAMLError, ValueError) as e:
             _LOGGER.error(
