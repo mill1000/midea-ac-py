@@ -81,6 +81,7 @@ async def test_config_entry_migration_from_5(hass: HomeAssistant) -> None:
     # Verify expected overrides
     assert CONF_CAPABILITY_OVERRIDES in options
     assert """supported_modes: ["dry", "heat"]""" in options[CONF_CAPABILITY_OVERRIDES]
+    assert """additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]""" in options[CONF_CAPABILITY_OVERRIDES]
 
 
 async def test_config_entry_migration_from_4(hass: HomeAssistant) -> None:
@@ -162,6 +163,10 @@ async def test_config_entry_migration_from_3(hass: HomeAssistant) -> None:
         workarounds = options.get(CONF_WORKAROUNDS)
         assert workarounds
         assert key in workarounds
+
+    # Verify expected overrides
+    assert CONF_CAPABILITY_OVERRIDES in options
+    assert """additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]""" in options[CONF_CAPABILITY_OVERRIDES]
 
 
 @pytest.mark.parametrize(
