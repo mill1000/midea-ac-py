@@ -81,7 +81,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     await device.get_capabilities()
 
     # Apply capability overrides if present
-    if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)) is not None:
+    if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)):
         try:
             overrides = yaml.safe_load(yaml_input)
             merge = config_entry.options.get(
