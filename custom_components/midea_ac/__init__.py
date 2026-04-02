@@ -188,14 +188,11 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
 
             overrides = []
             if (workarounds := new_options.get(CONF_WORKAROUNDS)) is not None:
-                all_presets = workarounds.pop(CONF_SHOW_ALL_PRESETS, False)
-                if all_presets:
+                if workarounds.pop(CONF_SHOW_ALL_PRESETS, False):
                     overrides.append(
                         'additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]')
 
-                additional_modes = workarounds.pop(
-                    CONF_ADDITIONAL_OPERATION_MODES, None)
-                if additional_modes:
+                if additional_modes := workarounds.pop(CONF_ADDITIONAL_OPERATION_MODES, None):
                     modes = [f'"{m}"' for m in filter(
                         None, additional_modes.split(" "))]
                     overrides.append(
