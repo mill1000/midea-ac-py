@@ -126,8 +126,6 @@ class MideaGroup5Entity(MideaCoordinatorEntity):
         # Call super method to ensure lifecycle is properly handled
         await super().async_added_to_hass()
 
-        print("hellloooo")
-
         # Register group 5 sensor with coordinator
         self.coordinator.register_group5_entity()
 
