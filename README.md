@@ -83,6 +83,7 @@ Thanks to the community the integration is available in the following languages.
   * Hrvatski
   * Italiano
   * 한국어
+  * македонски јазик
   * Magyar
   * Nederlands
   * Norsk (bokmål)
