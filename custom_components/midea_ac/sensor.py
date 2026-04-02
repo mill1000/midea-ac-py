@@ -15,7 +15,8 @@ from msmart.utils import MideaIntEnum
 from .const import (CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
                     CONF_ENERGY_SENSOR, CONF_POWER_SENSOR, DOMAIN,
                     EnergyFormat)
-from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
+from .coordinator import (MideaCoordinatorEntity, MideaDeviceUpdateCoordinator,
+                          MideaGroup5Entity)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -113,6 +114,15 @@ async def async_setup_entry(
                 )
             ])
 
+    if hasattr(device, "outdoor_fan_speed") and hasattr(device, "enable_group5_data_requests"):
+        entities.append(MideaGroup5Sensor(
+            coordinator,
+            "outdoor_fan_speed",
+            None,
+            None,
+            "outdoor_fan_speed",
+        ))
+
     add_entities(entities)
 
 
@@ -122,8 +132,8 @@ class MideaSensor(MideaCoordinatorEntity, SensorEntity):
     def __init__(self,
                  coordinator: MideaDeviceUpdateCoordinator,
                  prop: str,
-                 device_class: SensorDeviceClass,
-                 unit: str,
+                 device_class: SensorDeviceClass | None,
+                 unit: str | None,
                  translation_key: str | None = None,
                  *,
                  state_class: SensorStateClass = SensorStateClass.MEASUREMENT,
@@ -228,3 +238,16 @@ class MideaEnergySensor(MideaSensor):
             return None
 
         return value * self._scale
+
+
+class MideaGroup5Sensor(MideaSensor, MideaGroup5Entity):
+    """Sensor for Midea AC group 5 data."""
+
+    def __init__(self,
+                 *args,
+                 **kwargs
+                 ) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        # Group5 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False

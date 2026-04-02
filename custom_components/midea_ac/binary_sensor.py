@@ -11,7 +11,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
+from .coordinator import (MideaCoordinatorEntity, MideaDeviceUpdateCoordinator,
+                          MideaGroup5Entity)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,6 +46,14 @@ async def async_setup_entry(
                                           "self_clean",
                                           entity_category=EntityCategory.DIAGNOSTIC,
                                           ))
+
+    if hasattr(device, "defrost_active") and hasattr(device, "enable_group5_data_requests"):
+        entities.append(MideaGroup5BinarySensor(coordinator,
+                                                "defrost_active",
+                                                BinarySensorDeviceClass.RUNNING,
+                                                "defrost",
+                                                entity_category=EntityCategory.DIAGNOSTIC,
+                                                ))
     add_entities(entities)
 
 
@@ -98,3 +107,16 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         """Return the on state of this entity."""
         return getattr(self._device, self._prop, None)
+
+
+class MideaGroup5BinarySensor(MideaBinarySensor, MideaGroup5Entity):
+    """Binary sensor for Midea AC group 5 data."""
+
+    def __init__(self,
+                 *args,
+                 **kwargs
+                 ) -> None:
+        MideaBinarySensor.__init__(self, *args, **kwargs)
+
+        # Group5 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False
