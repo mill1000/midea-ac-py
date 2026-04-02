@@ -24,6 +24,8 @@ CONF_CLOUD_COUNTRY_CODES = ["DE", "KR", "US"]
 CONF_DEFAULT_CLOUD_COUNTRY = "US"
 CONF_SWING_ANGLE_RTL = "swing_angle_rtl"
 CONF_DEVICE_TYPE = "device_type"
+CONF_CAPABILITY_OVERRIDES = "capability_overrides"
+CONF_MERGE_CAPABILITY_OVERRIDES = "merge_capability_overrides"
 
 PRESET_IECO = "ieco"
 PRESET_SILENT = "silent"

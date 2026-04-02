@@ -1,11 +1,13 @@
 """Config flow for Midea Smart AC."""
 from __future__ import annotations
 
+import logging
 from typing import Any, cast
 
 import homeassistant.helpers.config_validation as cv
 import httpx
 import voluptuous as vol
+import yaml
 from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
                                           ConfigFlowResult, OptionsFlow)
 from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
@@ -29,20 +31,25 @@ from msmart.device import CommercialAirConditioner as CC
 from msmart.discover import CloudError, Discover
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_BEEP,
+from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
                     CONF_FAN_SPEED_STEP, CONF_KEY,
-                    CONF_MAX_CONNECTION_LIFETIME, CONF_POWER_SENSOR,
-                    CONF_SHOW_ALL_PRESETS, CONF_SWING_ANGLE_RTL,
-                    CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
-                    CONF_WORKAROUNDS, DOMAIN, UPDATE_INTERVAL, EnergyFormat)
+                    CONF_MAX_CONNECTION_LIFETIME,
+                    CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
+                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
+                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
+                    UPDATE_INTERVAL, EnergyFormat)
+
+_LOGGER = logging.getLogger(__name__)
 
 _DEFAULT_OPTIONS = {
     CONF_TEMP_STEP: 1.0,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
+    CONF_CAPABILITY_OVERRIDES: "",
+    CONF_MERGE_CAPABILITY_OVERRIDES: True
 }
 
 _DEFAULT_AC_OPTIONS = {
@@ -58,8 +65,6 @@ _DEFAULT_AC_OPTIONS = {
     },
     CONF_WORKAROUNDS: {
         CONF_USE_FAN_ONLY_WORKAROUND: False,
-        CONF_SHOW_ALL_PRESETS: False,
-        CONF_ADDITIONAL_OPERATION_MODES: "",
     }
 }
 
@@ -73,7 +78,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 5
+    MINOR_VERSION = 6
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -459,6 +464,13 @@ class MideaOptionsFlow(OptionsFlow):
                 vol.Coerce(int),
                 vol.Range(min=UPDATE_INTERVAL)
             ),
+            vol.Optional(CONF_CAPABILITY_OVERRIDES):  TextSelector(
+                TextSelectorConfig(
+                    multiline=True,
+                    type=TextSelectorType.TEXT
+                )
+            ),
+            vol.Optional(CONF_MERGE_CAPABILITY_OVERRIDES): cv.boolean,
         }
     )
 
@@ -492,9 +504,7 @@ class MideaOptionsFlow(OptionsFlow):
             vol.Optional(CONF_POWER_SENSOR): _ENERGY_SENSOR_SCHEMA,
             vol.Optional(CONF_WORKAROUNDS): section(
                 vol.Schema({
-                    vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean,
-                    vol.Optional(CONF_SHOW_ALL_PRESETS): cv.boolean,
-                    vol.Optional(CONF_ADDITIONAL_OPERATION_MODES): cv.string,
+                    vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean
                 }),
                 {"collapsed": True},
             )
@@ -510,8 +520,25 @@ class MideaOptionsFlow(OptionsFlow):
 
     async def async_step_init(self, user_input=None) -> ConfigFlowResult:
         """Handle the options flow."""
+        errors = {}
+
         if user_input is not None:
-            return self.async_create_entry(data=user_input)
+            if yaml_input := user_input.get(CONF_CAPABILITY_OVERRIDES):
+                try:
+                    overrides = yaml.safe_load(yaml_input)
+                    if not isinstance(overrides, dict):
+                        raise ValueError()
+
+                except yaml.YAMLError as e:
+                    _LOGGER.error(
+                        "Failed to parse capability overrides YAML: %s", e)
+                    errors[CONF_CAPABILITY_OVERRIDES] = "override_yaml_parse_error"
+                except ValueError as e:
+                    _LOGGER.error("Expected dict for capability overrides.")
+                    errors[CONF_CAPABILITY_OVERRIDES] = "override_yaml_format_error"
+
+            if not errors:
+                return self.async_create_entry(data=user_input)
 
         # Get options schema based on device type
         device_type = self.config_entry.data.get(CONF_DEVICE_TYPE)
@@ -520,10 +547,13 @@ class MideaOptionsFlow(OptionsFlow):
         if schema := self._DEVICE_SCHEMAS.get(device_type):
             device_schema = schema.schema
 
+        # Use existing data if no user input
+        user_input = user_input or self.config_entry.options
+
         # Merge base and device-specific schema
         data_schema = self.add_suggested_values_to_schema(
             self._BASE_SCHEMA.extend(device_schema),
-            self.config_entry.options,
+            user_input,
         )
 
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        return self.async_show_form(step_id="init", data_schema=data_schema, errors=errors)

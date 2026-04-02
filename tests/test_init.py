@@ -10,6 +10,7 @@ from msmart.const import DeviceType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
+                                              CONF_CAPABILITY_OVERRIDES,
                                               CONF_DEVICE_TYPE,
                                               CONF_ENERGY_DATA_FORMAT,
                                               CONF_ENERGY_DATA_SCALE,
@@ -39,6 +40,50 @@ _MIGRATED_ENERGY_CONFIGS = {
 }
 
 
+async def test_config_entry_migration_from_5(hass: HomeAssistant) -> None:
+    """Test basic migration of config entry from 1.5"""
+
+    # Create a mock v1.4 config entry
+    mock_config_entry = MockConfigEntry(
+        domain=DOMAIN,
+        minor_version=4,
+        data={},  # Data is unchanged
+        options={
+            CONF_WORKAROUNDS: {
+                CONF_ADDITIONAL_OPERATION_MODES: "dry heat",
+                CONF_SHOW_ALL_PRESETS: True,
+            }
+        }
+    )
+
+    # Setup entry to trigger migration
+    with patch(
+        "custom_components.midea_ac.async_setup_entry",
+        return_value=True,
+    ):
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    # Assert expected version
+    assert mock_config_entry.version == 1
+    assert mock_config_entry.minor_version == 6
+
+    # Grab options to test migration
+    options = mock_config_entry.options
+
+    # Verify old options are removed
+    workarounds: dict[str, Any] = options.get(CONF_WORKAROUNDS)
+    assert workarounds is not None
+    assert CONF_ADDITIONAL_OPERATION_MODES not in workarounds
+    assert CONF_SHOW_ALL_PRESETS not in workarounds
+
+    # Verify expected overrides
+    assert CONF_CAPABILITY_OVERRIDES in options
+    assert """supported_modes: ["dry", "heat"]""" in options[CONF_CAPABILITY_OVERRIDES]
+    assert """additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]""" in options[CONF_CAPABILITY_OVERRIDES]
+
+
 async def test_config_entry_migration_from_4(hass: HomeAssistant) -> None:
     """Test migration of config entry from 1.4"""
 
@@ -60,7 +105,7 @@ async def test_config_entry_migration_from_4(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 5
+    assert mock_config_entry.minor_version == 6
     assert mock_config_entry.data[CONF_DEVICE_TYPE] == DeviceType.AIR_CONDITIONER
 
 
@@ -90,7 +135,7 @@ async def test_config_entry_migration_from_3(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 5
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -114,10 +159,14 @@ async def test_config_entry_migration_from_3(hass: HomeAssistant) -> None:
         assert CONF_ENERGY_DATA_SCALE in config
 
     # Assert workarounds were grouped
-    for key in [CONF_USE_FAN_ONLY_WORKAROUND, CONF_SHOW_ALL_PRESETS, CONF_ADDITIONAL_OPERATION_MODES]:
+    for key in [CONF_USE_FAN_ONLY_WORKAROUND]:
         workarounds = options.get(CONF_WORKAROUNDS)
         assert workarounds
         assert key in workarounds
+
+    # Verify expected overrides
+    assert CONF_CAPABILITY_OVERRIDES in options
+    assert """additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]""" in options[CONF_CAPABILITY_OVERRIDES]
 
 
 @pytest.mark.parametrize(
@@ -159,7 +208,7 @@ async def test_config_entry_migration_from_3_energy_formats(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 5
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -209,7 +258,7 @@ async def test_config_entry_migration_from_2(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 5
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -244,5 +293,5 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 5
+    assert mock_config_entry.minor_version == 6
     assert isinstance(mock_config_entry.unique_id, str)

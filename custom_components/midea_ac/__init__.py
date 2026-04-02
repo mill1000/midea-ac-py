@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 
+import yaml
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN,
                                  Platform)
@@ -15,12 +16,13 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_DEVICE_TYPE,
-                    CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
-                    CONF_ENERGY_SENSOR, CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
-                    CONF_POWER_SENSOR, CONF_SHOW_ALL_PRESETS,
-                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
-                    EnergyFormat)
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
+                    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
+                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
+                    CONF_MAX_CONNECTION_LIFETIME,
+                    CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
+                    CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
+                    CONF_WORKAROUNDS, DOMAIN, EnergyFormat)
 from .coordinator import MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -77,6 +79,19 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     # Query device capabilities
     _LOGGER.info("Querying capabilities for device ID %s.", device.id)
     await device.get_capabilities()
+
+    # Apply capability overrides if present
+    if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)):
+        try:
+            overrides = yaml.safe_load(yaml_input)
+            merge = config_entry.options.get(
+                CONF_MERGE_CAPABILITY_OVERRIDES, True)
+            _LOGGER.info(
+                "Applying capability overrides (merge: %s) for device ID %s: %s", merge, device.id,  overrides)
+            device.override_capabilities(overrides, merge=merge)
+        except (yaml.YAMLError, ValueError) as e:
+            _LOGGER.error(
+                "Failed to apply capability overrides for device ID %s: %s", device.id, e)
 
     # Create device coordinator and fetch data
     coordinator = MideaDeviceUpdateCoordinator(hass, device)  # type: ignore
@@ -166,6 +181,28 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
                 },
                 minor_version=5,
             )
+
+        # 1.5 -> 1.6: Migrate workarounds to capability overrides
+        if config_entry.minor_version == 5:
+            new_options = {**config_entry.options}
+
+            overrides = []
+            if (workarounds := new_options.get(CONF_WORKAROUNDS)) is not None:
+                if workarounds.pop(CONF_SHOW_ALL_PRESETS, False):
+                    overrides.append(
+                        'additional_capabilities: ["ECO", "FREEZE_PROTECTION", "TURBO"]')
+
+                if additional_modes := workarounds.pop(CONF_ADDITIONAL_OPERATION_MODES, None):
+                    modes = [f'"{m}"' for m in filter(
+                        None, additional_modes.split(" "))]
+                    overrides.append(
+                        f'supported_modes: [{", ".join(modes)}]')
+
+            new_options[CONF_CAPABILITY_OVERRIDES] = "\n".join(overrides)
+            new_options[CONF_MERGE_CAPABILITY_OVERRIDES] = True
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=6)
 
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)

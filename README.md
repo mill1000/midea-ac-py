@@ -151,15 +151,41 @@ Name | Default | Device Type | Description
 **Reverse Horizontal Swing Angle** | False | All | Reverse the order of horizontal swing angles from left-to-right to right-to-left.
 **Temperature Step** | 1.0 | All | Step size for temperature set point.
 **Maximum Connection Lifetime** | Empty | All | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
-**Beep** | True | AC |Enable beep on setting changes.
-**Fan Speed Step** | 1 | AC |Step size for custom fan speeds.
+**Device Capability Overrides** | Empty | All | Override or extend the device's reported capabilities. See below for more information.
+**Beep** | True | AC | Enable beep on setting changes.
+**Fan Speed Step** | 1 | AC | Step size for custom fan speeds.
 **Energy Sensor Format > Data Format** | BCD | AC | Select the data format for decoding energy data from the device.
 **Energy Sensor Format > Scale** | 1.0 | AC | Select the data scale for reporting energy data from the device.
 **Power Sensor Format > Data Format** | BCD | AC | Select the data format for decoding power data from the device.
 **Power Sensor Format > Scale** | 1.0 | AC | Select the data scale for reporting power data from the device.
 **Workarounds > Use Fan-only Workaround** | False | AC | Enable this option if device updates cause the device to turn on and switch to fan-only.
-**Workarounds > Show All Presets** | False | AC | Show all presets regardless of device's reported capabilities.
-**Workarounds > Additional Operation Modes** | Empty | AC | Additional HVAC modes to make available in case the device's capabilities are incorrect.
+
+### Device Capability Overrides
+Device capability overrides are an advanced feature that allows you to explicitly define or adjust the capabilities reported by a device. These overrides do **not** enable new functionality. Overrides are intended only to correct or refine incorrectly reported capabilities.
+
+Overrides are specified as YAML key-value pairs. Only the specified keys are affected, any keys not included in the override will retain their existing values. Overrides can either be merged with the detected capabilities or fully replace them.
+
+Refer to the `_SUPPORTED_CAPABILITY_OVERRIDES` property in msmart-ng for supported override keys.
+
+- [AC Device](https://github.com/mill1000/midea-msmart/blob/main/msmart/device/AC/device.py)
+- [CC Device](https://github.com/mill1000/midea-msmart/blob/main/msmart/device/CC/device.py)
+
+Example:
+```yaml
+min_target_temperature: 16
+max_target_temperature: 30
+supported_modes:
+  - AUTO
+  - COOL
+  - DRY
+  - HEAT
+supported_capabilities:
+  - CUSTOM_FAN_SPEED
+  - ECO
+  - FREEZE_PROTECTION
+  - TURBO
+  - IECO
+```
 
 ### AC Options
 ![Integration Options](docs/ac_options.png)
