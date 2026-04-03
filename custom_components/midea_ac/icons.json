@@ -77,6 +77,12 @@
         "state": {
           "off": "mdi:minus-circle-outline"
         }
+      },
+      "out_silent": {
+        "default": "mdi:volume-off",
+        "state": {
+          "off": "mdi:volume-high"
+        }
       }
     }
   }

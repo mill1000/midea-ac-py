@@ -318,6 +318,9 @@
       },
       "purifier": {
         "name": "Luftreiniger"
+      },
+      "out_silent": {
+        "name": "Flüstermodus Außeneinheit"
       }
     }
   }
