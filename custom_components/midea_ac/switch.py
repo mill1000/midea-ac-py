@@ -34,6 +34,7 @@ async def async_setup_entry(
     if hasattr(device, "toggle_display"):
         # TODO Check supports_display_control ?
         entities.append(MideaDisplaySwitch(coordinator))
+        entities.append(MideaFollowMeSwitch(coordinator))
 
     if hasattr(device, "breeze_away") and getattr(device, "supports_breeze_away", False):
         entities.append(MideaSwitch(coordinator, "breeze_away"))
@@ -118,6 +119,65 @@ class MideaDisplaySwitch(MideaCoordinatorEntity, SwitchEntity):
         """Turn the display off."""
         if self.is_on:
             await self._toggle_display()
+            
+            
+class MideaFollowMeSwitch(MideaCoordinatorEntity, SwitchEntity):
+    """follow_me switch for Midea AC."""
+
+    _attr_translation_key = "follow_me"
+
+    def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
+        MideaCoordinatorEntity.__init__(self, coordinator)
+
+    async def _set_state(self, state) -> None:
+        """Set the state of the property controlled by the switch."""
+
+        # Update device property
+        #setattr(self._device, "follow_me", state)
+        self._device.follow_me = state
+
+        # Apply via coordinator
+        await self.coordinator.apply()        
+        
+
+    @property
+    def device_info(self) -> dict:
+        """Return info for device registry."""
+        return {
+            "identifiers": {
+                (DOMAIN, self._device.id)
+            },
+        }
+
+    @property
+    def has_entity_name(self) -> bool:
+        """Indicates if entity follows naming conventions."""
+        return True
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique ID of this entity."""
+        return f"{self._device.id}-follow_me"
+
+    @property
+    def entity_category(self) -> str:
+        """Return the entity category of this entity."""
+        return EntityCategory.CONFIG
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return the on state of the switch."""
+        #return getattr(self._device, "follow_me", None)
+        return self._device.follow_me
+
+    async def async_turn_on(self) -> None:
+        """Turn the switch on."""
+        await self._set_state(True)
+
+    async def async_turn_off(self) -> None:
+        """Turn the switch off."""
+        await self._set_state(False)            
+            
 
 
 class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
