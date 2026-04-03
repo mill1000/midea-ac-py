@@ -330,6 +330,9 @@
       },
       "purifier": {
         "name": "Purifier"
+      },
+      "out_silent": {
+        "name": "Outdoor Silent Mode"
       }
     }
   }
