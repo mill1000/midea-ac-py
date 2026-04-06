@@ -316,6 +316,9 @@
       "flash_cool": {
         "name": "Schnellkühlen"
       },
+      "out_silent": {
+        "name": "Flüstermodus Außeneinheit"
+      },
       "purifier": {
         "name": "Luftreiniger"
       }

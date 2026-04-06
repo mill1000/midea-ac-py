@@ -72,6 +72,12 @@
       "flash_cool": {
         "default": "mdi:sun-snowflake"
       },
+      "out_silent": {
+        "default": "mdi:volume-off",
+        "state": {
+          "off": "mdi:volume-high"
+        }
+      },
       "purifier": {
         "default": "mdi:minus-circle",
         "state": {

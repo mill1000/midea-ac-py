@@ -40,6 +40,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
   * Purifier (Ionizer/UV/Sterilizer)
   * Device filter alert
   * Custom fan speeds
+  * Out silent mode (PortaSplit)
   * Service to enable the "Follow Me" function<sup>3</sup>
   * Swing angle (fan position)
   * Indoor humidity sensor
