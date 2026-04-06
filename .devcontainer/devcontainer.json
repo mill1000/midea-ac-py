@@ -1,7 +1,8 @@
 {
   "image": "mcr.microsoft.com/devcontainers/python:3.14",
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "postCreateCommand": "pip install autopep8 isort; pip install -r tests/requirements.txt"
   
