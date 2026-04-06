@@ -328,11 +328,11 @@
       "flash_cool": {
         "name": "Flash cool"
       },
-      "purifier": {
-        "name": "Purifier"
-      },
       "out_silent": {
         "name": "Outdoor Silent Mode"
+      },
+      "purifier": {
+        "name": "Purifier"
       }
     }
   }

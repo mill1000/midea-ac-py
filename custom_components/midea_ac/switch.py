@@ -47,7 +47,7 @@ async def async_setup_entry(
     if hasattr(device, "flash_cool") and getattr(device, "supports_flash_cool", False):
         entities.append(MideaSwitch(coordinator, "flash_cool"))
 
-    if hasattr(device, "supports_out_silent") and getattr(device, "supports_out_silent", False):
+    if hasattr(device, "out_silent") and getattr(device, "supports_out_silent", False):
         entities.append(MideaSwitch(coordinator, "out_silent"))
 
     if hasattr(device, "purifier"):

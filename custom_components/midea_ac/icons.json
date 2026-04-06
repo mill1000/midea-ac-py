@@ -72,16 +72,16 @@
       "flash_cool": {
         "default": "mdi:sun-snowflake"
       },
-      "purifier": {
-        "default": "mdi:minus-circle",
-        "state": {
-          "off": "mdi:minus-circle-outline"
-        }
-      },
       "out_silent": {
         "default": "mdi:volume-off",
         "state": {
           "off": "mdi:volume-high"
+        }
+      },
+      "purifier": {
+        "default": "mdi:minus-circle",
+        "state": {
+          "off": "mdi:minus-circle-outline"
         }
       }
     }
