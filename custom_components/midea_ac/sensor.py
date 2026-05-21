@@ -10,6 +10,7 @@ from homeassistant.const import (PERCENTAGE, UnitOfEnergy, UnitOfPower,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from msmart.const import DeviceType
 from msmart.utils import MideaIntEnum
 
 from .const import (CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
@@ -122,6 +123,38 @@ async def async_setup_entry(
             None,
             "outdoor_fan_speed",
         ))
+
+    if device.type == DeviceType.HEAT_PUMP:
+        entities.extend([
+            MideaSensor(
+                coordinator,
+                "water_temperature",
+                SensorDeviceClass.TEMPERATURE,
+                UnitOfTemperature.CELSIUS,
+                "water_temperature",
+            ),
+            MideaSensor(
+                coordinator,
+                "outdoor_temperature",
+                SensorDeviceClass.TEMPERATURE,
+                UnitOfTemperature.CELSIUS,
+                "outdoor_temperature",
+            ),
+            MideaSensor(
+                coordinator,
+                "electric_power",
+                SensorDeviceClass.POWER,
+                UnitOfPower.WATT,
+                "electric_power",
+            ),
+            MideaSensor(
+                coordinator,
+                "thermal_power",
+                SensorDeviceClass.POWER,
+                UnitOfPower.WATT,
+                "thermal_power",
+            ),
+        ])
 
     add_entities(entities)
 

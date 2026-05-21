@@ -25,14 +25,17 @@ from homeassistant.helpers.selector import (CountrySelector,
                                             TextSelectorConfig,
                                             TextSelectorType)
 from msmart.base_device import Device
+from msmart.cloud import Cloud, CloudError
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
-from msmart.discover import CloudError, Discover
+from msmart.device import HeatPump
+from msmart.discover import Discover
 from msmart.lan import AuthenticationError
 
 from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
-                    CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
+                    CONF_CLOUD_ACCOUNT, CONF_CLOUD_COUNTRY_CODES,
+                    CONF_CLOUD_PASSWORD, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
                     CONF_FAN_SPEED_STEP, CONF_KEY,
@@ -289,7 +292,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     errors["base"] = "unsupported_device"
                 else:
                     # Create entry from valid device
-                    return await self._create_entry_from_device(device)
+                    return await self._create_entry_from_device(device, config=user_input)
 
         user_input = user_input or {}
 
@@ -301,13 +304,16 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_DEVICE_TYPE): SelectSelector(
                     SelectSelectorConfig(
                         options=[f"{e.value:X}" for e in
-                                 [DeviceType.AIR_CONDITIONER, DeviceType.COMMERCIAL_AC]],
+                                 [DeviceType.AIR_CONDITIONER, DeviceType.COMMERCIAL_AC,
+                                  DeviceType.HEAT_PUMP]],
                         translation_key="device_type",
                         mode=SelectSelectorMode.DROPDOWN,
                     ),
                 ),
                 vol.Optional(CONF_TOKEN): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
-                vol.Optional(CONF_KEY): cv.string
+                vol.Optional(CONF_KEY): cv.string,
+                vol.Optional(CONF_CLOUD_ACCOUNT): cv.string,
+                vol.Optional(CONF_CLOUD_PASSWORD): TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD)),
             }), user_input)
 
         return self.async_show_form(
@@ -386,38 +392,56 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         """Create an httpx AsyncClient in a HA friendly way."""
         return httpx_client.get_async_client(self.hass, *args, **kwargs)
 
-    async def _test_manual_connection(self, config) -> AC | CC | None:
+    async def _test_manual_connection(self, config) -> AC | CC | HeatPump | None:
         DEVICE_TYPES = {
             "AC": DeviceType.AIR_CONDITIONER,
-            "CC": DeviceType.COMMERCIAL_AC
+            "CC": DeviceType.COMMERCIAL_AC,
+            f"{DeviceType.HEAT_PUMP:X}": DeviceType.HEAT_PUMP,
         }
+
+        device_type = DEVICE_TYPES.get(config.get(CONF_DEVICE_TYPE).upper())
+        if device_type is None:
+            return None
 
         # Construct the device
         device = Device.construct(
-            type=DEVICE_TYPES[config.get(CONF_DEVICE_TYPE).upper()],
+            type=device_type,
             ip=config.get(CONF_HOST),
             port=config.get(CONF_PORT),
             device_id=int(config.get(CONF_ID)),
         )
 
         # Ensure device is a supported type
-        assert isinstance(device, (AC, CC))
+        assert isinstance(device, (AC, CC, HeatPump))
 
-        # Authenticate with device as needed
-        token = config.get(CONF_TOKEN)
-        key = config.get(CONF_KEY)
-        if token and key:
-            try:
-                await device.authenticate(token, key)
-            except AuthenticationError:
+        if isinstance(device, HeatPump):
+            # HeatPump requires cloud relay
+            account = config.get(CONF_CLOUD_ACCOUNT)
+            password = config.get(CONF_CLOUD_PASSWORD)
+            if not account or not password:
                 return None
+            cloud = Cloud(account=account, password=password)
+            try:
+                await cloud.login()
+            except CloudError:
+                return None
+            device.set_cloud(cloud)
+        else:
+            # Authenticate with device as needed
+            token = config.get(CONF_TOKEN)
+            key = config.get(CONF_KEY)
+            if token and key:
+                try:
+                    await device.authenticate(token, key)
+                except AuthenticationError:
+                    return None
 
         # Attempt to refresh device state
         await device.refresh()
 
         return device
 
-    async def _create_entry_from_device(self, device) -> ConfigFlowResult:
+    async def _create_entry_from_device(self, device, config=None) -> ConfigFlowResult:
         # Save the device into global data
         self.hass.data.setdefault(DOMAIN, {})
 
@@ -427,9 +451,14 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             CONF_ID: device.id,
             CONF_HOST: device.ip,
             CONF_PORT: device.port,
-            CONF_TOKEN: device.token,
-            CONF_KEY: device.key,
+            CONF_TOKEN: getattr(device, "token", None),
+            CONF_KEY: getattr(device, "key", None),
         }
+
+        # Store cloud credentials for HeatPump devices
+        if isinstance(device, HeatPump) and config:
+            data[CONF_CLOUD_ACCOUNT] = config.get(CONF_CLOUD_ACCOUNT)
+            data[CONF_CLOUD_PASSWORD] = config.get(CONF_CLOUD_PASSWORD)
 
         # Build default options based on device type
         default_options = _DEFAULT_OPTIONS

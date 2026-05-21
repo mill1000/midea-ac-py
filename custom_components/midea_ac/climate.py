@@ -23,6 +23,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
+from msmart.device import HeatPump
 from msmart.utils import MideaIntEnum
 
 from .const import (CONF_BEEP, CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
@@ -64,6 +65,10 @@ async def async_setup_entry(
     elif device.type == DeviceType.COMMERCIAL_AC:
         entities.append(
             MideaClimateCCDevice(hass, coordinator, config_entry.options))
+
+    elif device.type == DeviceType.HEAT_PUMP:
+        entities.append(
+            MideaClimateHeatPumpZone(hass, coordinator, config_entry.options, zone_index=1))
 
     add_entities(entities)
 
@@ -652,3 +657,130 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
         self._device.sleep = preset_mode == PRESET_SLEEP
 
         await self._apply()
+
+
+class MideaClimateHeatPumpZone(MideaCoordinatorEntity[HeatPump], ClimateEntity):
+    """Climate entity for a heat pump zone."""
+
+    _attr_translation_key = DOMAIN
+    _enable_turn_on_off_backwards_compatibility = False
+
+    _RUN_MODE_TO_HVAC_MODE: ClassVar[Mapping[HeatPump.RunMode, HVACMode]] = {
+        HeatPump.RunMode.AUTO: HVACMode.AUTO,
+        HeatPump.RunMode.COOL: HVACMode.COOL,
+        HeatPump.RunMode.HEAT: HVACMode.HEAT,
+    }
+
+    _HVAC_MODE_TO_RUN_MODE: ClassVar[Mapping[HVACMode, HeatPump.RunMode]] = {
+        HVACMode.AUTO: HeatPump.RunMode.AUTO,
+        HVACMode.COOL: HeatPump.RunMode.COOL,
+        HVACMode.HEAT: HeatPump.RunMode.HEAT,
+    }
+
+    def __init__(self,
+                 hass: HomeAssistant,
+                 coordinator: MideaDeviceUpdateCoordinator[HeatPump],
+                 options: Mapping[str, Any],
+                 zone_index: int = 1
+                 ) -> None:
+        MideaCoordinatorEntity.__init__(self, coordinator)
+        self.hass = hass
+        self._zone_index = zone_index
+        self._temperature_step = options.get(CONF_TEMP_STEP, 1.0)
+
+        self._supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
+        try:
+            self._supported_features |= ClimateEntityFeature.TURN_OFF
+            self._supported_features |= ClimateEntityFeature.TURN_ON
+        except AttributeError:
+            pass
+
+    @property
+    def device_info(self) -> dict:
+        return {
+            "identifiers": {(DOMAIN, self._device.id)},
+            "name": f"Midea {self._device.type:X} {self._device.id}",
+            "manufacturer": "Midea",
+        }
+
+    @property
+    def has_entity_name(self) -> bool:
+        return True
+
+    @property
+    def name(self) -> str | None:
+        if self._zone_index == 1:
+            return "Zone 1"
+        return f"Zone {self._zone_index}"
+
+    @property
+    def unique_id(self) -> str:
+        return f"{self._device.id}-zone{self._zone_index}"
+
+    @property
+    def supported_features(self) -> int:
+        return self._supported_features
+
+    @property
+    def temperature_unit(self) -> str:
+        return UnitOfTemperature.CELSIUS
+
+    @property
+    def target_temperature_step(self) -> float:
+        return self._temperature_step
+
+    @property
+    def hvac_modes(self) -> list[HVACMode]:
+        return [HVACMode.OFF, HVACMode.AUTO, HVACMode.HEAT, HVACMode.COOL]
+
+    @property
+    def hvac_mode(self) -> HVACMode:
+        zone = self._device.zone1 if self._zone_index == 1 else self._device.zone2
+        if zone is None or not zone.power_state:
+            return HVACMode.OFF
+        return self._RUN_MODE_TO_HVAC_MODE.get(self._device.run_mode, HVACMode.AUTO)
+
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        if hvac_mode == HVACMode.OFF:
+            self._device.zone1_power_state = False
+        else:
+            self._device.zone1_power_state = True
+            if run_mode := self._HVAC_MODE_TO_RUN_MODE.get(hvac_mode):
+                self._device.run_mode = run_mode
+        await self.coordinator.apply()
+
+    @property
+    def current_temperature(self) -> float | None:
+        return self._device.water_temperature
+
+    @property
+    def target_temperature(self) -> float | None:
+        return self._device.zone1_target_temperature
+
+    async def async_set_temperature(self, **kwargs) -> None:
+        if (temperature := kwargs.get(ATTR_TEMPERATURE)) is not None:
+            self._device.zone1_target_temperature = int(temperature)
+        await self.coordinator.apply()
+
+        if (mode := kwargs.get(ATTR_HVAC_MODE)) is not None:
+            await self.async_set_hvac_mode(mode)
+
+    @property
+    def min_temp(self) -> float:
+        if self._device.run_mode == HeatPump.RunMode.COOL:
+            return self._device.zone1_min_cool_temperature
+        return self._device.zone1_min_heat_temperature
+
+    @property
+    def max_temp(self) -> float:
+        if self._device.run_mode == HeatPump.RunMode.COOL:
+            return self._device.zone1_max_cool_temperature
+        return self._device.zone1_max_heat_temperature
+
+    async def async_turn_on(self) -> None:
+        self._device.zone1_power_state = True
+        await self.coordinator.apply()
+
+    async def async_turn_off(self) -> None:
+        self._device.zone1_power_state = False
+        await self.coordinator.apply()
