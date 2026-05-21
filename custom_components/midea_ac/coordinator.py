@@ -10,7 +10,7 @@ from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
 
-from .const import DOMAIN, UPDATE_INTERVAL, UPDATE_INTERVAL_CLOUD, MideaDevice
+from .const import DOMAIN, UPDATE_INTERVAL, MideaDevice
 from .device_proxy import MideaDeviceProxy
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,13 +20,11 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
     """Device update coordinator for Midea Smart AC."""
 
     def __init__(self, hass: HomeAssistant, device: MideaDevice) -> None:
-        # Use a longer interval for cloud-relayed devices to avoid excessive notifications
-        interval = UPDATE_INTERVAL_CLOUD if getattr(device, "_cloud", None) is not None else UPDATE_INTERVAL
         super().__init__(
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=datetime.timedelta(seconds=interval),
+            update_interval=datetime.timedelta(seconds=UPDATE_INTERVAL),
             request_refresh_debouncer=Debouncer(
                 hass,
                 _LOGGER,
