@@ -7,6 +7,7 @@ from msmart.device import HeatPump
 
 DOMAIN = "midea_ac"
 UPDATE_INTERVAL = 15
+UPDATE_INTERVAL_CLOUD = 60  # Longer interval for cloud-relayed devices (e.g. HeatPump)
 
 CONF_KEY = "k1"
 CONF_BEEP = "prompt_tone"
