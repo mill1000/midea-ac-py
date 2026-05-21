@@ -265,12 +265,29 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-            # Get device ID from user input
-            id = int(user_input.get(CONF_ID))
+            raw_id = (user_input.get(CONF_ID) or "").strip()
+            device_type_str = (user_input.get(CONF_DEVICE_TYPE) or "").upper()
 
-            # Check if device has already been configured
-            await self.async_set_unique_id(str(id))
-            self._abort_if_unique_id_configured()
+            # Auto-discover device ID for HeatPump when not provided
+            if not raw_id:
+                if device_type_str == f"{DeviceType.HEAT_PUMP:X}":
+                    host = user_input.get(CONF_HOST)
+                    info = await Discover.probe_device_info(host, timeout=5)
+                    if info and info.get("device_id"):
+                        raw_id = str(info["device_id"])
+                        user_input = {**user_input, CONF_ID: raw_id}
+                    else:
+                        errors[CONF_ID] = "device_not_found"
+                else:
+                    errors[CONF_ID] = "device_not_found"
+
+            if not errors:
+                id = int(raw_id)
+
+            if not errors:
+                # Check if device has already been configured
+                await self.async_set_unique_id(str(id))
+                self._abort_if_unique_id_configured()
 
             # Validate the hex format of certain fields
             for field in [CONF_TOKEN, CONF_KEY]:
@@ -298,7 +315,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
-                vol.Required(CONF_ID): cv.string,
+                vol.Optional(CONF_ID): cv.string,
                 vol.Required(CONF_HOST): cv.string,
                 vol.Required(CONF_PORT, default=6444): cv.port,
                 vol.Required(CONF_DEVICE_TYPE): SelectSelector(

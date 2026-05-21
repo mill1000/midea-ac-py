@@ -21,7 +21,7 @@
       "manual": {
         "description": "Enter information for your device.",
         "data": {
-          "id": "ID",
+          "id": "ID (auto-detected for Heat Pump)",
           "host": "Host",
           "port": "Port",
           "device_type": "Device Type",
