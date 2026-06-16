@@ -122,9 +122,11 @@ For automatic configuration, select "Discover devices".
 
 Enter a hostname or IP address to configure a specific device, or leave it blank to search the local network.
 
-Depending on your location, a different cloud region may be necessary to authenticate V3 devices. Try selecting the closest country to your location if you experience issues.
+__Note: Depending on your location, a different cloud region may be necessary to authenticate V3 devices. If you are unable to add a device with your region, please try again with the other region options.__
 
 ![Discover Devices](docs/discover_devices.png)
+
+If automatic configuration fails or cannot find your device, it may be possible to [manually configure](#manual-configuration) it instead.
 
 ### Manual Configuration
 For manual configuration, select "Configure manually". 
