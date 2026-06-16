@@ -11,12 +11,15 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from msmart import __version__ as MSMART_VERSION
 from msmart.base_device import Device
+from msmart.cloud import Cloud, CloudError
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
+from msmart.device import HeatPump
 from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
+                    CONF_CLOUD_ACCOUNT, CONF_CLOUD_PASSWORD,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
@@ -58,7 +61,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         port=port,
         device_id=int(id)
     )
-    assert isinstance(device, (AC, CC))
+    assert isinstance(device, (AC, CC, HeatPump))
 
     # Configure the connection lifetime
     if (lifetime := config_entry.options.get(CONF_MAX_CONNECTION_LIFETIME)) is not None:
@@ -66,22 +69,35 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             "Setting maximum connection lifetime to %s seconds for device ID %s.", lifetime, device.id)
         device.set_max_connection_lifetime(lifetime)
 
-    # Configure token and k1 as needed
-    token = config_entry.data[CONF_TOKEN]
-    key = config_entry.data[CONF_KEY]
-    if token and key:
+    if isinstance(device, HeatPump):
+        # HeatPump devices use cloud relay for communication
+        account = config_entry.data.get(CONF_CLOUD_ACCOUNT)
+        password = config_entry.data.get(CONF_CLOUD_PASSWORD)
+        if not account or not password:
+            raise ConfigEntryNotReady("HeatPump device requires cloud account credentials.")
+        cloud = Cloud(account=account, password=password)
         try:
-            await device.authenticate(token, key)
-        except AuthenticationError as e:
-            raise ConfigEntryNotReady(
-                "Failed to authenticate with device.") from e
+            await cloud.login()
+        except CloudError as e:
+            raise ConfigEntryNotReady("Failed to login to Midea cloud.") from e
+        device.set_cloud(cloud)
+    else:
+        # Configure token and k1 as needed for AC/CC devices
+        token = config_entry.data[CONF_TOKEN]
+        key = config_entry.data[CONF_KEY]
+        if token and key:
+            try:
+                await device.authenticate(token, key)
+            except AuthenticationError as e:
+                raise ConfigEntryNotReady(
+                    "Failed to authenticate with device.") from e
 
-    # Query device capabilities
-    _LOGGER.info("Querying capabilities for device ID %s.", device.id)
-    await device.get_capabilities()
+        # Query device capabilities (AC/CC only)
+        _LOGGER.info("Querying capabilities for device ID %s.", device.id)
+        await device.get_capabilities()
 
-    # Apply capability overrides if present
-    if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)):
+    # Apply capability overrides if present (AC/CC only)
+    if not isinstance(device, HeatPump) and (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)):
         try:
             overrides = yaml.safe_load(yaml_input)
             merge = config_entry.options.get(

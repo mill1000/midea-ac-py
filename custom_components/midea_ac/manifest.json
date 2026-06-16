@@ -13,7 +13,7 @@
     "msmart"
   ],
   "requirements": [
-    "msmart-ng==2026.4.1",
+    "msmart-ng @ git+https://github.com/xelhark/midea-msmart@feature/c3_heatpump",
     "pyyaml"
   ],
   "version": "2026.4.0"

@@ -21,16 +21,20 @@
       "manual": {
         "description": "Enter information for your device.",
         "data": {
-          "id": "ID",
+          "id": "ID (auto-detected for Heat Pump)",
           "host": "Host",
           "port": "Port",
           "device_type": "Device Type",
           "token": "Token",
-          "k1": "Key"
+          "k1": "Key",
+          "cloud_account": "Cloud Account",
+          "cloud_password": "Cloud Password"
         },
         "data_description": {
           "token": "Token for V3 devices (hexadecimal)",
-          "k1": "Key for V3 devices (hexadecimal)"
+          "k1": "Key for V3 devices (hexadecimal)",
+          "cloud_account": "MSmartHome account email (required for Heat Pump)",
+          "cloud_password": "MSmartHome account password (required for Heat Pump)"
         }
       },
       "reconfigure": {
@@ -130,6 +134,13 @@
     }
   },
   "selector": {
+    "device_type": {
+      "options": {
+        "AC": "Air Conditioner",
+        "CC": "Commercial AC",
+        "C3": "Heat Pump"
+      }
+    },
     "energy_data_format": {
       "options": {
         "bcd": "BCD",
@@ -310,6 +321,15 @@
       },
       "total_energy_usage": {
         "name": "Total energy"
+      },
+      "water_temperature": {
+        "name": "Water temperature"
+      },
+      "electric_power": {
+        "name": "Electric power"
+      },
+      "thermal_power": {
+        "name": "Thermal power"
       }
     },
     "switch": {

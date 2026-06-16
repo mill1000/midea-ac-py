@@ -3,6 +3,7 @@ from typing import TypeVar
 
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
+from msmart.device import HeatPump
 
 DOMAIN = "midea_ac"
 UPDATE_INTERVAL = 15
@@ -24,6 +25,8 @@ CONF_CLOUD_COUNTRY_CODES = ["DE", "KR", "US"]
 CONF_DEFAULT_CLOUD_COUNTRY = "US"
 CONF_SWING_ANGLE_RTL = "swing_angle_rtl"
 CONF_DEVICE_TYPE = "device_type"
+CONF_CLOUD_ACCOUNT = "cloud_account"
+CONF_CLOUD_PASSWORD = "cloud_password"
 CONF_CAPABILITY_OVERRIDES = "capability_overrides"
 CONF_MERGE_CAPABILITY_OVERRIDES = "merge_capability_overrides"
 
@@ -41,4 +44,4 @@ class EnergyFormat(StrEnum):
     _ALTERNATE_B = "alternate_b"
 
 
-MideaDevice = TypeVar("MideaDevice", AC, CC)
+MideaDevice = TypeVar("MideaDevice", AC, CC, HeatPump)
