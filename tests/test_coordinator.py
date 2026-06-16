@@ -234,3 +234,5 @@ async def test_group5_entity_request_enable(
     await entities[1].async_will_remove_from_hass()
     assert coordinator._group5_entities == 0
     assert device.enable_group5_data_requests == False
+
+    await coordinator.async_shutdown()

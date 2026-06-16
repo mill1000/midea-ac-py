@@ -58,3 +58,5 @@ async def test_energy_sensor_request_enable(
     await sensors[1].async_will_remove_from_hass()
     assert coordinator._energy_sensors == 0
     assert device.enable_energy_usage_requests == False
+
+    await coordinator.async_shutdown()
