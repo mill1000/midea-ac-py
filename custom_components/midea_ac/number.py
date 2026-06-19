@@ -14,9 +14,9 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-# Relative countdown timers are expressed in minutes, max 24 hours, 15 minute steps
+# Relative countdown timers are expressed in minutes, max 24 hours, 1 minute steps
 _TIMER_MAX_MINUTES = 24 * 60
-_TIMER_STEP_MINUTES = 15
+_TIMER_STEP_MINUTES = 1
 
 
 async def async_setup_entry(
