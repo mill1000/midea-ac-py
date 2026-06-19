@@ -207,6 +207,12 @@
     "number": {
       "fan_speed": {
         "name": "Fan speed"
+      },
+      "power_on_timer": {
+        "name": "Power-on timer"
+      },
+      "power_off_timer": {
+        "name": "Power-off timer"
       }
     },
     "select": {

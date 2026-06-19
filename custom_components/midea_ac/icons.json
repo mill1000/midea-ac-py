@@ -26,6 +26,12 @@
     "number": {
       "fan_speed": {
         "default": "mdi:fan"
+      },
+      "power_on_timer": {
+        "default": "mdi:timer-play-outline"
+      },
+      "power_off_timer": {
+        "default": "mdi:timer-stop-outline"
       }
     },
     "select": {
