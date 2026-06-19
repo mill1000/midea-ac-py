@@ -1,7 +1,7 @@
 # Midea Smart AC
-[![Code Quality Checks](https://github.com/mill1000/midea-ac-py/actions/workflows/checks.yml/badge.svg)](https://github.com/mill1000/midea-ac-py/actions/workflows/checks.yml)
-[![Validate with hassfest](https://github.com/mill1000/midea-ac-py/actions/workflows/hassfest.yml/badge.svg)](https://github.com/mill1000/midea-ac-py/actions/workflows/hassfest.yml)
-[![HACS Action](https://github.com/mill1000/midea-ac-py/actions/workflows/hacs.yml/badge.svg)](https://github.com/mill1000/midea-ac-py/actions/workflows/hacs.yml)
+[![Code Quality Checks](https://github.com/gilbertorconde/midea-ac/actions/workflows/checks.yml/badge.svg)](https://github.com/gilbertorconde/midea-ac/actions/workflows/checks.yml)
+[![Validate with hassfest](https://github.com/gilbertorconde/midea-ac/actions/workflows/hassfest.yml/badge.svg)](https://github.com/gilbertorconde/midea-ac/actions/workflows/hassfest.yml)
+[![HACS Action](https://github.com/gilbertorconde/midea-ac/actions/workflows/hacs.yml/badge.svg)](https://github.com/gilbertorconde/midea-ac/actions/workflows/hacs.yml)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 
 Home Assistant custom integration to control Midea (and associated brands) air conditioners via LAN.
@@ -99,7 +99,7 @@ Thanks to the community the integration is available in the following languages.
   * [Help contribute a new language](https://github.com/mill1000/midea-ac-py/issues/54)
 
 ## Install Via HACS
-[![Install via HACs on your Home Assistant instance.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mill1000&repository=midea-ac-py&category=integrations)
+[![Install via HACs on your Home Assistant instance.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=gilbertorconde&repository=midea-ac&category=integrations)
 
 Or search HACS integrations for "Midea Smart AC".
 
@@ -170,8 +170,8 @@ Overrides are specified as YAML key-value pairs. Only the specified keys are aff
 
 Refer to the `_SUPPORTED_CAPABILITY_OVERRIDES` property in msmart-ng for supported override keys.
 
-- [AC Device](https://github.com/mill1000/midea-msmart/blob/main/msmart/device/AC/device.py)
-- [CC Device](https://github.com/mill1000/midea-msmart/blob/main/msmart/device/CC/device.py)
+- [AC Device](https://github.com/gilbertorconde/midea-msmart/blob/main/msmart/device/AC/device.py)
+- [CC Device](https://github.com/gilbertorconde/midea-msmart/blob/main/msmart/device/CC/device.py)
 
 Example:
 ```yaml
@@ -203,7 +203,7 @@ Some users have reported issue with their devices periodically becoming unavaila
 It can usually be resolved by setting the `Maximum Connection Lifetime` to a value of about 90 seconds.
 
 ## Getting Device Info
-Use [msmart-ng](https://github.com/mill1000/midea-msmart) to obtain device information.
+Use [msmart-ng](https://github.com/gilbertorconde/midea-msmart) to obtain device information.
 ```shell
 pip install msmart-ng
 msmart-ng discover

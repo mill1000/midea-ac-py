@@ -48,7 +48,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     host = config_entry.data[CONF_HOST]
     port = config_entry.data[CONF_PORT]
 
-    _LOGGER.info("Starting midea-ac-py for device type %02X ID %s (%s:%d). Using msmart-ng version %s.",
+    _LOGGER.info("Starting midea-ac for device type %02X ID %s (%s:%d). Using msmart-ng version %s.",
                  device_type, id, host, port, MSMART_VERSION)
 
     # Construct the device
