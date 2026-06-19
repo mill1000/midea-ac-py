@@ -47,7 +47,84 @@ async def async_setup_entry(
     if hasattr(device, "off_timer"):
         entities.append(MideaPowerOffTimerNumber(coordinator))
 
+    # Fresh air (新风) fan speed. Capability-gated, so enabled when supported.
+    if hasattr(device, "fresh_air_fan_speed") and getattr(device, "supports_fresh_air", False):
+        entities.append(MideaPropertyNumber(
+            coordinator, "fresh_air_fan_speed",
+            native_min=0, native_max=100, native_step=1,
+            unit=PERCENTAGE))
+
+    # Cosy/comfort sleep curve level (0-3). No capability bit, disabled-by-default.
+    if hasattr(device, "cosy_sleep_mode"):
+        entities.append(MideaPropertyNumber(
+            coordinator, "cosy_sleep_mode",
+            native_min=0, native_max=3, native_step=1,
+            mode=NumberMode.SLIDER, enabled_default=False))
+
     add_entities(entities)
+
+
+class MideaPropertyNumber(MideaCoordinatorEntity, NumberEntity):
+    """Generic property-backed number for Midea AC."""
+
+    def __init__(self,
+                 coordinator: MideaDeviceUpdateCoordinator,
+                 prop: str,
+                 *,
+                 native_min: float,
+                 native_max: float,
+                 native_step: float = 1,
+                 unit: str | None = None,
+                 mode: NumberMode = NumberMode.BOX,
+                 translation_key: str | None = None,
+                 enabled_default: bool = True,
+                 ) -> None:
+        MideaCoordinatorEntity.__init__(self, coordinator)
+
+        self._prop = prop
+        self._attr_translation_key = translation_key if translation_key is not None else prop
+        self._attr_native_min_value = native_min
+        self._attr_native_max_value = native_max
+        self._attr_native_step = native_step
+        self._attr_native_unit_of_measurement = unit
+        self._attr_mode = mode
+        self._attr_entity_registry_enabled_default = enabled_default
+
+    @property
+    def device_info(self) -> dict:
+        """Return info for device registry."""
+        return {
+            "identifiers": {
+                (DOMAIN, self._device.id)
+            },
+        }
+
+    @property
+    def has_entity_name(self) -> bool:
+        """Indicates if entity follows naming conventions."""
+        return True
+
+    @property
+    def unique_id(self) -> str:
+        """Return the unique ID of this entity."""
+        return f"{self._device.id}-{self._prop}"
+
+    @property
+    def available(self) -> bool:
+        """Check device availability."""
+        return super().available and self._device.power_state
+
+    @property
+    def native_value(self) -> float | None:
+        value = getattr(self._device, self._prop, None)
+        return float(value) if value is not None else None
+
+    async def async_set_native_value(self, value: float) -> None:
+        """Set a new value for the backing property."""
+        setattr(self._device, self._prop, int(value))
+
+        # Apply via the coordinator
+        await self.coordinator.apply()
 
 
 class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):

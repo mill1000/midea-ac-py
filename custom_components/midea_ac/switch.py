@@ -67,6 +67,21 @@ async def async_setup_entry(
                                             True: device.PurifierMode.ON,
                                         }))
 
+    # Fresh air (新风) on/off. Gated by capability since it's a B5 feature.
+    if hasattr(device, "fresh_air") and getattr(device, "supports_fresh_air", False):
+        entities.append(MideaSwitch(coordinator, "fresh_air",
+                                    entity_category=EntityCategory.CONFIG))
+
+    # Extended classic-protocol toggles. Most have no capability bit, so we
+    # create them disabled-by-default and let users enable the ones their unit
+    # actually supports.
+    for prop in ("power_save", "low_frequency_fan", "comfort_sleep", "diy",
+                 "smart_eye", "ventilation", "anti_cold", "night_light", "pmv"):
+        if hasattr(device, prop):
+            entities.append(MideaSwitch(coordinator, prop,
+                                        entity_category=EntityCategory.CONFIG,
+                                        enabled_default=False))
+
     add_entities(entities)
 
 
@@ -132,7 +147,8 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
                  translation_key: str | None = None,
                  *,
                  entity_category: EntityCategory | None = None,
-                 state_map: Mapping[bool, Any] | None = None
+                 state_map: Mapping[bool, Any] | None = None,
+                 enabled_default: bool = True
                  ) -> None:
 
         MideaCoordinatorEntity.__init__(self, coordinator)
@@ -141,6 +157,7 @@ class MideaSwitch(MideaCoordinatorEntity, SwitchEntity):
         self._entity_category = entity_category
         self._attr_translation_key = translation_key if translation_key is not None else prop
         self._state_map = state_map
+        self._attr_entity_registry_enabled_default = enabled_default
 
     async def _set_state(self, state: bool) -> None:
         """Set the state of the property controlled by the switch."""

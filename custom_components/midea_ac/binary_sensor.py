@@ -54,6 +54,28 @@ async def async_setup_entry(
                                                 "defrost",
                                                 entity_category=EntityCategory.DIAGNOSTIC,
                                                 ))
+
+    # Water tank full fault (read-only). Disabled-by-default.
+    if hasattr(device, "water_full"):
+        entities.append(MideaBinarySensor(coordinator,
+                                          "water_full",
+                                          BinarySensorDeviceClass.PROBLEM,
+                                          "water_full",
+                                          entity_category=EntityCategory.DIAGNOSTIC,
+                                          enabled_default=False,
+                                          ))
+
+    # Read-only extended features with no classic write path. Disabled-by-default.
+    for prop in ("cool_wind", "natural_wind", "child_sleep"):
+        if hasattr(device, prop):
+            entities.append(MideaBinarySensor(coordinator,
+                                              prop,
+                                              BinarySensorDeviceClass.RUNNING,
+                                              prop,
+                                              entity_category=EntityCategory.DIAGNOSTIC,
+                                              enabled_default=False,
+                                              ))
+
     add_entities(entities)
 
 
@@ -66,13 +88,15 @@ class MideaBinarySensor(MideaCoordinatorEntity, BinarySensorEntity):
                  device_class: BinarySensorDeviceClass,
                  translation_key: str | None = None,
                  *,
-                 entity_category: EntityCategory = None) -> None:
+                 entity_category: EntityCategory = None,
+                 enabled_default: bool = True) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
 
         self._prop = prop
         self._device_class = device_class
         self._entity_category = entity_category
         self._attr_translation_key = translation_key
+        self._attr_entity_registry_enabled_default = enabled_default
 
     @property
     def device_info(self) -> dict:

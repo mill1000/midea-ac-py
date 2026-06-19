@@ -197,6 +197,18 @@
       },
       "defrost": {
         "name": "Defrost"
+      },
+      "water_full": {
+        "name": "Water tank full"
+      },
+      "cool_wind": {
+        "name": "Cool wind"
+      },
+      "natural_wind": {
+        "name": "Natural wind"
+      },
+      "child_sleep": {
+        "name": "Child sleep"
       }
     },
     "button": {
@@ -213,6 +225,12 @@
       },
       "power_off_timer": {
         "name": "Power-off timer"
+      },
+      "fresh_air_fan_speed": {
+        "name": "Fresh air fan speed"
+      },
+      "cosy_sleep_mode": {
+        "name": "Cosy sleep level"
       }
     },
     "select": {
@@ -339,6 +357,36 @@
       },
       "purifier": {
         "name": "Purifier"
+      },
+      "fresh_air": {
+        "name": "Fresh air"
+      },
+      "power_save": {
+        "name": "Power save"
+      },
+      "low_frequency_fan": {
+        "name": "Low frequency fan"
+      },
+      "comfort_sleep": {
+        "name": "Comfort sleep"
+      },
+      "diy": {
+        "name": "DIY mode"
+      },
+      "smart_eye": {
+        "name": "Smart eye"
+      },
+      "ventilation": {
+        "name": "Ventilation"
+      },
+      "anti_cold": {
+        "name": "Anti-cold"
+      },
+      "night_light": {
+        "name": "Night light"
+      },
+      "pmv": {
+        "name": "PMV comfort"
       }
     }
   }
