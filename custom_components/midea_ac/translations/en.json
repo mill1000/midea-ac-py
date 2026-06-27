@@ -204,6 +204,11 @@
         "name": "Start self clean"
       }
     },
+    "fan": {
+      "fresh_air": {
+        "name": "Fresh air"
+      }
+    },
     "number": {
       "fan_speed": {
         "name": "Fan speed"
