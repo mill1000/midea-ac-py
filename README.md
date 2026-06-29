@@ -50,7 +50,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
   * iECO
   * Auxiliary heating mode
-  * Flash/jet cool
+  * Flash cool/heat (Jet cool)
   * Cascade
 
 <small>

@@ -313,7 +313,7 @@
       "display": {
         "name": "Display"
       },
-      "flash_cool": {
+      "flash": {
         "name": "Snel afkoelen"
       },
       "purifier": {

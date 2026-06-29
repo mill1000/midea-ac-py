@@ -288,8 +288,8 @@
       "display": {
         "name": "面板顯示"
       },
-      "flash_cool": {
-        "name": "Flash cool"
+      "flash": {
+        "name": "Flash"
       },
       "purifier": {
         "name": "空氣淨化"

@@ -325,8 +325,8 @@
       "display": {
         "name": "Display"
       },
-      "flash_cool": {
-        "name": "Flash cool"
+      "flash": {
+        "name": "Flash"
       },
       "out_silent": {
         "name": "Outdoor silent mode"

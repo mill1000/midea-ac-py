@@ -288,8 +288,8 @@
       "display": {
         "name": "Schermo"
       },
-      "flash_cool": {
-        "name": "Flash cool"
+      "flash": {
+        "name": "Flash"
       },
       "purifier": {
         "name": "Depuratore"
