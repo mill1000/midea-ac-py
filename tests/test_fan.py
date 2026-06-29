@@ -17,11 +17,10 @@ from custom_components.midea_ac.coordinator import MideaDeviceUpdateCoordinator
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
 
-# Fresh air requires a msmart-ng with Fresh Air support
-# (see mill1000/midea-msmart#268); skip until that lands.
+# Fresh air fan requires a msmart-ng with Fresh Air support (> 2026.4.1)
 pytestmark = pytest.mark.skipif(
     not hasattr(AC, "FreshAirFanSpeed"),
-    reason="msmart-ng without Fresh Air support (mill1000/midea-msmart#268)",
+    reason="msmart-ng without Fresh Air support",
 )
 
 

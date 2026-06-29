@@ -10,6 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.percentage import (ordered_list_item_to_percentage,
                                            percentage_to_ordered_list_item)
+from msmart.device import AirConditioner as AC
 
 from .const import DOMAIN
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
@@ -44,14 +45,12 @@ class MideaFreshAirFan(MideaCoordinatorEntity, FanEntity):
     _attr_translation_key = "fresh_air"
     _enable_turn_on_off_backwards_compatibility = False
 
+    # List of selectablespeed levels excluding off
+    _SPEEDS = [s for s in AC.FreshAirFanSpeed.list()
+               if s != AC.FreshAirFanSpeed.OFF]
+
     def __init__(self, coordinator: MideaDeviceUpdateCoordinator) -> None:
         MideaCoordinatorEntity.__init__(self, coordinator)
-
-        self._enum_class = self._device.FreshAirFanSpeed
-        self._off = self._enum_class.OFF
-
-        # Ordered list of selectable (non-off) speed levels, ascending
-        self._speeds = [s for s in self._enum_class.list() if s != self._off]
 
         self._supported_features = FanEntityFeature.SET_SPEED
 
@@ -94,47 +93,43 @@ class MideaFreshAirFan(MideaCoordinatorEntity, FanEntity):
     @property
     def is_on(self) -> bool:
         """Return whether fresh air is on."""
-        return self._device.fresh_air_fan_speed != self._off
+        return self._device.fresh_air_fan_speed != AC.FreshAirFanSpeed.OFF
 
     @property
     def speed_count(self) -> int:
         """Return the number of speeds the fan supports."""
-        return len(self._speeds)
+        return len(self._SPEEDS)
 
     @property
     def percentage(self) -> int:
         """Return the current speed as a percentage."""
         speed = self._device.fresh_air_fan_speed
-        if speed == self._off:
+        if speed == AC.FreshAirFanSpeed.OFF:
             return 0
 
-        return ordered_list_item_to_percentage(self._speeds, speed)
+        return ordered_list_item_to_percentage(self._SPEEDS, speed)
 
     async def async_set_percentage(self, percentage: int) -> None:
         """Set the speed of the fan, as a percentage."""
-        if percentage <= 0:
-            self._device.fresh_air_fan_speed = self._off
-        else:
-            self._device.fresh_air_fan_speed = percentage_to_ordered_list_item(
-                self._speeds, percentage)
+        speed = AC.FreshAirFanSpeed.OFF
+        if percentage > 0:
+            speed = percentage_to_ordered_list_item(self._SPEEDS, percentage)
 
+        self._device.fresh_air_fan_speed = speed
         await self.coordinator.apply()
 
-    async def async_turn_on(self,
-                            percentage: Optional[int] = None,
-                            preset_mode: Optional[str] = None,
-                            **kwargs: Any) -> None:
+    async def async_turn_on(self, percentage: Optional[int] = None, preset_mode: Optional[str] = None, **kwargs: Any) -> None:
         """Turn the fan on."""
         if percentage is not None:
-            self._device.fresh_air_fan_speed = percentage_to_ordered_list_item(
-                self._speeds, percentage)
-        elif self._device.fresh_air_fan_speed == self._off and self._speeds:
-            # Default to the lowest supported speed when turning on from off
-            self._device.fresh_air_fan_speed = self._speeds[0]
+            return await self.async_set_percentage(percentage)
+
+        # Default to the lowest supported speed when turning on from off
+        if self._device.fresh_air_fan_speed == AC.FreshAirFanSpeed.OFF:
+            self._device.fresh_air_fan_speed = self._SPEEDS[0]
 
         await self.coordinator.apply()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the fan off."""
-        self._device.fresh_air_fan_speed = self._off
+        self._device.fresh_air_fan_speed = AC.FreshAirFanSpeed.OFF
         await self.coordinator.apply()
