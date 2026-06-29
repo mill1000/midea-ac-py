@@ -313,7 +313,7 @@
       "display": {
         "name": "Geräteanzeige"
       },
-      "flash_cool": {
+      "flash": {
         "name": "Schnellkühlen"
       },
       "out_silent": {
