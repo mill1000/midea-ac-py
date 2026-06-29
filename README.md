@@ -52,6 +52,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
   * Auxiliary heating mode
   * Flash/jet cool
   * Cascade
+  * Fresh air (ventilation) fan
 
 <small>
 
