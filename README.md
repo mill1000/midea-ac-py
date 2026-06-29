@@ -48,7 +48,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
   * Start and monitor self-cleaning
   * Rate selection (Gear mode)
   * "Breeze" modes (e.g., breeze away, breeze mild, breezeless)
-  * iECO
+  * iECO (ECOMaster/ECO+)
   * Auxiliary heating mode
   * Flash/jet cool
   * Cascade
