@@ -27,6 +27,7 @@ CONF_DEVICE_TYPE = "device_type"
 CONF_CAPABILITY_OVERRIDES = "capability_overrides"
 CONF_MERGE_CAPABILITY_OVERRIDES = "merge_capability_overrides"
 CONF_CACHED_CAPS = "cached_capabilities"
+CONF_ALLOW_OFFLINE_STARTUP = "allow_offline_startup"
 
 PRESET_IECO = "ieco"
 PRESET_SILENT = "silent"

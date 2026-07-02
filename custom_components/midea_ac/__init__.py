@@ -17,8 +17,8 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CACHED_CAPS,
-                    CONF_CAPABILITY_OVERRIDES,
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_ALLOW_OFFLINE_STARTUP,
+                    CONF_CACHED_CAPS, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
@@ -80,9 +80,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             "Setting maximum connection lifetime to %s seconds for device ID %s.", lifetime, device.id)
         device.set_max_connection_lifetime(lifetime)
 
-    # Capabilities cached from a previous successful setup. Lets the entry start
-    # while the device is offline instead of raising ConfigEntryNotReady.
+    # Capabilities cached from a previous successful setup. When "Allow offline
+    # startup" is enabled, they let the entry start while the device is offline
+    # instead of raising ConfigEntryNotReady.
     cached_caps = config_entry.data.get(CONF_CACHED_CAPS)
+    allow_offline = config_entry.options.get(CONF_ALLOW_OFFLINE_STARTUP, False)
     reachable = True
 
     # Configure token and k1 as needed
@@ -92,9 +94,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         try:
             await device.authenticate(token, key)
         except AuthenticationError as e:
-            # Without cached capabilities we cannot build entities, so keep HA's
-            # standard "retry setup" behavior.
-            if not cached_caps:
+            # Keep HA's standard "retry setup" behavior unless offline startup is
+            # allowed and we have cached capabilities to build entities from.
+            if not (allow_offline and cached_caps):
                 raise ConfigEntryNotReady(
                     "Failed to authenticate with device.") from e
             _LOGGER.warning(
@@ -117,7 +119,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
                     config_entry,
                     data={**config_entry.data, CONF_CACHED_CAPS: caps})
         except Exception as e:  # noqa: BLE001 - fall back to cache on any query failure
-            if not cached_caps:
+            if not (allow_offline and cached_caps):
                 raise ConfigEntryNotReady(
                     f"Failed to query device capabilities: {e}") from e
             _LOGGER.warning(

@@ -78,12 +78,14 @@
           "temp_step": "Temperaturschritte",
           "fan_speed_step": "Lüftergeschwindigkeitsschritte",
           "max_connection_lifetime": "Maximale Verbindungsdauer",
-          "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
+          "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren",
+          "allow_offline_startup": "Offline-Start erlauben"
         },
         "data_description": {
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
-          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
+          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)",
+          "allow_offline_startup": "Beim Start aus zwischengespeicherten Fähigkeiten laden, wenn das Gerät offline ist, statt einen Einrichtungsfehler anzuzeigen. Entitäten bleiben nicht verfügbar, bis das Gerät wieder verbunden ist."
         },
         "sections": {
           "energy_sensor": {
