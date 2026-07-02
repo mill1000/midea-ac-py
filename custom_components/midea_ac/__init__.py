@@ -1,6 +1,7 @@
 """Integration for Midea Smart AC."""
 from __future__ import annotations
 
+import enum
 import logging
 
 import yaml
@@ -16,7 +17,8 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
+from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CACHED_CAPS,
+                    CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
@@ -36,6 +38,17 @@ _PLATFORMS = [
     Platform.SENSOR,
     Platform.SWITCH
 ]
+
+
+def _caps_to_names(obj):
+    """Recursively convert enum values to their names so caps are JSON-serializable."""
+    if isinstance(obj, enum.Enum):
+        return obj.name
+    if isinstance(obj, dict):
+        return {k: _caps_to_names(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple, set)):
+        return [_caps_to_names(v) for v in obj]
+    return obj
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -67,6 +80,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             "Setting maximum connection lifetime to %s seconds for device ID %s.", lifetime, device.id)
         device.set_max_connection_lifetime(lifetime)
 
+    # Capabilities cached from a previous successful setup. Lets the entry start
+    # while the device is offline instead of raising ConfigEntryNotReady.
+    cached_caps = config_entry.data.get(CONF_CACHED_CAPS)
+    reachable = True
+
     # Configure token and k1 as needed
     token = config_entry.data[CONF_TOKEN]
     key = config_entry.data[CONF_KEY]
@@ -74,12 +92,43 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         try:
             await device.authenticate(token, key)
         except AuthenticationError as e:
-            raise ConfigEntryNotReady(
-                "Failed to authenticate with device.") from e
+            # Without cached capabilities we cannot build entities, so keep HA's
+            # standard "retry setup" behavior.
+            if not cached_caps:
+                raise ConfigEntryNotReady(
+                    "Failed to authenticate with device.") from e
+            _LOGGER.warning(
+                "Could not authenticate with device ID %s, starting from cached capabilities: %s",
+                device.id, e)
+            reachable = False
 
-    # Query device capabilities
-    _LOGGER.info("Querying capabilities for device ID %s.", device.id)
-    await device.get_capabilities()
+    # Query device capabilities (and cache them for offline starts)
+    if reachable:
+        try:
+            _LOGGER.info("Querying capabilities for device ID %s.", device.id)
+            await device.get_capabilities()
+
+            # Cache capabilities so the entry can start while the device is offline.
+            # Only write when changed: async_update_entry notifies the update
+            # listener registered below and could otherwise cause a reload loop.
+            caps = _caps_to_names(device.capabilities_dict())
+            if caps != cached_caps:
+                hass.config_entries.async_update_entry(
+                    config_entry,
+                    data={**config_entry.data, CONF_CACHED_CAPS: caps})
+        except Exception as e:  # noqa: BLE001 - fall back to cache on any query failure
+            if not cached_caps:
+                raise ConfigEntryNotReady(
+                    f"Failed to query device capabilities: {e}") from e
+            _LOGGER.warning(
+                "Could not query capabilities for device ID %s, starting from cache: %s",
+                device.id, e)
+            reachable = False
+
+    # Build entities from cached capabilities when the device is unreachable.
+    # Full replace (merge=False) mirrors what a successful get_capabilities() sets.
+    if not reachable:
+        device.override_capabilities(cached_caps, merge=False)
 
     # Apply capability overrides if present
     if (yaml_input := config_entry.options.get(CONF_CAPABILITY_OVERRIDES)):
@@ -96,7 +145,12 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     # Create device coordinator and fetch data
     coordinator = MideaDeviceUpdateCoordinator(hass, device)  # type: ignore
-    await coordinator.async_config_entry_first_refresh()
+    if reachable:
+        await coordinator.async_config_entry_first_refresh()
+    else:
+        # No ConfigEntryNotReady -> no error banner. Entities start 'unavailable'
+        # (device.online is False); the coordinator reconnects in the background.
+        await coordinator.async_refresh()
 
     # Store coordinator in global data
     hass.data[DOMAIN][config_entry.entry_id] = coordinator
