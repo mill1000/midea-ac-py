@@ -80,14 +80,16 @@
           "max_connection_lifetime": "Maximum Connection Lifetime",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle",
           "capability_overrides": "Capability Overrides",
-          "merge_capability_overrides": "Merge Overrides"
+          "merge_capability_overrides": "Merge Overrides",
+          "allow_offline_startup": "Allow offline startup"
         },
         "data_description": {
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",
           "capability_overrides": "Device capability overrides in YAML format",
-          "merge_capability_overrides": "Merge overrides with existing device capabilities"
+          "merge_capability_overrides": "Merge overrides with existing device capabilities",
+          "allow_offline_startup": "Start from previously cached capabilities when the device is offline, instead of showing a setup error. Entities remain unavailable until the device reconnects."
         },
         "sections": {
           "energy_sensor": {

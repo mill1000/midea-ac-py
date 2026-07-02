@@ -31,7 +31,8 @@ from msmart.device import CommercialAirConditioner as CC
 from msmart.discover import CloudError, Discover
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
+from .const import (CONF_ALLOW_OFFLINE_STARTUP, CONF_BEEP,
+                    CONF_CAPABILITY_OVERRIDES,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
@@ -49,7 +50,8 @@ _DEFAULT_OPTIONS = {
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
     CONF_CAPABILITY_OVERRIDES: "",
-    CONF_MERGE_CAPABILITY_OVERRIDES: True
+    CONF_MERGE_CAPABILITY_OVERRIDES: True,
+    CONF_ALLOW_OFFLINE_STARTUP: False
 }
 
 _DEFAULT_AC_OPTIONS = {
@@ -471,6 +473,7 @@ class MideaOptionsFlow(OptionsFlow):
                 )
             ),
             vol.Optional(CONF_MERGE_CAPABILITY_OVERRIDES): cv.boolean,
+            vol.Optional(CONF_ALLOW_OFFLINE_STARTUP): cv.boolean,
         }
     )
 
