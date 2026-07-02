@@ -143,8 +143,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
             _LOGGER.error(
                 "Failed to apply capability overrides for device ID %s: %s", device.id, e)
 
-    # Create device coordinator and fetch data
-    coordinator = MideaDeviceUpdateCoordinator(hass, device)  # type: ignore
+    # Create device coordinator and fetch data. Pass token/key so the
+    # coordinator can (re)authenticate a V3 device that started from cache
+    # while offline and whose credentials were never stored.
+    coordinator = MideaDeviceUpdateCoordinator(hass, device, token, key)  # type: ignore
     if reachable:
         await coordinator.async_config_entry_first_refresh()
     else:

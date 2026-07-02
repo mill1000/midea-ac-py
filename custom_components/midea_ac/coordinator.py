@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.debounce import Debouncer
 from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
+from msmart.lan import AuthenticationError
 
 from .const import DOMAIN, UPDATE_INTERVAL, MideaDevice
 from .device_proxy import MideaDeviceProxy
@@ -19,7 +20,8 @@ _LOGGER = logging.getLogger(__name__)
 class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
     """Device update coordinator for Midea Smart AC."""
 
-    def __init__(self, hass: HomeAssistant, device: MideaDevice) -> None:
+    def __init__(self, hass: HomeAssistant, device: MideaDevice,
+                 token: str | None = None, key: str | None = None) -> None:
         super().__init__(
             hass,
             _LOGGER,
@@ -35,12 +37,25 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
 
         self._lock = Lock()
         self._proxy: MideaDeviceProxy[MideaDevice] = MideaDeviceProxy(device)
+        self._token = token
+        self._key = key
         self._energy_sensors = 0
         self._group5_entities = 0
 
     async def _async_update_data(self) -> None:
         """Update the device data."""
         async with self._lock:
+            # A V3 device that started from cached capabilities while offline
+            # never stored its credentials, so msmart cannot re-authenticate on
+            # its own. (Re)authenticate here so polling recovers once the device
+            # is reachable again. Skipped once authenticated (token is set).
+            if self._token and self._key and self._proxy.token is None:
+                try:
+                    await self._proxy.authenticate(self._token, self._key)
+                except AuthenticationError as e:
+                    _LOGGER.debug(
+                        "Device still unreachable, will retry: %s", e)
+                    return
             await self._proxy.refresh()
 
     async def apply(self) -> None:
