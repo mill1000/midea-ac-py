@@ -1,7 +1,10 @@
 """Config flow for Midea Smart AC."""
 from __future__ import annotations
 
+import asyncio
+import ipaddress
 import logging
+
 from typing import Any, cast
 
 import homeassistant.helpers.config_validation as cv
@@ -68,10 +71,6 @@ _DEFAULT_AC_OPTIONS = {
     }
 }
 
-_CLOUD_CREDENTIALS = {
-    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1"),
-    "KR": ("midea_sea@mailinator.com", "password_for_sea1")
-}
 
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -98,19 +97,15 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
             # If host was not provided, discover all devices
             if not (host := user_input.get(CONF_HOST)):
-                return await self.async_step_pick_device(country_code=country_code)
+                return await self.async_step_pick_device(
+                    country_code=country_code
+                )
 
-            # Get credentials for region
-            account, password = _CLOUD_CREDENTIALS.get(
-                country_code, (None, None))
-
-            # Attempt to find specified device
+            # Attempt to find specified device (LAN-only, no cloud credentials)
             device = await Discover.discover_single(
                 host,
                 auto_connect=False,
-                timeout=2,
-                account=account,
-                password=password,
+                timeout=5,
                 get_async_client=self._get_async_client
             )
 
@@ -135,11 +130,22 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     # Catch cloud errors and report to user
                     return self.async_abort(reason="cloud_connection_failed")
 
+        # Map HA language codes to cloud country codes for auto-selection
+        _LANGUAGE_TO_COUNTRY = {
+            "de": "DE",
+            "ko": "KR",
+            "en": "US",
+        }
+        default_country = _LANGUAGE_TO_COUNTRY.get(
+            self.hass.config.language[:2].lower(),
+            CONF_DEFAULT_CLOUD_COUNTRY
+        )
+
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
                 vol.Optional(CONF_HOST, default=""): str,
                 vol.Optional(
-                    CONF_COUNTRY_CODE, default=CONF_DEFAULT_CLOUD_COUNTRY
+                    CONF_COUNTRY_CODE, default=default_country
                 ): CountrySelector(
                     CountrySelectorConfig(
                         countries=CONF_CLOUD_COUNTRY_CODES)
@@ -187,22 +193,29 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             entry.unique_id for entry in self._async_current_entries()
         }
 
-        # Get credentials for region
-        account, password = _CLOUD_CREDENTIALS.get(country_code, (None, None))
-
-        # Discover all devices
+        # First attempt: broadcast discovery
+        _LOGGER.debug("Starting broadcast discovery...")
         self._discovered_devices = await Discover.discover(
             auto_connect=False,
-            timeout=2,
-            account=account,
-            password=password,
+            timeout=5,
             get_async_client=self._get_async_client
         )
 
+        # Fallback: if broadcast found nothing (e.g. Docker bridge network),
+        # automatically scan common private subnets via unicast UDP
+        if not self._discovered_devices:
+            _LOGGER.debug(
+                "Broadcast found no devices. Falling back to subnet scan...")
+            self._discovered_devices = await self._discover_subnet()
+
         # Create dict of device ID to friendly name
+        _TYPE_LABELS = {
+            DeviceType.AIR_CONDITIONER: "Air Conditioner",
+            DeviceType.COMMERCIAL_AC: "Commercial Air Conditioner",
+        }
         devices_name = {
             device.id: (
-                f"{device.name} - {device.id} ({device.ip})"
+                f"{_TYPE_LABELS.get(device.type, 'Device')} ({device.ip}) – ID: {device.id}"
             )
             for device in self._discovered_devices
             if (str(device.id) not in configured_devices and
@@ -385,6 +398,85 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     def _get_async_client(self, *args, **kwargs) -> httpx.AsyncClient:
         """Create an httpx AsyncClient in a HA friendly way."""
         return httpx_client.get_async_client(self.hass, *args, **kwargs)
+
+    async def _discover_subnet(self) -> list:
+        """Scan common subnets via unicast UDP.
+
+        Used as a fallback for Docker/NAT environments where broadcast fails.
+        Scans HA adapters first, then common private subnets.
+        """
+        # Most common private home network subnets.
+        # Listed by frequency of use: FRITZ!Box DE default first, then global defaults.
+        _COMMON_SUBNETS = [
+            "192.168.178.0/24",  # FRITZ!Box default (Germany)
+            "192.168.1.0/24",    # Most common globally
+            "192.168.0.0/24",    # Second most common globally
+            "10.0.0.0/24",
+            "10.0.1.0/24",
+            "10.1.1.0/24",
+        ]
+
+        all_ips: list[str] = []
+
+        # First try to detect subnet from HA's own network adapters
+        # (works when HA is on the real LAN; skips Docker-internal 172.x addresses)
+        try:
+            from homeassistant.components.network import async_get_adapters
+            adapters = await async_get_adapters(self.hass)
+            for adapter in adapters:
+                for ipv4 in adapter.get("ipv4", []):
+                    addr = ipv4.get("address", "")
+                    prefix = ipv4.get("network_prefix", 24)
+                    if (addr
+                            and not addr.startswith("127.")
+                            and not addr.startswith("172.")
+                            and not addr.startswith("169.254.")):
+                        network = ipaddress.IPv4Network(
+                            f"{addr}/{prefix}", strict=False)
+                        all_ips = [str(ip) for ip in network.hosts()]
+                        _LOGGER.debug(
+                            "Subnet scan: auto-detected adapter subnet %s (%d hosts)",
+                            network, len(all_ips))
+                        break
+                if all_ips:
+                    break
+        except Exception as e:
+            _LOGGER.debug("Could not read HA network adapters: %s", e)
+
+        if not all_ips:
+            # Fallback: scan all common private subnets in parallel.
+            # This handles Docker bridge / NAT environments where the container
+            # only sees its internal 172.x.x.x address but can still route UDP
+            # to devices on the physical LAN via masquerade/NAT.
+            _LOGGER.debug(
+                "No suitable adapter found. Scanning common private subnets: %s",
+                _COMMON_SUBNETS)
+            for subnet in _COMMON_SUBNETS:
+                network = ipaddress.IPv4Network(subnet, strict=False)
+                all_ips.extend(str(ip) for ip in network.hosts())
+
+        if not all_ips:
+            _LOGGER.warning("No IPs to scan for subnet fallback.")
+            return []
+
+        _LOGGER.debug("Subnet scan: probing %d hosts in total.", len(all_ips))
+
+        async def _try_host(host: str):
+            try:
+                return await Discover.discover_single(
+                    host,
+                    auto_connect=False,
+                    timeout=1,
+                    get_async_client=self._get_async_client
+                )
+            except Exception:
+                return None
+
+        # Run all hosts in parallel — total time ≈ timeout (1s), not N * timeout
+        results = await asyncio.gather(*[_try_host(ip) for ip in all_ips])
+        devices = [d for d in results if d is not None]
+        _LOGGER.debug("Subnet scan found %d device(s).", len(devices))
+        return devices
 
     async def _test_manual_connection(self, config) -> AC | CC | None:
         DEVICE_TYPES = {

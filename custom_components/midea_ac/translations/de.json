@@ -9,13 +9,20 @@
         }
       },
       "discover": {
-        "description": "Lassen Sie das Host-Feld leer, um Geräte im Netzwerk zu erkennen.",
+        "description": "Midea Klimaanlage automatisch im Netzwerk suchen. Einfach Weiter klicken.",
         "data": {
-          "host": "Host",
+          "host": "Geräte-IP-Adresse (optional)",
           "country_code": "Cloud Region"
         },
         "data_description": {
-          "country_code": "Wählen Sie das Land, das Ihrem Standort am nächsten ist."
+          "host": "Leer lassen für automatische Suche. IP angeben, um ein bestimmtes Gerät direkt anzusprechen (z. B. 192.168.178.40).",
+          "country_code": "Region wählen, die Ihrem Standort am nächsten ist."
+        }
+      },
+      "pick_device": {
+        "description": "Gefundene Geräte. Wählen Sie das hinzuzufügende Gerät aus.",
+        "data": {
+          "id": "Gerät"
         }
       },
       "manual": {

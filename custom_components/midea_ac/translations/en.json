@@ -9,13 +9,20 @@
         }
       },
       "discover": {
-        "description": "Leave the host blank to discover device(s) on the network.",
+        "description": "Automatically find your Midea AC on the network. Just click Submit.",
         "data": {
-          "host": "Host",
+          "host": "Device IP Address (optional)",
           "country_code": "Cloud Region"
         },
         "data_description": {
-          "country_code": "Select closest country to your location."
+          "host": "Leave blank to scan the network automatically. Enter an IP to target a specific device (e.g. 192.168.178.40).",
+          "country_code": "Select the region closest to your location."
+        }
+      },
+      "pick_device": {
+        "description": "Device(s) found. Select the device to add.",
+        "data": {
+          "id": "Device"
         }
       },
       "manual": {
