@@ -12,7 +12,7 @@ from homeassistant.components.climate.const import (ATTR_HVAC_MODE,
                                                     PRESET_ECO, PRESET_NONE,
                                                     PRESET_SLEEP,
                                                     ClimateEntityFeature,
-                                                    HVACMode)
+                                                    HVACAction, HVACMode)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED,
                                  UnitOfTemperature)
@@ -292,6 +292,44 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        """Return the current running hvac action, used to select the state icon."""
+        mode = self.hvac_mode
+
+        if mode == HVACMode.OFF:
+            return HVACAction.OFF
+        if mode == HVACMode.FAN_ONLY:
+            return HVACAction.FAN
+        if mode == HVACMode.DRY:
+            return HVACAction.DRYING
+        if mode == HVACMode.COOL:
+            return HVACAction.COOLING
+        if mode == HVACMode.HEAT:
+            return HVACAction.HEATING
+        if mode == HVACMode.AUTO:
+            return self._auto_hvac_action()
+
+        return None
+
+    def _auto_hvac_action(self) -> HVACAction:
+        """Estimate the hvac action while in auto mode from the temperature delta.
+
+        The device doesn't report the actual compressor state, so this is a
+        best guess based on current vs. target temperature.
+        """
+        current = self._device.indoor_temperature
+        target = self._device.target_temperature
+
+        if current is None or target is None:
+            return HVACAction.IDLE
+        if current > target:
+            return HVACAction.COOLING
+        if current < target:
+            return HVACAction.HEATING
+
+        return HVACAction.IDLE
+
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
         if hvac_mode == HVACMode.OFF:
@@ -491,6 +529,16 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             mode = AC.OperationalMode.DRY
 
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(mode, HVACMode.OFF)
+
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        """Return the current running hvac action, used to select the state icon."""
+        action = super().hvac_action
+
+        if action == HVACAction.HEATING and self._device.defrost_active:
+            return HVACAction.DEFROSTING
+
+        return action
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""

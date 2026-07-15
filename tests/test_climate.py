@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from homeassistant.components.climate.const import (PRESET_ECO, PRESET_SLEEP,
                                                     ClimateEntityFeature,
-                                                    HVACMode)
+                                                    HVACAction, HVACMode)
 from homeassistant.core import HomeAssistant
 from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
@@ -236,3 +236,117 @@ async def test_preset_modes(
     # Assert configured modes are present
     for k, _ in config_modes.items():
         assert k in climate_device.preset_modes
+
+
+@pytest.mark.parametrize(
+    ("power_state", "operational_mode", "expected_action"),
+    [
+        (False, AC.OperationalMode.COOL, HVACAction.OFF),
+        (True, AC.OperationalMode.COOL, HVACAction.COOLING),
+        (True, AC.OperationalMode.HEAT, HVACAction.HEATING),
+        (True, AC.OperationalMode.DRY, HVACAction.DRYING),
+        (True, AC.OperationalMode.SMART_DRY, HVACAction.DRYING),
+        (True, AC.OperationalMode.FAN_ONLY, HVACAction.FAN),
+    ],
+)
+async def test_ac_hvac_action(
+    hass: HomeAssistant,
+    power_state: bool,
+    operational_mode: AC.OperationalMode,
+    expected_action: HVACAction,
+):
+    """Test hvac_action reflects the mode for the AC device."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = power_state
+    mock_device._operational_mode = operational_mode
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+
+    assert climate_device.hvac_action == expected_action
+
+
+@pytest.mark.parametrize(
+    ("indoor_temperature", "target_temperature", "expected_action"),
+    [
+        (None, 24, HVACAction.IDLE),
+        (26, 24, HVACAction.COOLING),
+        (22, 24, HVACAction.HEATING),
+        (24, 24, HVACAction.IDLE),
+    ],
+)
+async def test_ac_hvac_action_auto_mode(
+    hass: HomeAssistant,
+    indoor_temperature: float | None,
+    target_temperature: float,
+    expected_action: HVACAction,
+):
+    """Test hvac_action is estimated from the temperature delta in auto mode."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = AC.OperationalMode.AUTO
+    mock_device._indoor_temperature = indoor_temperature
+    mock_device._target_temperature = target_temperature
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+
+    assert climate_device.hvac_action == expected_action
+
+
+async def test_ac_hvac_action_defrosting(
+    hass: HomeAssistant,
+):
+    """Test hvac_action reports defrosting while heating with defrost active."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = AC.OperationalMode.HEAT
+    mock_device._defrost_active = True
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+
+    assert climate_device.hvac_action == HVACAction.DEFROSTING
+
+
+@pytest.mark.parametrize(
+    ("power_state", "operational_mode", "expected_action"),
+    [
+        (False, CC.OperationalMode.COOL, HVACAction.OFF),
+        (True, CC.OperationalMode.COOL, HVACAction.COOLING),
+        (True, CC.OperationalMode.HEAT, HVACAction.HEATING),
+        (True, CC.OperationalMode.DRY, HVACAction.DRYING),
+        (True, CC.OperationalMode.FAN, HVACAction.FAN),
+    ],
+)
+async def test_cc_hvac_action(
+    hass: HomeAssistant,
+    power_state: bool,
+    operational_mode: "CC.OperationalMode",
+    expected_action: HVACAction,
+):
+    """Test hvac_action reflects the mode for the CC device."""
+
+    mock_device = CC("0.0.0.0", 0, 0)
+    mock_device._power_state = power_state
+    mock_device._operational_mode = operational_mode
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateCCDevice(hass, mock_coordinator, {})
+
+    assert climate_device.hvac_action == expected_action
