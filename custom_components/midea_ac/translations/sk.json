@@ -58,7 +58,7 @@
       "already_configured": "ID zariadenia už bolo nakonfigurované.",
       "cannot_connect": "Nepodarilo sa vytvoriť spojenie.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "V sieti sa nenašli žiadne podporované zariadenia.",
+      "no_devices_found": "V sieti sa nenašli žiadne nové zariadenia.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

@@ -58,7 +58,7 @@
       "already_configured": "Dispozitivul este deja configurat.",
       "cannot_connect": "Nu s-a putut realiza conexiunea.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Nu s-au găsit dispozitive compatibile în rețea.",
+      "no_devices_found": "Nu s-au găsit dispozitive noi în rețea.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

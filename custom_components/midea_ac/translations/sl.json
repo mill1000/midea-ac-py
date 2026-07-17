@@ -58,7 +58,7 @@
       "already_configured": "Ta naprava je že bila nastavljena.",
       "cannot_connect": "Povezave ni bilo mogoče vspoztaviti.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Podprtih naprav ni bilo mogoče najti na omrežju.",
+      "no_devices_found": "V omrežju ni bilo najdenih novih naprav.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

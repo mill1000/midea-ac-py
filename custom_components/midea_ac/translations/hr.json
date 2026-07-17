@@ -58,7 +58,7 @@
       "already_configured": "Uređaj je već konfiguriran.",
       "cannot_connect": "Nije bilo moguće uspostaviti vezu.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Na mreži nisu pronađeni podržani uređaji.",
+      "no_devices_found": "Na mreži nisu pronađeni novi uređaji.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

@@ -59,7 +59,7 @@
       "already_configured": "Dit apparaat is al ingesteld.",
       "cannot_connect": "Het apparaat kon niet worden bereikt.",
       "cloud_connection_failed": "Cloudverbinding is mislukt.",
-      "no_devices_found": "Geen ondersteunde apparaten gevonden op het netwerk.",
+      "no_devices_found": "Geen nieuwe apparaten gevonden op het netwerk.{already_configured}",
       "reconfigure_successful": "Apparaat succesvol opnieuw ingesteld."
     },
     "error": {

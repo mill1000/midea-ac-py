@@ -58,7 +58,7 @@
       "already_configured": "Устройство уже настроено.",
       "cannot_connect": "Не удалось установить соединение.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Поддерживаемые устройства не найдены.",
+      "no_devices_found": "Новые устройства в сети не найдены.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

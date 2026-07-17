@@ -58,7 +58,7 @@
       "already_configured": "Cihaz zaten yapılandırılmış.",
       "cannot_connect": "Bağlantı kurulamadı.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Ağda desteklenen bir cihaz bulunamadı.",
+      "no_devices_found": "Ağda yeni cihaz bulunamadı.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

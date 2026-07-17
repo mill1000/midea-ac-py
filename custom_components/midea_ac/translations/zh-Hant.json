@@ -58,7 +58,7 @@
       "already_configured": "已存在的設備。",
       "cannot_connect": "無法連結到設備。",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "未發現支援的設備。",
+      "no_devices_found": "網路上未發現新裝置。{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

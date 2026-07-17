@@ -58,7 +58,7 @@
       "already_configured": "O dispositivo já está configurado.",
       "cannot_connect": "Não foi possível conectar.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Não foram encontrados dispositivos compatíveis na sua rede.",
+      "no_devices_found": "Não foram encontrados novos dispositivos na rede.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

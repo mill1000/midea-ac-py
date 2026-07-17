@@ -59,7 +59,7 @@
       "already_configured": "Уредот веќе е конфигуриран.",
       "cannot_connect": "Не може да се воспостави врска со уредот.",
       "cloud_connection_failed": "Не може да се воспостави врска со облакот.",
-      "no_devices_found": "Не се пронајдени поддржани уреди на мрежата.",
+      "no_devices_found": "Не се пронајдени нови уреди на мрежата.{already_configured}",
       "reconfigure_successful": "Уредот е успешно повторно конфигуриран."
     },
     "error": {

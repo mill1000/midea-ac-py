@@ -58,7 +58,7 @@
       "already_configured": "El dispositiu ja ha estat configurat.",
       "cannot_connect": "No s'ha pogut realitzar una connexió.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "No s'han trobat dispositius compatibles a la xarxa.",
+      "no_devices_found": "No s'han trobat dispositius nous a la xarxa.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

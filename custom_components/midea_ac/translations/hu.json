@@ -58,7 +58,7 @@
       "already_configured": "Az eszköz már konfigurálva lett.",
       "cannot_connect": "Nem sikerült a csatlakozás.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Nem található támogatott eszköz a hálózaton.",
+      "no_devices_found": "Nem található új eszköz a hálózaton.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

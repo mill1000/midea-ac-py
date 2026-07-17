@@ -58,7 +58,7 @@
       "already_configured": "Enheten er allerede konfigurert.",
       "cannot_connect": "Det kunne ikke opprettes en forbindelse.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Finner ingen støttede enheter på nettverket.",
+      "no_devices_found": "Fant ingen nye enheter på nettverket.{already_configured}",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {
