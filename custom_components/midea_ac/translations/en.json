@@ -57,9 +57,10 @@
     },
     "abort": {
       "already_configured": "The device has already been configured.",
+      "already_configured_devices_found": "No new devices found on the network.\n\nAlready configured on this network:\n{devices}",
       "cannot_connect": "Device connection could not be made.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "No new devices found on the network.{already_configured}",
+      "no_devices_found": "No supported devices found on the network.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

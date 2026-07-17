@@ -56,9 +56,10 @@
     },
     "abort": {
       "already_configured": "Uređaj je već konfiguriran.",
+      "already_configured_devices_found": "Na mreži nisu pronađeni novi uređaji.\n\nVeć konfigurirano na ovoj mreži:\n{devices}",
       "cannot_connect": "Nije bilo moguće uspostaviti vezu.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Na mreži nisu pronađeni novi uređaji.{already_configured}",
+      "no_devices_found": "Na mreži nisu pronađeni podržani uređaji.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

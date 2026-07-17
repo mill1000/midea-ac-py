@@ -56,9 +56,10 @@
     },
     "abort": {
       "already_configured": "L'appareil a déjà été configuré.",
+      "already_configured_devices_found": "Aucun nouvel appareil trouvé sur le réseau.\n\nDéjà configuré sur ce réseau:\n{devices}",
       "cannot_connect": "La connexion n'a pas pu être établie.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Aucun nouvel appareil trouvé sur le réseau.{already_configured}",
+      "no_devices_found": "Aucun appareil compatible trouvé sur le réseau.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

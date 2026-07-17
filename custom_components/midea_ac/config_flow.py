@@ -73,35 +73,6 @@ _CLOUD_CREDENTIALS = {
     "KR": ("midea_sea@mailinator.com", "password_for_sea1")
 }
 
-# Label prefixed to the list of already-configured devices surfaced when
-# discovery finds no new devices, keyed by the two-letter language code.
-_ALREADY_CONFIGURED_LABELS = {
-    "bg": "Вече конфигурирани в тази мрежа",
-    "ca": "Ja configurats en aquesta xarxa",
-    "cs": "Již nakonfigurováno v této síti",
-    "de": "Bereits im Netzwerk konfiguriert",
-    "en": "Already configured on this network",
-    "es": "Ya configurados en esta red",
-    "eu": "Sare honetan jadanik konfiguratuta",
-    "fr": "Déjà configuré sur ce réseau",
-    "hr": "Već konfigurirano na ovoj mreži",
-    "hu": "Már konfigurálva ezen a hálózaton",
-    "it": "Già configurato su questa rete",
-    "ko": "이 네트워크에 이미 구성됨",
-    "mk": "Веќе конфигурирано на оваа мрежа",
-    "nb": "Allerede konfigurert på dette nettverket",
-    "nl": "Al geconfigureerd op dit netwerk",
-    "pl": "Już skonfigurowane w tej sieci",
-    "pt": "Já configurado nesta rede",
-    "ro": "Deja configurat în această rețea",
-    "ru": "Уже настроено в этой сети",
-    "sk": "Už nakonfigurované v tejto sieti",
-    "sl": "Že konfigurirano v tem omrežju",
-    "tr": "Bu ağda zaten yapılandırılmış",
-    "uk": "Вже налаштовано в цій мережі",
-    "zh": "此网络中已配置",
-}
-
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
@@ -251,23 +222,16 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     device.type in [DeviceType.AIR_CONDITIONER, DeviceType.COMMERCIAL_AC])
             ]
 
-            already_configured_message = ""
             if already_configured_names:
-                label = _ALREADY_CONFIGURED_LABELS.get(
-                    self.hass.config.language[:2].lower(),
-                    _ALREADY_CONFIGURED_LABELS["en"]
+                return self.async_abort(
+                    reason="already_configured_devices_found",
+                    description_placeholders={
+                        "devices": "\n".join(
+                            f"- {name}" for name in already_configured_names)
+                    }
                 )
-                bullets = "\n".join(
-                    f"- {name}" for name in already_configured_names
-                )
-                already_configured_message = f"\n\n{label}:\n{bullets}"
 
-            return self.async_abort(
-                reason="no_devices_found",
-                description_placeholders={
-                    "already_configured": already_configured_message
-                }
-            )
+            return self.async_abort(reason="no_devices_found")
 
         data_schema = vol.Schema({
             vol.Required(CONF_ID): vol.In(devices_name)

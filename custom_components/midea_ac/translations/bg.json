@@ -56,9 +56,10 @@
     },
     "abort": {
       "already_configured": "Устройството вече е конфигурирано.",
+      "already_configured_devices_found": "Няма намерени нови устройства в мрежата.\n\nВече конфигурирани в тази мрежа:\n{devices}",
       "cannot_connect": "Не можа да се осъществи връзка.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Няма намерени нови устройства в мрежата.{already_configured}",
+      "no_devices_found": "Няма намерени поддържани устройства в мрежата.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

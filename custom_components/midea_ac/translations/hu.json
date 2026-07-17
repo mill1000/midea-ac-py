@@ -56,9 +56,10 @@
     },
     "abort": {
       "already_configured": "Az eszköz már konfigurálva lett.",
+      "already_configured_devices_found": "Nem található új eszköz a hálózaton.\n\nMár konfigurálva ezen a hálózaton:\n{devices}",
       "cannot_connect": "Nem sikerült a csatlakozás.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Nem található új eszköz a hálózaton.{already_configured}",
+      "no_devices_found": "Nem található támogatott eszköz a hálózaton.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

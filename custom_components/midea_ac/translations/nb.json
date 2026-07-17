@@ -56,9 +56,10 @@
     },
     "abort": {
       "already_configured": "Enheten er allerede konfigurert.",
+      "already_configured_devices_found": "Fant ingen nye enheter på nettverket.\n\nAllerede konfigurert på dette nettverket:\n{devices}",
       "cannot_connect": "Det kunne ikke opprettes en forbindelse.",
       "cloud_connection_failed": "Cloud connection could not be made.",
-      "no_devices_found": "Fant ingen nye enheter på nettverket.{already_configured}",
+      "no_devices_found": "Finner ingen støttede enheter på nettverket.",
       "reconfigure_successful": "Device successfully reconfigured."
     },
     "error": {

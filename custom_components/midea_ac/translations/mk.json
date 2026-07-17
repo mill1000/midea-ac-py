@@ -57,9 +57,10 @@
     },
     "abort": {
       "already_configured": "Уредот веќе е конфигуриран.",
+      "already_configured_devices_found": "Не се пронајдени нови уреди на мрежата.\n\nВеќе конфигурирано на оваа мрежа:\n{devices}",
       "cannot_connect": "Не може да се воспостави врска со уредот.",
       "cloud_connection_failed": "Не може да се воспостави врска со облакот.",
-      "no_devices_found": "Не се пронајдени нови уреди на мрежата.{already_configured}",
+      "no_devices_found": "Не се пронајдени поддржани уреди на мрежата.",
       "reconfigure_successful": "Уредот е успешно повторно конфигуриран."
     },
     "error": {
