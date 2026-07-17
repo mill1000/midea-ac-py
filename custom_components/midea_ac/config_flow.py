@@ -10,14 +10,12 @@ import voluptuous as vol
 import yaml
 from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
                                           ConfigFlowResult, OptionsFlow)
-from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
-                                 CONF_PORT, CONF_TOKEN, DEGREE)
+from homeassistant.const import (CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN,
+                                 DEGREE)
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import section
 from homeassistant.helpers import httpx_client
-from homeassistant.helpers.selector import (CountrySelector,
-                                            CountrySelectorConfig,
-                                            NumberSelector,
+from homeassistant.helpers.selector import (NumberSelector,
                                             NumberSelectorConfig,
                                             NumberSelectorMode, SelectSelector,
                                             SelectSelectorConfig,
@@ -31,11 +29,9 @@ from msmart.device import CommercialAirConditioner as CC
 from msmart.discover import CloudError, Discover
 from msmart.lan import AuthenticationError
 
-from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
-                    CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
-                    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
-                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_FAN_SPEED_STEP, CONF_KEY,
+from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES, CONF_DEVICE_TYPE,
+                    CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+                    CONF_ENERGY_SENSOR, CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
@@ -68,11 +64,6 @@ _DEFAULT_AC_OPTIONS = {
     }
 }
 
-_CLOUD_CREDENTIALS = {
-    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1"),
-    "KR": ("midea_sea@mailinator.com", "password_for_sea1")
-}
-
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
@@ -94,23 +85,16 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-            country_code = cast(str, user_input.get(CONF_COUNTRY_CODE))
 
             # If host was not provided, discover all devices
             if not (host := user_input.get(CONF_HOST)):
-                return await self.async_step_pick_device(country_code=country_code)
-
-            # Get credentials for region
-            account, password = _CLOUD_CREDENTIALS.get(
-                country_code, (None, None))
+                return await self.async_step_pick_device()
 
             # Attempt to find specified device
             device = await Discover.discover_single(
                 host,
                 auto_connect=False,
-                timeout=2,
-                account=account,
-                password=password,
+                timeout=5,
                 get_async_client=self._get_async_client
             )
 
@@ -138,12 +122,6 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
                 vol.Optional(CONF_HOST, default=""): str,
-                vol.Optional(
-                    CONF_COUNTRY_CODE, default=CONF_DEFAULT_CLOUD_COUNTRY
-                ): CountrySelector(
-                    CountrySelectorConfig(
-                        countries=CONF_CLOUD_COUNTRY_CODES)
-                ),
             }), user_input)
 
         return self.async_show_form(
@@ -153,9 +131,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_pick_device(
-        self, user_input: dict[str, Any] | None = None,
-        *,
-        country_code: str = CONF_DEFAULT_CLOUD_COUNTRY
+        self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the pick device step of config flow."""
 
@@ -187,15 +163,10 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             entry.unique_id for entry in self._async_current_entries()
         }
 
-        # Get credentials for region
-        account, password = _CLOUD_CREDENTIALS.get(country_code, (None, None))
-
         # Discover all devices
         self._discovered_devices = await Discover.discover(
             auto_connect=False,
-            timeout=2,
-            account=account,
-            password=password,
+            timeout=5,
             get_async_client=self._get_async_client
         )
 
