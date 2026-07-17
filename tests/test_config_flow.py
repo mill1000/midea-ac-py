@@ -9,6 +9,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
+from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -46,6 +47,110 @@ async def test_config_flow_options(hass: HomeAssistant) -> None:
     assert manual_form_result["type"] is FlowResultType.FORM
     assert manual_form_result["step_id"] == "manual"
     assert not manual_form_result["errors"]
+
+
+def _mock_discovered_device(
+    id: int, ip: str, name: str,
+    device_type: DeviceType = DeviceType.AIR_CONDITIONER
+) -> MagicMock:
+    """Build a fake device as returned by Discover.discover()."""
+    device = MagicMock()
+    device.id = id
+    device.ip = ip
+    device.name = name
+    device.type = device_type
+    return device
+
+
+async def test_pick_device_flow_no_devices_found(hass: HomeAssistant) -> None:
+    """Test the discover flow aborts with no_devices_found when nothing is discovered."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "no_devices_found"
+
+
+async def test_pick_device_flow_already_configured_devices_found(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test the discover flow surfaces already-configured devices when no new device is found."""
+    mock_config_entry.add_to_hass(hass)
+
+    discovered = _mock_discovered_device(
+        id=int(mock_config_entry.unique_id), ip="10.0.0.40", name="net_ac_6888"
+    )
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[discovered]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured_devices_found"
+    assert result["description_placeholders"] == {
+        "devices": "- net_ac_6888 - 1234 (10.0.0.40)"
+    }
+
+
+async def test_pick_device_flow_new_and_already_configured_devices(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test the discover flow only lists new devices when both new and already-configured devices are found."""
+    mock_config_entry.add_to_hass(hass)
+
+    already_configured = _mock_discovered_device(
+        id=int(mock_config_entry.unique_id), ip="10.0.0.40", name="net_ac_6888"
+    )
+    new_device = _mock_discovered_device(id=5678, ip="10.0.0.41", name="net_ac_1234")
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[already_configured, new_device]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "pick_device"
+
+    # Only the new device should be selectable; the already-configured one
+    # is silently excluded, same as before this feature existed.
+    id_validator = next(v for k, v in result["data_schema"].schema.items()
+                         if k == CONF_ID)
+    assert list(id_validator.container.keys()) == [5678]
 
 
 async def test_manual_flow_invalid_input(hass: HomeAssistant) -> None:
