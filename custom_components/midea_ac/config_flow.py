@@ -257,9 +257,10 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     self.hass.config.language[:2].lower(),
                     _ALREADY_CONFIGURED_LABELS["en"]
                 )
-                already_configured_message = (
-                    f"\n\n{label}: " + ", ".join(already_configured_names)
+                bullets = "\n".join(
+                    f"- {name}" for name in already_configured_names
                 )
+                already_configured_message = f"\n\n{label}:\n{bullets}"
 
             return self.async_abort(
                 reason="no_devices_found",
