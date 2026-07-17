@@ -304,31 +304,34 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if mode == HVACMode.DRY:
             return HVACAction.DRYING
         if mode == HVACMode.COOL:
-            return HVACAction.COOLING
+            return self._temperature_based_hvac_action(HVACAction.COOLING, None)
         if mode == HVACMode.HEAT:
-            return HVACAction.HEATING
+            return self._temperature_based_hvac_action(None, HVACAction.HEATING)
         if mode == HVACMode.AUTO:
-            return self._auto_hvac_action()
+            return self._temperature_based_hvac_action(HVACAction.COOLING, HVACAction.HEATING)
 
         return None
 
-    def _auto_hvac_action(self) -> HVACAction:
-        """Estimate the hvac action while in auto mode from the temperature delta.
+    def _temperature_based_hvac_action(
+        self, cooling: HVACAction | None, heating: HVACAction | None
+    ) -> HVACAction:
+        """Derive the hvac action from current vs. target temperature.
 
         The device doesn't report the actual compressor state, so this is a
-        best guess based on current vs. target temperature.
+        best guess. ``cooling`` is returned when the room is warmer than
+        target, ``heating`` when cooler. If the relevant action is ``None``
+        for that direction (single-direction modes), ``IDLE`` is returned
+        instead.
         """
         current = self._device.indoor_temperature
         target = self._device.target_temperature
 
-        if current is None or target is None:
+        if current is None or target is None or current == target:
             return HVACAction.IDLE
         if current > target:
-            return HVACAction.COOLING
-        if current < target:
-            return HVACAction.HEATING
+            return cooling if cooling is not None else HVACAction.IDLE
 
-        return HVACAction.IDLE
+        return heating if heating is not None else HVACAction.IDLE
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""

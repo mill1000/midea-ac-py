@@ -239,20 +239,27 @@ async def test_preset_modes(
 
 
 @pytest.mark.parametrize(
-    ("power_state", "operational_mode", "expected_action"),
+    ("power_state", "operational_mode", "indoor_temperature",
+     "target_temperature", "expected_action"),
     [
-        (False, AC.OperationalMode.COOL, HVACAction.OFF),
-        (True, AC.OperationalMode.COOL, HVACAction.COOLING),
-        (True, AC.OperationalMode.HEAT, HVACAction.HEATING),
-        (True, AC.OperationalMode.DRY, HVACAction.DRYING),
-        (True, AC.OperationalMode.SMART_DRY, HVACAction.DRYING),
-        (True, AC.OperationalMode.FAN_ONLY, HVACAction.FAN),
+        (False, AC.OperationalMode.COOL, 26, 24, HVACAction.OFF),
+        (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
+        (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
+        (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.DRY, None, 24, HVACAction.DRYING),
+        (True, AC.OperationalMode.SMART_DRY, None, 24, HVACAction.DRYING),
+        (True, AC.OperationalMode.FAN_ONLY, None, 24, HVACAction.FAN),
     ],
 )
 async def test_ac_hvac_action(
     hass: HomeAssistant,
     power_state: bool,
     operational_mode: AC.OperationalMode,
+    indoor_temperature: float | None,
+    target_temperature: float,
     expected_action: HVACAction,
 ):
     """Test hvac_action reflects the mode for the AC device."""
@@ -260,6 +267,8 @@ async def test_ac_hvac_action(
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = power_state
     mock_device._operational_mode = operational_mode
+    mock_device._indoor_temperature = indoor_temperature
+    mock_device._target_temperature = target_temperature
 
     mock_coordinator = MagicMock()
     mock_coordinator.apply = AsyncMock()
@@ -310,6 +319,8 @@ async def test_ac_hvac_action_defrosting(
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = True
     mock_device._operational_mode = AC.OperationalMode.HEAT
+    mock_device._indoor_temperature = 22
+    mock_device._target_temperature = 24
     mock_device._defrost_active = True
 
     mock_coordinator = MagicMock()
@@ -322,19 +333,24 @@ async def test_ac_hvac_action_defrosting(
 
 
 @pytest.mark.parametrize(
-    ("power_state", "operational_mode", "expected_action"),
+    ("power_state", "operational_mode", "indoor_temperature",
+     "target_temperature", "expected_action"),
     [
-        (False, CC.OperationalMode.COOL, HVACAction.OFF),
-        (True, CC.OperationalMode.COOL, HVACAction.COOLING),
-        (True, CC.OperationalMode.HEAT, HVACAction.HEATING),
-        (True, CC.OperationalMode.DRY, HVACAction.DRYING),
-        (True, CC.OperationalMode.FAN, HVACAction.FAN),
+        (False, CC.OperationalMode.COOL, 26, 24, HVACAction.OFF),
+        (True, CC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
+        (True, CC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
+        (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.DRY, None, 24, HVACAction.DRYING),
+        (True, CC.OperationalMode.FAN, None, 24, HVACAction.FAN),
     ],
 )
 async def test_cc_hvac_action(
     hass: HomeAssistant,
     power_state: bool,
     operational_mode: "CC.OperationalMode",
+    indoor_temperature: float | None,
+    target_temperature: float,
     expected_action: HVACAction,
 ):
     """Test hvac_action reflects the mode for the CC device."""
@@ -342,6 +358,8 @@ async def test_cc_hvac_action(
     mock_device = CC("0.0.0.0", 0, 0)
     mock_device._power_state = power_state
     mock_device._operational_mode = operational_mode
+    mock_device._indoor_temperature = indoor_temperature
+    mock_device._target_temperature = target_temperature
 
     mock_coordinator = MagicMock()
     mock_coordinator.apply = AsyncMock()
