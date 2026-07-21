@@ -12,7 +12,7 @@ from homeassistant.components.climate.const import (ATTR_HVAC_MODE,
                                                     PRESET_ECO, PRESET_NONE,
                                                     PRESET_SLEEP,
                                                     ClimateEntityFeature,
-                                                    HVACMode)
+                                                    HVACAction, HVACMode)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED,
                                  UnitOfTemperature)
@@ -292,6 +292,34 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
+    @property
+    def hvac_action(self) -> HVACAction:
+        """Return the current HVAC action."""
+
+        # For basic modes return the matching action
+        _HVAC_MODE_TO_HVAC_ACTION = {
+            HVACMode.OFF: HVACAction.OFF,
+            HVACMode.FAN_ONLY: HVACAction.FAN,
+            HVACMode.DRY: HVACAction.DRYING,
+        }
+        if (action := _HVAC_MODE_TO_HVAC_ACTION.get(self.hvac_mode)) != None:
+            return action
+
+        #  The device doesn't report actual activity, so we'll estimate the action based on sensors and set points
+        current = self.current_temperature
+        target = self.target_temperature
+
+        if current is None or target is None:
+            return HVACAction.IDLE
+
+        if self.hvac_mode in [HVACMode.COOL, HVACMode.AUTO] and current > target:
+            return HVACAction.COOLING
+
+        if self.hvac_mode in [HVACMode.HEAT, HVACMode.AUTO] and current < target:
+            return HVACAction.HEATING
+
+        return HVACAction.IDLE
+
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
         if hvac_mode == HVACMode.OFF:
@@ -491,6 +519,16 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             mode = AC.OperationalMode.DRY
 
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(mode, HVACMode.OFF)
+
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        """Return the current running hvac action, used to select the state icon."""
+        action = super().hvac_action
+
+        if action == HVACAction.HEATING and self._device.defrost_active:
+            return HVACAction.DEFROSTING
+
+        return action
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
