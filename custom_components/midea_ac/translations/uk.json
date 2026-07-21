@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "Пристрій вже налаштовано.",
+      "already_configured_devices_found": "У мережі не знайдено нових пристроїв.\n\nВже налаштовано в цій мережі:\n{devices}",
       "cannot_connect": "Не вдалося встановити зʼєднання.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "У мережі не знайдено підтримуваних пристроїв.",

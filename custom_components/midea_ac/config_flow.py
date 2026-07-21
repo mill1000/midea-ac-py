@@ -199,27 +199,40 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
             get_async_client=self._get_async_client
         )
 
-        # Create dict of device ID to friendly name
-        devices_name = {
-            device.id: (
-                f"{device.name} - {device.id} ({device.ip})"
-            )
+        # Create a dict of supported devices
+        supported_devices = {
+            device.id: f"{device.name} - {device.id} ({device.ip})"
             for device in self._discovered_devices
-            if (str(device.id) not in configured_devices and
-                device.type in [DeviceType.AIR_CONDITIONER, DeviceType.COMMERCIAL_AC])
+            if device.type in [DeviceType.AIR_CONDITIONER, DeviceType.COMMERCIAL_AC]
         }
 
-        # Check if there is at least one device
-        if len(devices_name) == 0:
+        # No supported devices found
+        if len(supported_devices) == 0:
             return self.async_abort(reason="no_devices_found")
 
-        data_schema = vol.Schema({
-            vol.Required(CONF_ID): vol.In(devices_name)
-        })
+        # Show device picker if new devices found
+        new_devices = {
+            dev_id: name
+            for dev_id, name in supported_devices.items()
+            if str(dev_id) not in configured_devices
+        }
+        if len(new_devices):
+            return self.async_show_form(
+                step_id="pick_device",
+                data_schema=vol.Schema({
+                    vol.Required(CONF_ID): vol.In(new_devices)
+                })
+            )
 
-        return self.async_show_form(
-            step_id="pick_device",
-            data_schema=data_schema
+        # No new devices, show existing devices
+        return self.async_abort(
+            reason="already_configured_devices_found",
+            description_placeholders={
+                "devices": "\n".join(
+                    f"- {name}"
+                    for name in supported_devices.values()
+                )
+            }
         )
 
     async def async_step_show_token_key(

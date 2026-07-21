@@ -57,6 +57,7 @@
     },
     "abort": {
       "already_configured": "Das Gerät wurde bereits konfiguriert.",
+      "already_configured_devices_found": "Keine neuen Geräte im Netzwerk gefunden.\n\nBereits im Netzwerk konfiguriert:\n{devices}",
       "cannot_connect": "Es konnte keine Verbindung hergestellt werden.",
       "cloud_connection_failed": "Es konnte keine Verbindung zur Cloud hergestellt werden.",
       "no_devices_found": "Keine unterstützten Geräte im Netzwerk gefunden.",

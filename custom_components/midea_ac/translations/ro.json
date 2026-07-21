@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "Dispozitivul este deja configurat.",
+      "already_configured_devices_found": "Nu s-au găsit dispozitive noi în rețea.\n\nDeja configurat în această rețea:\n{devices}",
       "cannot_connect": "Nu s-a putut realiza conexiunea.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "Nu s-au găsit dispozitive compatibile în rețea.",

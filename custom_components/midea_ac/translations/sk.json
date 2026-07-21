@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "ID zariadenia už bolo nakonfigurované.",
+      "already_configured_devices_found": "V sieti sa nenašli žiadne nové zariadenia.\n\nUž nakonfigurované v tejto sieti:\n{devices}",
       "cannot_connect": "Nepodarilo sa vytvoriť spojenie.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "V sieti sa nenašli žiadne podporované zariadenia.",

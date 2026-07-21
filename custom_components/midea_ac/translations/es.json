@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "El dispositivo ya ha sido configurado.",
+      "already_configured_devices_found": "No se han encontrado dispositivos nuevos en la red.\n\nYa configurados en esta red:\n{devices}",
       "cannot_connect": "No se pudo realizar una connexión.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "No se han encontrado dispositivos compatibles en la red.",

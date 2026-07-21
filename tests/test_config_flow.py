@@ -9,6 +9,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
+from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -46,6 +47,111 @@ async def test_config_flow_options(hass: HomeAssistant) -> None:
     assert manual_form_result["type"] is FlowResultType.FORM
     assert manual_form_result["step_id"] == "manual"
     assert not manual_form_result["errors"]
+
+
+async def test_pick_device_flow_no_devices_found(hass: HomeAssistant) -> None:
+    """Test the discover flow aborts with no_devices_found when nothing is discovered."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "no_devices_found"
+
+
+async def test_pick_device_flow_already_configured_devices_found(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test the discover flow surfaces already-configured devices when no new device is found."""
+    # Add config entry for existing device
+    mock_config_entry.add_to_hass(hass)
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    # Create mock device for discovery
+    mock_device = MagicMock()
+    mock_device.id = int(mock_config_entry.unique_id)
+    mock_device.ip = "10.0.0.40"
+    mock_device.name = "net_ac_6888"
+    mock_device.type = DeviceType.AIR_CONDITIONER
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[mock_device]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured_devices_found"
+    assert result["description_placeholders"] == {
+        "devices": "- net_ac_6888 - 1234 (10.0.0.40)"
+    }
+
+
+async def test_pick_device_flow_new_and_already_configured_devices(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test the discover flow only lists new devices when both new and already-configured devices are found."""
+    # Add config entry for existing device
+    mock_config_entry.add_to_hass(hass)
+
+    # Create mock devices for discovery
+    mock_existing_device = MagicMock()
+    mock_existing_device.id = int(mock_config_entry.unique_id)
+    mock_existing_device.ip = "10.0.0.40"
+    mock_existing_device.name = "net_ac_6888"
+    mock_existing_device.type = DeviceType.AIR_CONDITIONER
+
+    mock_new_device = MagicMock()
+    mock_new_device.id = 5678
+    mock_new_device.ip = "10.0.0.41"
+    mock_new_device.name = "net_ac_1234"
+    mock_new_device.type = DeviceType.AIR_CONDITIONER
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[mock_existing_device, mock_new_device]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "pick_device"
+
+    # Get the device ID passed to the form
+    device_ids = result["data_schema"].schema[CONF_ID].container.keys()
+
+    # Assert only the new device is present
+    assert mock_new_device.id in device_ids
+    assert mock_existing_device.id not in device_ids
 
 
 async def test_manual_flow_invalid_input(hass: HomeAssistant) -> None:

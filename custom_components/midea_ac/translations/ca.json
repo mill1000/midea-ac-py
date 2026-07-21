@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "El dispositiu ja ha estat configurat.",
+      "already_configured_devices_found": "No s'han trobat dispositius nous a la xarxa.\n\nJa configurats en aquesta xarxa:\n{devices}",
       "cannot_connect": "No s'ha pogut realitzar una connexió.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "No s'han trobat dispositius compatibles a la xarxa.",

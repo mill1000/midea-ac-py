@@ -56,6 +56,7 @@
     },
     "abort": {
       "already_configured": "Устройство уже настроено.",
+      "already_configured_devices_found": "Новые устройства в сети не найдены.\n\nУже настроено в этой сети:\n{devices}",
       "cannot_connect": "Не удалось установить соединение.",
       "cloud_connection_failed": "Cloud connection could not be made.",
       "no_devices_found": "Поддерживаемые устройства не найдены.",
