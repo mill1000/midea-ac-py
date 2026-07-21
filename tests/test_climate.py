@@ -242,16 +242,28 @@ async def test_preset_modes(
     ("power_state", "operational_mode", "indoor_temperature",
      "target_temperature", "expected_action"),
     [
+        # Off
         (False, AC.OperationalMode.COOL, 26, 24, HVACAction.OFF),
-        (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
-        (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
-        (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        # Basic modes
         (True, AC.OperationalMode.DRY, None, 24, HVACAction.DRYING),
         (True, AC.OperationalMode.SMART_DRY, None, 24, HVACAction.DRYING),
         (True, AC.OperationalMode.FAN_ONLY, None, 24, HVACAction.FAN),
+        # Cool
+        (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
+        (True, AC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        # Heat
+        (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
+        (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        # Auto
+        (True, AC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
+        (True, AC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # No sensor input
+        (True, AC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
     ],
 )
 async def test_ac_hvac_action(
@@ -267,38 +279,6 @@ async def test_ac_hvac_action(
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = power_state
     mock_device._operational_mode = operational_mode
-    mock_device._indoor_temperature = indoor_temperature
-    mock_device._target_temperature = target_temperature
-
-    mock_coordinator = MagicMock()
-    mock_coordinator.apply = AsyncMock()
-    mock_coordinator.device = mock_device
-
-    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
-
-    assert climate_device.hvac_action == expected_action
-
-
-@pytest.mark.parametrize(
-    ("indoor_temperature", "target_temperature", "expected_action"),
-    [
-        (None, 24, HVACAction.IDLE),
-        (26, 24, HVACAction.COOLING),
-        (22, 24, HVACAction.HEATING),
-        (24, 24, HVACAction.IDLE),
-    ],
-)
-async def test_ac_hvac_action_auto_mode(
-    hass: HomeAssistant,
-    indoor_temperature: float | None,
-    target_temperature: float,
-    expected_action: HVACAction,
-):
-    """Test hvac_action is estimated from the temperature delta in auto mode."""
-
-    mock_device = AC("0.0.0.0", 0, 0)
-    mock_device._power_state = True
-    mock_device._operational_mode = AC.OperationalMode.AUTO
     mock_device._indoor_temperature = indoor_temperature
     mock_device._target_temperature = target_temperature
 
@@ -336,13 +316,27 @@ async def test_ac_hvac_action_defrosting(
     ("power_state", "operational_mode", "indoor_temperature",
      "target_temperature", "expected_action"),
     [
+        # Off
         (False, CC.OperationalMode.COOL, 26, 24, HVACAction.OFF),
-        (True, CC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
-        (True, CC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
-        (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
-        (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        # Basic modes
         (True, CC.OperationalMode.DRY, None, 24, HVACAction.DRYING),
         (True, CC.OperationalMode.FAN, None, 24, HVACAction.FAN),
+        # Cool
+        (True, CC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
+        (True, CC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        # Heat
+        (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
+        (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        # Auto
+        (True, CC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
+        (True, CC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # No sensor input
+        (True, CC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
     ],
 )
 async def test_cc_hvac_action(

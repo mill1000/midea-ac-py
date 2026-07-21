@@ -293,45 +293,32 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
     @property
-    def hvac_action(self) -> HVACAction | None:
-        """Return the current running hvac action, used to select the state icon."""
-        mode = self.hvac_mode
+    def hvac_action(self) -> HVACAction:
+        """Return the current HVAC action."""
 
-        if mode == HVACMode.OFF:
-            return HVACAction.OFF
-        if mode == HVACMode.FAN_ONLY:
-            return HVACAction.FAN
-        if mode == HVACMode.DRY:
-            return HVACAction.DRYING
-        if mode == HVACMode.COOL:
-            return self._temperature_based_hvac_action(HVACAction.COOLING, None)
-        if mode == HVACMode.HEAT:
-            return self._temperature_based_hvac_action(None, HVACAction.HEATING)
-        if mode == HVACMode.AUTO:
-            return self._temperature_based_hvac_action(HVACAction.COOLING, HVACAction.HEATING)
+        # For basic modes return the matching action
+        _HVAC_MODE_TO_HVAC_ACTION = {
+            HVACMode.OFF: HVACAction.OFF,
+            HVACMode.FAN_ONLY: HVACAction.FAN,
+            HVACMode.DRY: HVACAction.DRYING,
+        }
+        if (action := _HVAC_MODE_TO_HVAC_ACTION.get(self.hvac_mode)) != None:
+            return action
 
-        return None
+        #  The device doesn't report actual activity, so we'll estimate the action based on sensors and set points
+        current = self.current_temperature
+        target = self.target_temperature
 
-    def _temperature_based_hvac_action(
-        self, cooling: HVACAction | None, heating: HVACAction | None
-    ) -> HVACAction:
-        """Derive the hvac action from current vs. target temperature.
-
-        The device doesn't report the actual compressor state, so this is a
-        best guess. ``cooling`` is returned when the room is warmer than
-        target, ``heating`` when cooler. If the relevant action is ``None``
-        for that direction (single-direction modes), ``IDLE`` is returned
-        instead.
-        """
-        current = self._device.indoor_temperature
-        target = self._device.target_temperature
-
-        if current is None or target is None or current == target:
+        if current is None or target is None:
             return HVACAction.IDLE
-        if current > target:
-            return cooling if cooling is not None else HVACAction.IDLE
 
-        return heating if heating is not None else HVACAction.IDLE
+        if self.hvac_mode in [HVACMode.COOL, HVACMode.AUTO] and current > target:
+            return HVACAction.COOLING
+
+        if self.hvac_mode in [HVACMode.HEAT, HVACMode.AUTO] and current < target:
+            return HVACAction.HEATING
+
+        return HVACAction.IDLE
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
