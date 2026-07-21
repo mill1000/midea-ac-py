@@ -11,11 +11,7 @@
       "discover": {
         "description": "Leave the host blank to discover device(s) on the network.",
         "data": {
-          "host": "Host",
-          "country_code": "Cloud Region"
-        },
-        "data_description": {
-          "country_code": "Select closest country to your location."
+          "host": "Host"
         }
       },
       "manual": {
