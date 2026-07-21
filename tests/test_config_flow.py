@@ -49,19 +49,6 @@ async def test_config_flow_options(hass: HomeAssistant) -> None:
     assert not manual_form_result["errors"]
 
 
-def _mock_discovered_device(
-    id: int, ip: str, name: str,
-    device_type: DeviceType = DeviceType.AIR_CONDITIONER
-) -> MagicMock:
-    """Build a fake device as returned by Discover.discover()."""
-    device = MagicMock()
-    device.id = id
-    device.ip = ip
-    device.name = name
-    device.type = device_type
-    return device
-
-
 async def test_pick_device_flow_no_devices_found(hass: HomeAssistant) -> None:
     """Test the discover flow aborts with no_devices_found when nothing is discovered."""
     result = await hass.config_entries.flow.async_init(
@@ -88,21 +75,25 @@ async def test_pick_device_flow_already_configured_devices_found(
     mock_config_entry: MockConfigEntry,
 ) -> None:
     """Test the discover flow surfaces already-configured devices when no new device is found."""
+    # Add config entry for existing device
     mock_config_entry.add_to_hass(hass)
-
-    discovered = _mock_discovered_device(
-        id=int(mock_config_entry.unique_id), ip="10.0.0.40", name="net_ac_6888"
-    )
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "discover"}
     )
     assert result
 
+    # Create mock device for discovery
+    mock_device = MagicMock()
+    mock_device.id = int(mock_config_entry.unique_id)
+    mock_device.ip = "10.0.0.40"
+    mock_device.name = "net_ac_6888"
+    mock_device.type = DeviceType.AIR_CONDITIONER
+
     with patch(
         "custom_components.midea_ac.config_flow.Discover.discover",
         new_callable=AsyncMock,
-        return_value=[discovered]
+        return_value=[mock_device]
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -121,12 +112,21 @@ async def test_pick_device_flow_new_and_already_configured_devices(
     mock_config_entry: MockConfigEntry,
 ) -> None:
     """Test the discover flow only lists new devices when both new and already-configured devices are found."""
+    # Add config entry for existing device
     mock_config_entry.add_to_hass(hass)
 
-    already_configured = _mock_discovered_device(
-        id=int(mock_config_entry.unique_id), ip="10.0.0.40", name="net_ac_6888"
-    )
-    new_device = _mock_discovered_device(id=5678, ip="10.0.0.41", name="net_ac_1234")
+    # Create mock devices for discovery
+    mock_existing_device = MagicMock()
+    mock_existing_device.id = int(mock_config_entry.unique_id)
+    mock_existing_device.ip = "10.0.0.40"
+    mock_existing_device.name = "net_ac_6888"
+    mock_existing_device.type = DeviceType.AIR_CONDITIONER
+
+    mock_new_device = MagicMock()
+    mock_new_device.id = 5678
+    mock_new_device.ip = "10.0.0.41"
+    mock_new_device.name = "net_ac_1234"
+    mock_new_device.type = DeviceType.AIR_CONDITIONER
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "discover"}
@@ -136,7 +136,7 @@ async def test_pick_device_flow_new_and_already_configured_devices(
     with patch(
         "custom_components.midea_ac.config_flow.Discover.discover",
         new_callable=AsyncMock,
-        return_value=[already_configured, new_device]
+        return_value=[mock_existing_device, mock_new_device]
     ):
         result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
@@ -146,11 +146,12 @@ async def test_pick_device_flow_new_and_already_configured_devices(
     assert result["type"] is FlowResultType.FORM
     assert result["step_id"] == "pick_device"
 
-    # Only the new device should be selectable; the already-configured one
-    # is silently excluded, same as before this feature existed.
-    id_validator = next(v for k, v in result["data_schema"].schema.items()
-                         if k == CONF_ID)
-    assert list(id_validator.container.keys()) == [5678]
+    # Get the device ID passed to the form
+    device_ids = result["data_schema"].schema[CONF_ID].container.keys()
+
+    # Assert only the new device is present
+    assert mock_new_device.id in device_ids
+    assert mock_existing_device.id not in device_ids
 
 
 async def test_manual_flow_invalid_input(hass: HomeAssistant) -> None:
