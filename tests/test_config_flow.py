@@ -442,6 +442,77 @@ async def test_manual_flow_cc_device(hass: HomeAssistant) -> None:
         assert "errors" not in result
 
 
+async def test_ac_device_does_not_leak_default_options_into_later_cc_device(
+    hass: HomeAssistant,
+) -> None:
+    """Test that configuring an AC device doesn't affect the default
+    options given to a CC device configured afterward.
+
+    Regression test for #452: _create_entry_from_device used to alias
+    _DEFAULT_OPTIONS instead of copying it, so merging in
+    _DEFAULT_AC_OPTIONS for an AC device mutated the shared global in
+    place - leaking AC-only option keys into every device configured
+    afterward, regardless of its actual type.
+    """
+    # Configure an AC device first
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "manual"}
+    )
+    with (
+        patch("custom_components.midea_ac.async_setup_entry", return_value=True),
+        patch("custom_components.midea_ac.config_flow.AC.refresh"),
+        patch("custom_components.midea_ac.config_flow.AC.online",
+              new_callable=PropertyMock) as ac_online,
+        patch("custom_components.midea_ac.config_flow.AC.supported",
+              new_callable=PropertyMock) as ac_supported,
+    ):
+        ac_online.return_value = True
+        ac_supported.return_value = True
+        ac_result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+                CONF_ID: "1234",
+                CONF_DEVICE_TYPE: "AC",
+            },
+        )
+
+    assert ac_result["type"] is FlowResultType.CREATE_ENTRY
+    # Sanity check: the AC device correctly got its AC-specific options
+    assert CONF_BEEP in ac_result["result"].options
+
+    # Now configure an unrelated CC device
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "manual"}
+    )
+    with (
+        patch("custom_components.midea_ac.async_setup_entry", return_value=True),
+        patch("custom_components.midea_ac.config_flow.CC.refresh"),
+        patch("custom_components.midea_ac.config_flow.CC.online",
+              new_callable=PropertyMock) as cc_online,
+        patch("custom_components.midea_ac.config_flow.CC.supported",
+              new_callable=PropertyMock) as cc_supported,
+    ):
+        cc_online.return_value = True
+        cc_supported.return_value = True
+        cc_result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+                CONF_ID: "5678",
+                CONF_DEVICE_TYPE: "CC",
+            },
+        )
+
+    assert cc_result["type"] is FlowResultType.CREATE_ENTRY
+
+    # CC's own option schema never exposes CONF_BEEP - it should never
+    # appear in a CC device's stored options.
+    assert CONF_BEEP not in cc_result["result"].options
+
+
 async def test_options_flow_init(
     hass: HomeAssistant,
     mock_config_entry: MockConfigEntry,
