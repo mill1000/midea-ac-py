@@ -32,6 +32,14 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+# Minimum overshoot past the setpoint, in degrees, before COOL/HEAT is
+# reported as actively running rather than idle. The device doesn't report
+# the real compressor state, so this is only an approximation - 0.5 matches
+# the sensor's smallest reporting step, avoiding flip-flopping between
+# COOLING/HEATING and IDLE on trivial fluctuations right at the setpoint.
+# TODO: make this configurable once there's a settings UI for it.
+_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -321,11 +329,19 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if current is None or target is None:
             return HVACAction.IDLE
 
-        if self.hvac_mode == HVACMode.COOL and current > target:
-            return HVACAction.COOLING
+        if self.hvac_mode == HVACMode.COOL:
+            return (
+                HVACAction.COOLING
+                if current > target + _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                else HVACAction.IDLE
+            )
 
-        if self.hvac_mode == HVACMode.HEAT and current < target:
-            return HVACAction.HEATING
+        if self.hvac_mode == HVACMode.HEAT:
+            return (
+                HVACAction.HEATING
+                if current < target - _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                else HVACAction.IDLE
+            )
 
         return HVACAction.IDLE
 
