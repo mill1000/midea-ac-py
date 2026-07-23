@@ -25,9 +25,9 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.utils import MideaIntEnum
 
-from .const import (CONF_BEEP, CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
-                    CONF_WORKAROUNDS, DOMAIN, PRESET_IECO, PRESET_SILENT,
-                    MideaDevice)
+from .const import (CONF_BEEP, CONF_ENABLE_HVAC_ACTION, CONF_TEMP_STEP,
+                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
+                    PRESET_IECO, PRESET_SILENT, MideaDevice)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -426,6 +426,7 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
 
         # Apply misc options
         self._device.beep = options.get(CONF_BEEP, False)
+        self._enable_hvac_action = options.get(CONF_ENABLE_HVAC_ACTION, True)
 
         self._use_fan_only_workaround = workarounds.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)
@@ -523,6 +524,9 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
     @property
     def hvac_action(self) -> HVACAction | None:
         """Return the current running hvac action, used to select the state icon."""
+        if not self._enable_hvac_action:
+            return None
+
         action = super().hvac_action
 
         if action == HVACAction.HEATING and self._device.defrost_active:

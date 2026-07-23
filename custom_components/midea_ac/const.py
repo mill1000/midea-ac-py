@@ -9,6 +9,7 @@ UPDATE_INTERVAL = 15
 
 CONF_KEY = "k1"
 CONF_BEEP = "prompt_tone"
+CONF_ENABLE_HVAC_ACTION = "enable_hvac_action"
 CONF_TEMP_STEP = "temp_step"
 CONF_FAN_SPEED_STEP = "fan_speed_step"
 CONF_WORKAROUNDS = "workarounds"
