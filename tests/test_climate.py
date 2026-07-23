@@ -256,14 +256,14 @@ async def test_preset_modes(
         (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
         (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
         (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Auto
-        (True, AC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
-        (True, AC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # Auto - direction cannot be reliably determined locally, see #449
+        (True, AC.OperationalMode.AUTO, 22, 24, None),
+        (True, AC.OperationalMode.AUTO, 24, 24, None),
+        (True, AC.OperationalMode.AUTO, 26, 24, None),
         # No sensor input
         (True, AC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
         (True, AC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.AUTO, None, 24, None),
     ],
 )
 async def test_ac_hvac_action(
@@ -272,7 +272,7 @@ async def test_ac_hvac_action(
     operational_mode: AC.OperationalMode,
     indoor_temperature: float | None,
     target_temperature: float,
-    expected_action: HVACAction,
+    expected_action: HVACAction | None,
 ):
     """Test hvac_action reflects the mode for the AC device."""
 
@@ -329,14 +329,14 @@ async def test_ac_hvac_action_defrosting(
         (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
         (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
         (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Auto
-        (True, CC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
-        (True, CC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
-        (True, CC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # Auto - direction cannot be reliably determined locally, see #449
+        (True, CC.OperationalMode.AUTO, 22, 24, None),
+        (True, CC.OperationalMode.AUTO, 24, 24, None),
+        (True, CC.OperationalMode.AUTO, 26, 24, None),
         # No sensor input
         (True, CC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
         (True, CC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
-        (True, CC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.AUTO, None, 24, None),
     ],
 )
 async def test_cc_hvac_action(
@@ -345,7 +345,7 @@ async def test_cc_hvac_action(
     operational_mode: "CC.OperationalMode",
     indoor_temperature: float | None,
     target_temperature: float,
-    expected_action: HVACAction,
+    expected_action: HVACAction | None,
 ):
     """Test hvac_action reflects the mode for the CC device."""
 

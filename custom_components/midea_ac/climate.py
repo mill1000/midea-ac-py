@@ -293,7 +293,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
     @property
-    def hvac_action(self) -> HVACAction:
+    def hvac_action(self) -> HVACAction | None:
         """Return the current HVAC action."""
 
         # For basic modes return the matching action
@@ -305,6 +305,15 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if (action := _HVAC_MODE_TO_HVAC_ACTION.get(self.hvac_mode)) != None:
             return action
 
+        # In auto mode the device doesn't report which direction it is
+        # actually operating in, so estimating from current vs. target
+        # temperature can be actively wrong (e.g. reporting "cooling" while
+        # the unit is heating past an overshoot). Report nothing rather than
+        # a potentially misleading value. See
+        # https://github.com/mill1000/midea-ac-py/issues/449
+        if self.hvac_mode == HVACMode.AUTO:
+            return None
+
         #  The device doesn't report actual activity, so we'll estimate the action based on sensors and set points
         current = self.current_temperature
         target = self.target_temperature
@@ -312,10 +321,10 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if current is None or target is None:
             return HVACAction.IDLE
 
-        if self.hvac_mode in [HVACMode.COOL, HVACMode.AUTO] and current > target:
+        if self.hvac_mode == HVACMode.COOL and current > target:
             return HVACAction.COOLING
 
-        if self.hvac_mode in [HVACMode.HEAT, HVACMode.AUTO] and current < target:
+        if self.hvac_mode == HVACMode.HEAT and current < target:
             return HVACAction.HEATING
 
         return HVACAction.IDLE
