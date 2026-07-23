@@ -15,6 +15,7 @@ from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.midea_ac.const import (CONF_BEEP, CONF_DEVICE_TYPE,
+                                              CONF_ENABLE_HVAC_ACTION,
                                               CONF_KEY, DOMAIN)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -480,6 +481,36 @@ async def test_options_flow_init(
         CONF_BEEP: False,
     }
     assert len(mock_setup_entry.mock_calls) == 1
+
+
+async def test_options_flow_init_suggests_defaults_for_missing_options(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test the options form suggests declared defaults for options that
+    are missing from an existing entry's stored options (e.g. an entry
+    created before that option existed), instead of leaving them unset."""
+
+    # Patch refresh and get_capabilities calls to allow integration to setup
+    with (patch("custom_components.midea_ac.config_flow.AC.get_capabilities"),
+          patch("custom_components.midea_ac.config_flow.AC.refresh")):
+        # mock_config_entry has no stored options at all
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    # Show options form
+    result = await hass.config_entries.options.async_init(mock_config_entry.entry_id)
+    assert result["type"] is FlowResultType.FORM
+
+    suggested_values = {
+        key.schema: key.description["suggested_value"]
+        for key in result["data_schema"].schema
+        if getattr(key, "description", None)
+    }
+
+    assert suggested_values[CONF_BEEP] is True
+    assert suggested_values[CONF_ENABLE_HVAC_ACTION] is True
 
 
 async def test_reconfigure_flow_invalid_input(
