@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Beepa gaitu",
+          "enable_hvac_action": "Gaitu HVAC ekintza",
           "temp_step": "Tenperatura Urratsa",
           "fan_speed_step": "Haizagailu Abiadura Pausuak",
           "max_connection_lifetime": "Gehienezko Konexio-Denbora",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Klima txartelean funtzionamendu-egoera zenbatetsia erakusten du (hozten/berotzen/inaktibo). Gailuak ez du bere benetako egoera jakinarazten, beraz hurbilketa bat baino ez da.",
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
           "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
           "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (15 segundo gutxienez)"

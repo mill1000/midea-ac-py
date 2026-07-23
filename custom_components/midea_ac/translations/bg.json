@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Включи Beep сигнал",
+          "enable_hvac_action": "Активиране на HVAC действие",
           "temp_step": "Интервал на температурата",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Максимален живот на връзката",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Показва приблизително работно състояние (охлаждане/отопление/бездействие) на картата за климат. Устройството не съобщава действителното си състояние, така че това е само приближение.",
           "temp_step": "Размер на интервала за зададената температура",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Максимално време в секунди, за което ще се използва връзка (минимум 15 секунди)"

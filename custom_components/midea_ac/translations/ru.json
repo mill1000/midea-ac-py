@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Включить звуковые сигналы",
+          "enable_hvac_action": "Включить действие HVAC",
           "temp_step": "Шаг температуры",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Время подключения",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Отображает предполагаемое рабочее состояние (охлаждение/нагрев/ожидание) на карточке климата. Устройство не сообщает свое фактическое состояние, поэтому это лишь приближение.",
           "temp_step": "Размер шага для установки значения температуры",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Максимальное время в секундах, в течение которого будет использоваться соединение (минимум 15 секунд)"

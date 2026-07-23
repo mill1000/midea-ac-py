@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Tón výzvy",
+          "enable_hvac_action": "Povoliť akciu HVAC",
           "temp_step": "Teplotný krok",
           "fan_speed_step": "Krok rýchlosti ventilátora",
           "max_connection_lifetime": "Maximálna životnosť pripojenia",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Zobrazuje odhadovaný prevádzkový stav (chladenie/kúrenie/nečinnosť) na karte klímy. Zariadenie neoznamuje svoj skutočný stav, ide teda len o odhad.",
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",
           "fan_speed_step": "Veľkosť kroku voliteľnej rýchlosti ventilátora",
           "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 15 sekúnd)"

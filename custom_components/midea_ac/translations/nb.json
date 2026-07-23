@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Aktiver lydsignal",
+          "enable_hvac_action": "Aktiver HVAC-handling",
           "temp_step": "Temperaturtrinn",
           "fan_speed_step": "Viftehastighetstrinn",
           "max_connection_lifetime": "Maksimal tilkoblingstid",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Viser en estimert driftstilstand (kjøling/oppvarming/inaktiv) på klimakortet. Enheten rapporterer ikke sin faktiske tilstand, så dette er bare en tilnærming.",
           "temp_step": "Trinnstørrelse for temperaturinnstilling",
           "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
           "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 15 sekunder)"

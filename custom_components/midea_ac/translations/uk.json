@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Увімкнути звуковий сигнал",
+          "enable_hvac_action": "Увімкнути дію HVAC",
           "temp_step": "Крок температури",
           "fan_speed_step": "Крок швидкості вентилятора",
           "max_connection_lifetime": "Максимальний час підключення",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "enable_hvac_action": "Показує приблизний робочий стан (охолодження/нагрівання/очікування) на картці клімату. Пристрій не повідомляє свій фактичний стан, тому це лише наближення.",
           "temp_step": "Розмір кроку для налаштування температури",
           "fan_speed_step": "Розмір кроку для ручного налаштування швидкості вентилятора",
           "max_connection_lifetime": "Максимальний час використання зʼєднання в секундах (мінімум 15 секунд)"
