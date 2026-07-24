@@ -36,13 +36,19 @@ _MIGRATED_ENERGY_CONFIGS = {
 }
 
 
-async def test_config_entry_migration_from_6(hass: HomeAssistant) -> None:
-    """Test migration of config entry from 1.6"""
+async def test_config_entry_migration_from_7(hass: HomeAssistant) -> None:
+    """Test migration of config entry from 1.7
 
-    # Create a mock v1.6 config entry
+    Note: 1.7 is the version left by #451's own 1.6 -> 1.7 migration
+    (estimate_hvac_action), which isn't present on this branch. This test
+    starts from 7 directly to reflect the state this step will actually see
+    once rebased on top of #451.
+    """
+
+    # Create a mock v1.7 config entry
     mock_config_entry = MockConfigEntry(
         domain=DOMAIN,
-        minor_version=6,
+        minor_version=7,
         data={},  # Data is unchanged
         options={}
     )
@@ -58,7 +64,7 @@ async def test_config_entry_migration_from_6(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 8
 
     # Assert the hvac_action temperature threshold defaulted
     options = mock_config_entry.options
@@ -94,7 +100,7 @@ async def test_config_entry_migration_from_5(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -132,7 +138,7 @@ async def test_config_entry_migration_from_4(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
     assert mock_config_entry.data[CONF_DEVICE_TYPE] == DeviceType.AIR_CONDITIONER
 
 
@@ -162,7 +168,7 @@ async def test_config_entry_migration_from_3(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -235,7 +241,7 @@ async def test_config_entry_migration_from_3_energy_formats(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -285,7 +291,7 @@ async def test_config_entry_migration_from_2(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -320,5 +326,5 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.minor_version == 6
     assert isinstance(mock_config_entry.unique_id, str)
