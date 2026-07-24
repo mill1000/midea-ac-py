@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activer le bip",
-          "enable_hvac_action": "Activer l'action HVAC",
+          "estimate_hvac_action": "Estimer l'action HVAC",
           "temp_step": "Palier de température",
           "fan_speed_step": "Palier de vitesse du ventilateur",
           "max_connection_lifetime": "Durée maximale de connexion",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Affiche un état de fonctionnement estimé (refroidissement/chauffage/inactif) sur la carte climatisation. L'appareil ne signale pas son état réel, il ne s'agit donc que d'une approximation.",
+          "estimate_hvac_action": "Affiche un état de fonctionnement estimé (refroidissement/chauffage/inactif) sur la carte climatisation. L'appareil ne signale pas son état réel, il ne s'agit donc que d'une approximation.",
           "temp_step": "Taille du palier pour le réglage de la température",
           "fan_speed_step": "Taille du palier pour le réglage de la vitesses personnalisé du ventilateur",
           "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 15 secondes)"

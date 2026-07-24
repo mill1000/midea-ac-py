@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "삐 소리 활성화",
-          "enable_hvac_action": "HVAC 작동 상태 사용",
+          "estimate_hvac_action": "HVAC 작동 상태 추정",
           "temp_step": "온도 조절 간격",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "최대 연결 시간",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "기후 카드에 예상 작동 상태(냉방/난방/유휴)를 표시합니다. 기기가 실제 상태를 보고하지 않으므로 이는 근사값일 뿐입니다.",
+          "estimate_hvac_action": "기후 카드에 예상 작동 상태(냉방/난방/유휴)를 표시합니다. 기기가 실제 상태를 보고하지 않으므로 이는 근사값일 뿐입니다.",
           "temp_step": "온도 조절 간격 설정",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "최대 연결 시간(초), 최소 15초"

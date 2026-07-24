@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Abilita Beep",
-          "enable_hvac_action": "Abilita azione HVAC",
+          "estimate_hvac_action": "Stima azione HVAC",
           "temp_step": "Incremento temperatura",
           "fan_speed_step": "Incremento velocità della ventola",
           "max_connection_lifetime": "Durata massima della connessione",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Mostra uno stato di funzionamento stimato (raffreddamento/riscaldamento/inattivo) sulla scheda del clima. Il dispositivo non segnala il suo stato reale, quindi si tratta solo di un'approssimazione.",
+          "estimate_hvac_action": "Mostra uno stato di funzionamento stimato (raffreddamento/riscaldamento/inattivo) sulla scheda del clima. Il dispositivo non segnala il suo stato reale, quindi si tratta solo di un'approssimazione.",
           "temp_step": "Incremento per la configurazione della temperatura",
           "fan_speed_step": "Incremento per la configurazione della velocità della ventola",
           "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 15 secondi)"

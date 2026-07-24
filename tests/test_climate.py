@@ -17,7 +17,7 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateACDevice,
                                                 MideaClimateCCDevice,
                                                 MideaClimateDevice)
-from custom_components.midea_ac.const import CONF_ENABLE_HVAC_ACTION
+from custom_components.midea_ac.const import CONF_ESTIMATE_HVAC_ACTION
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -318,8 +318,8 @@ async def test_ac_hvac_action_defrosting(
     [
         # Default (option absent) - behaves as if enabled
         ({}, HVACAction.COOLING),
-        (dict.fromkeys([CONF_ENABLE_HVAC_ACTION], True), HVACAction.COOLING),
-        (dict.fromkeys([CONF_ENABLE_HVAC_ACTION], False), None),
+        (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], True), HVACAction.COOLING),
+        (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], False), None),
     ],
 )
 async def test_ac_hvac_action_enable_option(
@@ -327,7 +327,7 @@ async def test_ac_hvac_action_enable_option(
     options: Mapping[str, bool],
     expected_action: HVACAction | None,
 ):
-    """Test the enable_hvac_action option gates hvac_action reporting."""
+    """Test the estimate_hvac_action option gates hvac_action reporting."""
 
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = True
@@ -373,7 +373,7 @@ async def test_ac_hvac_action_disabled_always_none(
     mock_coordinator.device = mock_device
 
     climate_device = MideaClimateACDevice(
-        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: False})
+        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: False})
 
     assert climate_device.hvac_action is None
 

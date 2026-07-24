@@ -15,7 +15,7 @@ from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.midea_ac.const import (CONF_BEEP, CONF_DEVICE_TYPE,
-                                              CONF_ENABLE_HVAC_ACTION,
+                                              CONF_ESTIMATE_HVAC_ACTION,
                                               CONF_KEY, DOMAIN)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -510,7 +510,7 @@ async def test_options_flow_init_suggests_defaults_for_missing_options(
     }
 
     assert suggested_values[CONF_BEEP] is True
-    assert suggested_values[CONF_ENABLE_HVAC_ACTION] is True
+    assert suggested_values[CONF_ESTIMATE_HVAC_ACTION] is True
 
 
 async def test_reconfigure_flow_invalid_input(

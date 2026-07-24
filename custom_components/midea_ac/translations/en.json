@@ -76,7 +76,7 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Enable Beep",
-          "enable_hvac_action": "Enable HVAC Action",
+          "estimate_hvac_action": "Estimate HVAC Action",
           "temp_step": "Temperature Step",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Maximum Connection Lifetime",
@@ -85,7 +85,7 @@
           "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
-          "enable_hvac_action": "Report an estimated running state (cooling/heating/idle) on the climate card. The device doesn't report its actual state, so this is only an approximation.",
+          "estimate_hvac_action": "Report an estimated running state (cooling/heating/idle) on the climate card. The device doesn't report its actual state, so this is only an approximation.",
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",

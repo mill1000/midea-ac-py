@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Bip Sesini Etkinleştir",
-          "enable_hvac_action": "HVAC eylemini etkinleştir",
+          "estimate_hvac_action": "HVAC eylemini tahmin et",
           "temp_step": "Sıcaklık Adımı",
           "fan_speed_step": "Fan Hızı Adımı",
           "max_connection_lifetime": "Maksimum Bağlantısı Süresi",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "İklim kartında tahmini bir çalışma durumu (soğutma/ısıtma/boşta) gösterir. Cihaz gerçek durumunu bildirmediğinden bu yalnızca bir yaklaşımdır.",
+          "estimate_hvac_action": "İklim kartında tahmini bir çalışma durumu (soğutma/ısıtma/boşta) gösterir. Cihaz gerçek durumunu bildirmediğinden bu yalnızca bir yaklaşımdır.",
           "temp_step": "Sıcaklık ayar noktası için adım boyutu",
           "fan_speed_step": "Özel fan hızı için adım boyutu",
           "max_connection_lifetime": "Bir bağlantının maksimum kullanacağı süre (minimum 15 saniye)"

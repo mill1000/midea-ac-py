@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activar so",
-          "enable_hvac_action": "Activa l'acció HVAC",
+          "estimate_hvac_action": "Estima l'acció HVAC",
           "temp_step": "Mida del pas de temperatura",
           "fan_speed_step": "Mida del pas de velocitat del ventilador",
           "max_connection_lifetime": "Temps màxim de connexió",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Mostra un estat de funcionament estimat (refredant/escalfant/inactiu) a la targeta de clima. El dispositiu no informa del seu estat real, així que és només una aproximació.",
+          "estimate_hvac_action": "Mostra un estat de funcionament estimat (refredant/escalfant/inactiu) a la targeta de clima. El dispositiu no informa del seu estat real, així que és només una aproximació.",
           "temp_step": "Mida del pas de la consigna de temperatura",
           "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
           "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 15 segons)"

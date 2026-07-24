@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Ativar Beeps",
-          "enable_hvac_action": "Ativar ação HVAC",
+          "estimate_hvac_action": "Estimar ação HVAC",
           "temp_step": "Valor de incremento/decremento de temperatura",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Tempo máximo de ligação",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Mostra um estado de funcionamento estimado (arrefecimento/aquecimento/inativo) no cartão de clima. O dispositivo não comunica o seu estado real, por isso trata-se apenas de uma aproximação.",
+          "estimate_hvac_action": "Mostra um estado de funcionamento estimado (arrefecimento/aquecimento/inativo) no cartão de clima. O dispositivo não comunica o seu estado real, por isso trata-se apenas de uma aproximação.",
           "temp_step": "Valor de incremento/decremento para a temperatura",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Tempo máximo, em segundos, que uma ligação é usada (mínimo 15 segundos)"

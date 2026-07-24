@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "啟用嗶聲",
-          "enable_hvac_action": "啟用 HVAC 狀態",
+          "estimate_hvac_action": "估算 HVAC 狀態",
           "temp_step": "溫度步進",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "最大連結有效期",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "在氣候卡片上顯示估計的運行狀態（製冷/製熱/閒置）。裝置不會回報其實際狀態，因此這僅為近似值。",
+          "estimate_hvac_action": "在氣候卡片上顯示估計的運行狀態（製冷/製熱/閒置）。裝置不會回報其實際狀態，因此這僅為近似值。",
           "temp_step": "溫度設置的步進值",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "單次連結的最大有效期(單位為秒，最短15秒)"

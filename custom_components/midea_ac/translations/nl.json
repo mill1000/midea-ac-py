@@ -76,14 +76,14 @@
         "description": "Geavanceerde integratie-instellingen.",
         "data": {
           "prompt_tone": "Piep inschakelen",
-          "enable_hvac_action": "HVAC-actie inschakelen",
+          "estimate_hvac_action": "HVAC-actie schatten",
           "temp_step": "Stapgrootte voor temperatuur",
           "fan_speed_step": "Stapgrootte voor ventilatorsnelheid",
           "max_connection_lifetime": "Maximale verbindingsduur",
           "swing_angle_rtl": "Horizontale blaasrichting omdraaien"
         },
         "data_description": {
-          "enable_hvac_action": "Toont een geschatte werkingsstatus (koelen/verwarmen/inactief) op de klimaatkaart. Het apparaat rapporteert zijn werkelijke status niet, dus dit is slechts een benadering.",
+          "estimate_hvac_action": "Toont een geschatte werkingsstatus (koelen/verwarmen/inactief) op de klimaatkaart. Het apparaat rapporteert zijn werkelijke status niet, dus dit is slechts een benadering.",
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
           "fan_speed_step": "Stapgrootte voor aangepaste ventilatorsnelheden",
           "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 15)"
