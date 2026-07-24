@@ -79,7 +79,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 6
+    MINOR_VERSION = 7
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -562,18 +562,8 @@ class MideaOptionsFlow(OptionsFlow):
         if schema := self._DEVICE_SCHEMAS.get(device_type):
             device_schema = schema.schema
 
-        # Build declared defaults for this device type, so options added
-        # after a config entry was created (and thus missing from its
-        # stored options) still show their intended default in the form,
-        # instead of appearing unset/unchecked.
-        default_options = dict(_DEFAULT_OPTIONS)
-        if device_type == DeviceType.AIR_CONDITIONER:
-            default_options.update(_DEFAULT_AC_OPTIONS)
-
-        # Use existing data if no user input, falling back to declared
-        # defaults for any option missing from the stored entry
-        user_input = user_input or (
-            default_options | self.config_entry.options)
+        # Use existing data if no user input
+        user_input = user_input or self.config_entry.options
 
         # Merge base and device-specific schema
         data_schema = self.add_suggested_values_to_schema(

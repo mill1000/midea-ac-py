@@ -15,6 +15,7 @@ from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
                                               CONF_ENERGY_DATA_FORMAT,
                                               CONF_ENERGY_DATA_SCALE,
                                               CONF_ENERGY_SENSOR,
+                                              CONF_ESTIMATE_HVAC_ACTION,
                                               CONF_POWER_SENSOR,
                                               CONF_SHOW_ALL_PRESETS,
                                               CONF_USE_FAN_ONLY_WORKAROUND,
@@ -67,7 +68,7 @@ async def test_config_entry_migration_from_5(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -105,7 +106,7 @@ async def test_config_entry_migration_from_4(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
     assert mock_config_entry.data[CONF_DEVICE_TYPE] == DeviceType.AIR_CONDITIONER
 
 
@@ -135,7 +136,7 @@ async def test_config_entry_migration_from_3(hass: HomeAssistant) -> None:
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -208,7 +209,7 @@ async def test_config_entry_migration_from_3_energy_formats(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -258,7 +259,7 @@ async def test_config_entry_migration_from_2(
 
     # Assert expected version
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
 
     # Grab options to test migration
     options = mock_config_entry.options
@@ -293,5 +294,45 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         await hass.async_block_till_done()
 
     assert mock_config_entry.version == 1
-    assert mock_config_entry.minor_version == 6
+    assert mock_config_entry.minor_version == 7
     assert isinstance(mock_config_entry.unique_id, str)
+
+
+@pytest.mark.parametrize(
+    ("device_type", "existing_options", "expected_value"),
+    [
+        # AC entry missing the option gets the default backfilled
+        (DeviceType.AIR_CONDITIONER, {}, True),
+        # AC entry with an explicit value keeps it untouched
+        (DeviceType.AIR_CONDITIONER, {CONF_ESTIMATE_HVAC_ACTION: False}, False),
+        # Non-AC entry is left alone, the option doesn't apply to it
+        (DeviceType.COMMERCIAL_AC, {}, None),
+    ],
+)
+async def test_config_entry_migration_from_6(
+    hass: HomeAssistant,
+    device_type: DeviceType,
+    existing_options: dict[str, Any],
+    expected_value: bool | None,
+) -> None:
+    """Test migration of config entry from 1.6"""
+
+    # Create a mock v1.6 config entry
+    mock_config_entry = MockConfigEntry(
+        domain=DOMAIN,
+        minor_version=6,
+        data={CONF_DEVICE_TYPE: device_type},
+        options=existing_options,
+    )
+
+    with patch(
+        "custom_components.midea_ac.async_setup_entry",
+        return_value=True,
+    ):
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert mock_config_entry.version == 1
+    assert mock_config_entry.minor_version == 7
+    assert mock_config_entry.options.get(CONF_ESTIMATE_HVAC_ACTION) == expected_value

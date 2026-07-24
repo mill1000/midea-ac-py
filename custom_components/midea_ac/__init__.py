@@ -18,7 +18,8 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
-                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
+                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
+                    CONF_ESTIMATE_HVAC_ACTION, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
@@ -204,6 +205,16 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=6)
+
+        # 1.6 -> 1.7: Add default for estimate_hvac_action option
+        if config_entry.minor_version == 6:
+            new_options = {**config_entry.options}
+
+            if config_entry.data.get(CONF_DEVICE_TYPE) == DeviceType.AIR_CONDITIONER:
+                new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, True)
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=7)
 
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)
