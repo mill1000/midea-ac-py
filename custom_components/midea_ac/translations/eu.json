@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Zehaztu eragiketa modu osagarriak"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC ekintzaren konfigurazioa",
+            "data": {
+              "temperature_threshold": "Tenperatura atalasea"
+            },
+            "data_description": {
+              "temperature_threshold": "Konsigna gainditzeko gutxieneko tenperatura, graduetan, HOZTEA/BEROTZEA aktibo gisa jakinarazi aurretik, inaktibo izan beharrean"
+            }
           }
         }
       }

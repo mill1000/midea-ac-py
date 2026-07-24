@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Spesifiser ekstra driftsmoduser"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC-handlingskonfigurasjon",
+            "data": {
+              "temperature_threshold": "Temperaturterskel"
+            },
+            "data_description": {
+              "temperature_threshold": "Minste temperaturoverskridelse over settpunktet, i grader, før KJØLING/OPPVARMING rapporteres som aktiv i stedet for inaktiv"
+            }
           }
         }
       }

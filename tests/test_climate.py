@@ -17,6 +17,8 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateACDevice,
                                                 MideaClimateCCDevice,
                                                 MideaClimateDevice)
+from custom_components.midea_ac.const import (
+    CONF_HVAC_ACTION, CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -40,6 +42,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
+        hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[],
         supported_swing_modes=[],
@@ -75,6 +78,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
+        hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[AC.FanSpeed.AUTO],
         supported_swing_modes=[AC.SwingMode.BOTH],
@@ -316,6 +320,36 @@ async def test_ac_hvac_action_defrosting(
     climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
 
     assert climate_device.hvac_action == HVACAction.DEFROSTING
+
+
+async def test_ac_hvac_action_custom_threshold(
+    hass: HomeAssistant,
+):
+    """Test hvac_action honors a configured temperature threshold."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = AC.OperationalMode.COOL
+    mock_device._indoor_temperature = 25
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    # A 1 degree overshoot is beyond the default 0.5 threshold
+    default_climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+    assert default_climate_device.hvac_action == HVACAction.COOLING
+
+    # ... but within a custom, wider threshold
+    options = {
+        CONF_HVAC_ACTION: {
+            CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 2.0,
+        }
+    }
+    custom_climate_device = MideaClimateACDevice(
+        hass, mock_coordinator, options)
+    assert custom_climate_device.hvac_action == HVACAction.IDLE
 
 
 @pytest.mark.parametrize(

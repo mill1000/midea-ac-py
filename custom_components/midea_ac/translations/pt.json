@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Especifique Modos de Funcionamento Adicionais"
             }
+          },
+          "hvac_action": {
+            "name": "Configuração da ação HVAC",
+            "data": {
+              "temperature_threshold": "Limite de temperatura"
+            },
+            "data_description": {
+              "temperature_threshold": "Desvio mínimo de temperatura além do ponto de ajuste, em graus, antes que REFRIGERAÇÃO/AQUECIMENTO seja reportado como ativo em vez de inativo"
+            }
           }
         }
       }

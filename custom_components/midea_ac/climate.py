@@ -25,20 +25,21 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.utils import MideaIntEnum
 
-from .const import (CONF_BEEP, CONF_TEMP_STEP, CONF_USE_FAN_ONLY_WORKAROUND,
-                    CONF_WORKAROUNDS, DOMAIN, PRESET_IECO, PRESET_SILENT,
-                    MideaDevice)
+from .const import (CONF_BEEP, CONF_HVAC_ACTION,
+                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_TEMP_STEP,
+                    CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
+                    PRESET_IECO, PRESET_SILENT, MideaDevice)
 from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-# Minimum overshoot past the setpoint, in degrees, before COOL/HEAT is
-# reported as actively running rather than idle. The device doesn't report
-# the real compressor state, so this is only an approximation - 0.5 matches
-# the sensor's smallest reporting step, avoiding flip-flopping between
-# COOLING/HEATING and IDLE on trivial fluctuations right at the setpoint.
-# TODO: make this configurable once there's a settings UI for it.
-_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
+# Default minimum overshoot past the setpoint, in degrees, before COOL/HEAT
+# is reported as actively running rather than idle. The device doesn't
+# report the real compressor state, so this is only an approximation - 0.5
+# matches the sensor's smallest reporting step, avoiding flip-flopping
+# between COOLING/HEATING and IDLE on trivial fluctuations right at the
+# setpoint.
+_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
 
 
 async def async_setup_entry(
@@ -81,6 +82,7 @@ class ClimateConfig:
     temperature_step: float
     min_target_temperature: float
     max_target_temperature: float
+    hvac_action_temperature_threshold: float
     supported_operation_modes: Sequence[MideaIntEnum]
     supported_fan_speeds: Sequence[MideaIntEnum]
     supported_swing_modes: Sequence[MideaIntEnum]
@@ -110,6 +112,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self._target_temperature_step = config.temperature_step
         self._min_temperature = config.min_target_temperature
         self._max_temperature = config.max_target_temperature
+        self._hvac_action_temperature_threshold = config.hvac_action_temperature_threshold
 
         # Setup default supported features
         self._supported_features = (
@@ -332,14 +335,14 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if self.hvac_mode == HVACMode.COOL:
             return (
                 HVACAction.COOLING
-                if current > target + _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                if current > target + self._hvac_action_temperature_threshold
                 else HVACAction.IDLE
             )
 
         if self.hvac_mode == HVACMode.HEAT:
             return (
                 HVACAction.HEATING
-                if current < target - _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                if current < target - self._hvac_action_temperature_threshold
                 else HVACAction.IDLE
             )
 
@@ -441,6 +444,8 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
+            hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
+                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD),
             supported_operation_modes=operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,
@@ -676,6 +681,8 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
+            hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
+                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD),
             supported_operation_modes=device.supported_operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,

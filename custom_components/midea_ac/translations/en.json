@@ -121,6 +121,15 @@
             "data_description": {
               "additional_operation_modes": "Specify additional operational modes"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC Action Configuration",
+            "data": {
+              "temperature_threshold": "Temperature Threshold"
+            },
+            "data_description": {
+              "temperature_threshold": "Minimum temperature overshoot past the setpoint, in degrees, before COOL/HEAT is reported as active rather than idle"
+            }
           }
         }
       }

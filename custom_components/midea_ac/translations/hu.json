@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Adja meg a további üzemmódokat"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC művelet konfigurációja",
+            "data": {
+              "temperature_threshold": "Hőmérséklet-küszöb"
+            },
+            "data_description": {
+              "temperature_threshold": "Az alappont feletti minimális hőmérséklet-túllépés fokban, mielőtt a HŰTÉS/FŰTÉS aktívként jelenik meg tétlen helyett"
+            }
           }
         }
       }

@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Especificar modes d'operació addicionals"
             }
+          },
+          "hvac_action": {
+            "name": "Configuració de l'acció HVAC",
+            "data": {
+              "temperature_threshold": "Llindar de temperatura"
+            },
+            "data_description": {
+              "temperature_threshold": "Desviació mínima de temperatura per sobre del punt de consigna, en graus, abans que REFRIGERACIÓ/CALEFACCIÓ s'informi com a activa en lloc d'inactiva"
+            }
           }
         }
       }

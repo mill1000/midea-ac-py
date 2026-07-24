@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Вкажіть додаткові режими роботи"
             }
+          },
+          "hvac_action": {
+            "name": "Налаштування дії HVAC",
+            "data": {
+              "temperature_threshold": "Поріг температури"
+            },
+            "data_description": {
+              "temperature_threshold": "Мінімальне перевищення температури понад задану, у градусах, перш ніж ОХОЛОДЖЕННЯ/ОБІГРІВ буде повідомлено як активне, а не бездіяльне"
+            }
           }
         }
       }
