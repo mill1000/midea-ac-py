@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Określenie dodatkowych trybów pracy"
             }
+          },
+          "hvac_action": {
+            "name": "Konfiguracja działania HVAC",
+            "data": {
+              "temperature_threshold": "Próg temperatury"
+            },
+            "data_description": {
+              "temperature_threshold": "Minimalne przekroczenie temperatury ponad nastawę, w stopniach, zanim CHŁODZENIE/OGRZEWANIE zostanie zgłoszone jako aktywne zamiast bezczynne"
+            }
           }
         }
       }

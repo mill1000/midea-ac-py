@@ -26,6 +26,8 @@ CONF_SWING_ANGLE_RTL = "swing_angle_rtl"
 CONF_DEVICE_TYPE = "device_type"
 CONF_CAPABILITY_OVERRIDES = "capability_overrides"
 CONF_MERGE_CAPABILITY_OVERRIDES = "merge_capability_overrides"
+CONF_HVAC_ACTION = "hvac_action"
+CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD = "temperature_threshold"
 
 PRESET_IECO = "ieco"
 PRESET_SILENT = "silent"

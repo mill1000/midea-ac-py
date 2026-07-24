@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Specifica ulteriori modalità aggiuntive"
             }
+          },
+          "hvac_action": {
+            "name": "Configurazione dell'azione HVAC",
+            "data": {
+              "temperature_threshold": "Soglia di temperatura"
+            },
+            "data_description": {
+              "temperature_threshold": "Scostamento minimo di temperatura rispetto al setpoint, in gradi, prima che RAFFREDDAMENTO/RISCALDAMENTO venga segnalato come attivo anziché inattivo"
+            }
           }
         }
       }

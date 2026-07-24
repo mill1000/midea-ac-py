@@ -18,8 +18,9 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
-                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_KEY,
-                    CONF_MAX_CONNECTION_LIFETIME,
+                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
+                    CONF_HVAC_ACTION, CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+                    CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
                     CONF_WORKAROUNDS, DOMAIN, EnergyFormat)
@@ -204,6 +205,20 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=6)
+
+        # 1.7 -> 1.8: Default the hvac_action temperature threshold
+        # Note: 1.6 -> 1.7 is owned by #451 (estimate_hvac_action); this step
+        # is pre-numbered to land after it merges.
+        if config_entry.minor_version == 7:
+            new_options = {
+                **config_entry.options,
+                CONF_HVAC_ACTION: {
+                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
+                },
+            }
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=8)
 
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)

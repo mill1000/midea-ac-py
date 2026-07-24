@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Specifică moduri adiționale de funcționare"
             }
+          },
+          "hvac_action": {
+            "name": "Configurarea acțiunii HVAC",
+            "data": {
+              "temperature_threshold": "Prag de temperatură"
+            },
+            "data_description": {
+              "temperature_threshold": "Depășirea minimă a temperaturii peste punctul de referință, în grade, înainte ca RĂCIRE/ÎNCĂLZIRE să fie raportată ca activă în loc de inactivă"
+            }
           }
         }
       }

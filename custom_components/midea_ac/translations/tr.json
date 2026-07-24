@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Ek çalışma modlarını belirle"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC Eylem Yapılandırması",
+            "data": {
+              "temperature_threshold": "Sıcaklık Eşiği"
+            },
+            "data_description": {
+              "temperature_threshold": "SOĞUTMA/ISITMA'nın boşta yerine etkin olarak bildirilmesinden önce, ayar noktasının üzerinde derece cinsinden gereken minimum sıcaklık aşımı"
+            }
           }
         }
       }

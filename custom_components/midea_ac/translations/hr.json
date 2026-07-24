@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Navedite dodatne načine rada"
             }
+          },
+          "hvac_action": {
+            "name": "Konfiguracija HVAC radnje",
+            "data": {
+              "temperature_threshold": "Temperaturni prag"
+            },
+            "data_description": {
+              "temperature_threshold": "Najmanje prekoračenje temperature iznad zadane vrijednosti, u stupnjevima, prije nego što se HLAĐENJE/GRIJANJE prijavi kao aktivno umjesto neaktivno"
+            }
           }
         }
       }

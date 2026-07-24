@@ -17,6 +17,8 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateACDevice,
                                                 MideaClimateCCDevice,
                                                 MideaClimateDevice)
+from custom_components.midea_ac.const import (
+    CONF_HVAC_ACTION, CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -40,6 +42,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
+        hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[],
         supported_swing_modes=[],
@@ -75,6 +78,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
+        hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[AC.FanSpeed.AUTO],
         supported_swing_modes=[AC.SwingMode.BOTH],
@@ -252,18 +256,24 @@ async def test_preset_modes(
         (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
         (True, AC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
         (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        # Cool - within/at the idle threshold
+        (True, AC.OperationalMode.COOL, 24.5, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, 24.6, 24, HVACAction.COOLING),
         # Heat
         (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
         (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
         (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Auto
-        (True, AC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
-        (True, AC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # Heat - within/at the idle threshold
+        (True, AC.OperationalMode.HEAT, 23.5, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 23.4, 24, HVACAction.HEATING),
+        # Auto - direction cannot be reliably determined locally, see #449
+        (True, AC.OperationalMode.AUTO, 22, 24, None),
+        (True, AC.OperationalMode.AUTO, 24, 24, None),
+        (True, AC.OperationalMode.AUTO, 26, 24, None),
         # No sensor input
         (True, AC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
         (True, AC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.AUTO, None, 24, None),
     ],
 )
 async def test_ac_hvac_action(
@@ -272,7 +282,7 @@ async def test_ac_hvac_action(
     operational_mode: AC.OperationalMode,
     indoor_temperature: float | None,
     target_temperature: float,
-    expected_action: HVACAction,
+    expected_action: HVACAction | None,
 ):
     """Test hvac_action reflects the mode for the AC device."""
 
@@ -312,6 +322,36 @@ async def test_ac_hvac_action_defrosting(
     assert climate_device.hvac_action == HVACAction.DEFROSTING
 
 
+async def test_ac_hvac_action_custom_threshold(
+    hass: HomeAssistant,
+):
+    """Test hvac_action honors a configured temperature threshold."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = AC.OperationalMode.COOL
+    mock_device._indoor_temperature = 25
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    # A 1 degree overshoot is beyond the default 0.5 threshold
+    default_climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+    assert default_climate_device.hvac_action == HVACAction.COOLING
+
+    # ... but within a custom, wider threshold
+    options = {
+        CONF_HVAC_ACTION: {
+            CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 2.0,
+        }
+    }
+    custom_climate_device = MideaClimateACDevice(
+        hass, mock_coordinator, options)
+    assert custom_climate_device.hvac_action == HVACAction.IDLE
+
+
 @pytest.mark.parametrize(
     ("power_state", "operational_mode", "indoor_temperature",
      "target_temperature", "expected_action"),
@@ -329,14 +369,14 @@ async def test_ac_hvac_action_defrosting(
         (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
         (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
         (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Auto
-        (True, CC.OperationalMode.AUTO, 22, 24, HVACAction.HEATING),
-        (True, CC.OperationalMode.AUTO, 24, 24, HVACAction.IDLE),
-        (True, CC.OperationalMode.AUTO, 26, 24, HVACAction.COOLING),
+        # Auto - direction cannot be reliably determined locally, see #449
+        (True, CC.OperationalMode.AUTO, 22, 24, None),
+        (True, CC.OperationalMode.AUTO, 24, 24, None),
+        (True, CC.OperationalMode.AUTO, 26, 24, None),
         # No sensor input
         (True, CC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
         (True, CC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
-        (True, CC.OperationalMode.AUTO, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.AUTO, None, 24, None),
     ],
 )
 async def test_cc_hvac_action(
@@ -345,7 +385,7 @@ async def test_cc_hvac_action(
     operational_mode: "CC.OperationalMode",
     indoor_temperature: float | None,
     target_temperature: float,
-    expected_action: HVACAction,
+    expected_action: HVACAction | None,
 ):
     """Test hvac_action reflects the mode for the CC device."""
 

@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "추가 작동 모드를 지정하세요"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC 작동 구성",
+            "data": {
+              "temperature_threshold": "온도 임계값"
+            },
+            "data_description": {
+              "temperature_threshold": "냉방/난방이 유휴 상태 대신 작동 중으로 표시되기 전, 설정 온도를 초과하는 최소 온도 차이(도 단위)"
+            }
           }
         }
       }

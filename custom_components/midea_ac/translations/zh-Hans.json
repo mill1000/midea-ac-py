@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "指定额外的运行模式"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC 动作配置",
+            "data": {
+              "temperature_threshold": "温度阈值"
+            },
+            "data_description": {
+              "temperature_threshold": "在将制冷/制热报告为运行状态而非空闲状态之前，超出设定温度的最小温差（摄氏度）"
+            }
           }
         }
       }

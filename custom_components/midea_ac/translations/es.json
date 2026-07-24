@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Especificar metodos de operación adicionales"
             }
+          },
+          "hvac_action": {
+            "name": "Configuración de la acción HVAC",
+            "data": {
+              "temperature_threshold": "Umbral de temperatura"
+            },
+            "data_description": {
+              "temperature_threshold": "Desviación mínima de temperatura respecto al punto de ajuste, en grados, antes de que se indique REFRIGERACIÓN/CALEFACCIÓN como activa en lugar de inactiva"
+            }
           }
         }
       }

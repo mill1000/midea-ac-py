@@ -119,6 +119,15 @@
             "data_description": {
               "additional_operation_modes": "Specificeer extra functies"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC-actieconfiguratie",
+            "data": {
+              "temperature_threshold": "Temperatuurdrempel"
+            },
+            "data_description": {
+              "temperature_threshold": "Minimale temperatuuroverschrijding ten opzichte van het instelpunt, in graden, voordat KOELEN/VERWARMEN als actief in plaats van inactief wordt gerapporteerd"
+            }
           }
         }
       }

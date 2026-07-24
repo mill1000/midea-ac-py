@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Zadajte ďalšie prevádzkové režimy"
             }
+          },
+          "hvac_action": {
+            "name": "Konfigurácia akcie HVAC",
+            "data": {
+              "temperature_threshold": "Teplotný prah"
+            },
+            "data_description": {
+              "temperature_threshold": "Minimálne prekročenie teploty nad nastavenú hodnotu, v stupňoch, kým sa CHLADENIE/KÚRENIE nahlási ako aktívne namiesto nečinného"
+            }
           }
         }
       }

@@ -119,6 +119,15 @@
             "data_description": {
               "additional_operation_modes": "Zusätzliche Betriebsmodi angeben"
             }
+          },
+          "hvac_action": {
+            "name": "HVAC-Aktionskonfiguration",
+            "data": {
+              "temperature_threshold": "Temperaturschwelle"
+            },
+            "data_description": {
+              "temperature_threshold": "Mindestüberschreitung der Temperatur über den Sollwert hinaus, in Grad, bevor KÜHLEN/HEIZEN als aktiv statt im Leerlauf gemeldet wird"
+            }
           }
         }
       }

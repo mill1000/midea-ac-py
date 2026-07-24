@@ -118,6 +118,15 @@
             "data_description": {
               "additional_operation_modes": "Spécifiez des modes de fonctionnement supplémentaires"
             }
+          },
+          "hvac_action": {
+            "name": "Configuration de l'action HVAC",
+            "data": {
+              "temperature_threshold": "Seuil de température"
+            },
+            "data_description": {
+              "temperature_threshold": "Dépassement minimal de température par rapport à la consigne, en degrés, avant que REFROIDISSEMENT/CHAUFFAGE ne soit signalé comme actif plutôt qu'inactif"
+            }
           }
         }
       }

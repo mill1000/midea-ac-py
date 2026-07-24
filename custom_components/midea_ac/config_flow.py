@@ -35,7 +35,8 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_FAN_SPEED_STEP, CONF_KEY,
+                    CONF_FAN_SPEED_STEP, CONF_HVAC_ACTION,
+                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
@@ -44,12 +45,17 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
 
 _LOGGER = logging.getLogger(__name__)
 
+_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
+
 _DEFAULT_OPTIONS = {
     CONF_TEMP_STEP: 1.0,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
     CONF_CAPABILITY_OVERRIDES: "",
-    CONF_MERGE_CAPABILITY_OVERRIDES: True
+    CONF_MERGE_CAPABILITY_OVERRIDES: True,
+    CONF_HVAC_ACTION: {
+        CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+    }
 }
 
 _DEFAULT_AC_OPTIONS = {
@@ -78,7 +84,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 6
+    MINOR_VERSION = 8
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -487,6 +493,23 @@ class MideaOptionsFlow(OptionsFlow):
         }
     )
 
+    _HVAC_ACTION_SCHEMA = section(
+        vol.Schema({
+            vol.Optional(
+                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+                default=_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD
+            ): NumberSelector(
+                NumberSelectorConfig(
+                    min=0,
+                    step=.01,
+                    mode=NumberSelectorMode.BOX,
+                    unit_of_measurement=DEGREE
+                )
+            )
+        }),
+        {"collapsed": True},
+    )
+
     _ENERGY_SENSOR_SCHEMA = section(
         vol.Schema(
             {
@@ -515,6 +538,7 @@ class MideaOptionsFlow(OptionsFlow):
             ),
             vol.Optional(CONF_ENERGY_SENSOR): _ENERGY_SENSOR_SCHEMA,
             vol.Optional(CONF_POWER_SENSOR): _ENERGY_SENSOR_SCHEMA,
+            vol.Optional(CONF_HVAC_ACTION): _HVAC_ACTION_SCHEMA,
             vol.Optional(CONF_WORKAROUNDS): section(
                 vol.Schema({
                     vol.Optional(CONF_USE_FAN_ONLY_WORKAROUND): cv.boolean
@@ -524,7 +548,11 @@ class MideaOptionsFlow(OptionsFlow):
         }
     )
 
-    _CC_OPTION_SCHEMA = vol.Schema({})
+    _CC_OPTION_SCHEMA = vol.Schema(
+        {
+            vol.Optional(CONF_HVAC_ACTION): _HVAC_ACTION_SCHEMA,
+        }
+    )
 
     _DEVICE_SCHEMAS = {
         DeviceType.AIR_CONDITIONER: _AC_OPTION_SCHEMA,
