@@ -35,7 +35,7 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_FAN_SPEED_STEP, CONF_KEY,
+                    CONF_ESTIMATE_HVAC_ACTION, CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
@@ -54,6 +54,7 @@ _DEFAULT_OPTIONS = {
 
 _DEFAULT_AC_OPTIONS = {
     CONF_BEEP: True,
+    CONF_ESTIMATE_HVAC_ACTION: False,
     CONF_FAN_SPEED_STEP: 1,
     CONF_ENERGY_SENSOR: {
         CONF_ENERGY_DATA_FORMAT: EnergyFormat.BCD,
@@ -78,7 +79,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
-    MINOR_VERSION = 6
+    MINOR_VERSION = 7
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -510,6 +511,7 @@ class MideaOptionsFlow(OptionsFlow):
     _AC_OPTION_SCHEMA = vol.Schema(
         {
             vol.Optional(CONF_BEEP): cv.boolean,
+            vol.Optional(CONF_ESTIMATE_HVAC_ACTION): cv.boolean,
             vol.Optional(CONF_FAN_SPEED_STEP): NumberSelector(
                 NumberSelectorConfig(min=1, max=20, step=1)
             ),

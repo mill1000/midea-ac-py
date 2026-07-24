@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Omogući zvučni signal",
+          "estimate_hvac_action": "Procijeni HVAC radnju",
           "temp_step": "Temperaturni korak",
           "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "max_connection_lifetime": "Maksimalno trajanje veze",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "estimate_hvac_action": "Prikazuje procijenjeno radno stanje (hlađenje/grijanje/mirovanje) na kartici klime. Uređaj ne prijavljuje svoje stvarno stanje, pa je ovo samo procjena.",
           "temp_step": "Veličina koraka za zadanu vrijednost temperature",
           "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "max_connection_lifetime": "Maksimalno vrijeme u sekundama tijekom kojeg će se veza koristiti (najmanje 15 sekundi)"

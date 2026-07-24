@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activar pitido",
+          "estimate_hvac_action": "Estimar acción HVAC",
           "temp_step": "Tamaño del escalón de temperatura",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Tiempo de connexión máximo",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "estimate_hvac_action": "Muestra un estado de funcionamiento estimado (enfriando/calentando/inactivo) en la tarjeta de clima. El dispositivo no informa su estado real, por lo que es solo una aproximación.",
           "temp_step": "Tamaño del escalón para la consigna de temperatura",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Tiempo máximo en segundos que se usará una connexión (mínimo 15 segundos)"
