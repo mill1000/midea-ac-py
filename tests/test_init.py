@@ -304,7 +304,8 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         # AC entry missing the option gets the default backfilled
         (DeviceType.AIR_CONDITIONER, {}, True),
         # AC entry with an explicit value keeps it untouched
-        (DeviceType.AIR_CONDITIONER, {CONF_ESTIMATE_HVAC_ACTION: False}, False),
+        (DeviceType.AIR_CONDITIONER, {
+         CONF_ESTIMATE_HVAC_ACTION: False}, False),
         # Non-AC entry is left alone, the option doesn't apply to it
         (DeviceType.COMMERCIAL_AC, {}, None),
     ],
@@ -335,4 +336,5 @@ async def test_config_entry_migration_from_6(
 
     assert mock_config_entry.version == 1
     assert mock_config_entry.minor_version == 7
-    assert mock_config_entry.options.get(CONF_ESTIMATE_HVAC_ACTION) == expected_value
+    assert mock_config_entry.options.get(
+        CONF_ESTIMATE_HVAC_ACTION) == expected_value
