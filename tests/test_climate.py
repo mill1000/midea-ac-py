@@ -287,7 +287,8 @@ async def test_ac_hvac_action(
     mock_coordinator.apply = AsyncMock()
     mock_coordinator.device = mock_device
 
-    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+    climate_device = MideaClimateACDevice(
+        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
 
     assert climate_device.hvac_action == expected_action
 
@@ -308,7 +309,8 @@ async def test_ac_hvac_action_defrosting(
     mock_coordinator.apply = AsyncMock()
     mock_coordinator.device = mock_device
 
-    climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+    climate_device = MideaClimateACDevice(
+        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
 
     assert climate_device.hvac_action == HVACAction.DEFROSTING
 
@@ -316,8 +318,8 @@ async def test_ac_hvac_action_defrosting(
 @pytest.mark.parametrize(
     ("options", "expected_action"),
     [
-        # Default (option absent) - behaves as if enabled
-        ({}, HVACAction.COOLING),
+        # Default (option absent) - behaves as if disabled
+        ({}, None),
         (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], True), HVACAction.COOLING),
         (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], False), None),
     ],

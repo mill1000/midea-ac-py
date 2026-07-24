@@ -302,7 +302,7 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
     ("device_type", "existing_options", "expected_value"),
     [
         # AC entry missing the option gets the default backfilled
-        (DeviceType.AIR_CONDITIONER, {}, True),
+        (DeviceType.AIR_CONDITIONER, {}, False),
         # AC entry with an explicit value keeps it untouched
         (DeviceType.AIR_CONDITIONER, {
          CONF_ESTIMATE_HVAC_ACTION: False}, False),

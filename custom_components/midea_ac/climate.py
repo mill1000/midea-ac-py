@@ -427,7 +427,7 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         # Apply misc options
         self._device.beep = options.get(CONF_BEEP, False)
         self._estimate_hvac_action = options.get(
-            CONF_ESTIMATE_HVAC_ACTION, True)
+            CONF_ESTIMATE_HVAC_ACTION, False)
 
         self._use_fan_only_workaround = workarounds.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)

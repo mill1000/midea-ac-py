@@ -211,7 +211,7 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
             new_options = {**config_entry.options}
 
             if config_entry.data.get(CONF_DEVICE_TYPE) == DeviceType.AIR_CONDITIONER:
-                new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, True)
+                new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, False)
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=7)
