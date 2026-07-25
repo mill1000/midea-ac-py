@@ -32,6 +32,14 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+# Minimum overshoot past the setpoint, in degrees, before COOL/HEAT is
+# reported as actively running rather than idle. The device doesn't report
+# the real compressor state, so this is only an approximation - 0.5 matches
+# the sensor's smallest reporting step, avoiding flip-flopping between
+# COOLING/HEATING and IDLE on trivial fluctuations right at the setpoint.
+# TODO: make this configurable once there's a settings UI for it.
+_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -293,7 +301,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
     @property
-    def hvac_action(self) -> HVACAction:
+    def hvac_action(self) -> HVACAction | None:
         """Return the current HVAC action."""
 
         # For basic modes return the matching action
@@ -305,6 +313,15 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if (action := _HVAC_MODE_TO_HVAC_ACTION.get(self.hvac_mode)) != None:
             return action
 
+        # In auto mode the device doesn't report which direction it is
+        # actually operating in, so estimating from current vs. target
+        # temperature can be actively wrong (e.g. reporting "cooling" while
+        # the unit is heating past an overshoot). Report nothing rather than
+        # a potentially misleading value. See
+        # https://github.com/mill1000/midea-ac-py/issues/449
+        if self.hvac_mode == HVACMode.AUTO:
+            return None
+
         #  The device doesn't report actual activity, so we'll estimate the action based on sensors and set points
         current = self.current_temperature
         target = self.target_temperature
@@ -312,11 +329,19 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if current is None or target is None:
             return HVACAction.IDLE
 
-        if self.hvac_mode in [HVACMode.COOL, HVACMode.AUTO] and current > target:
-            return HVACAction.COOLING
+        if self.hvac_mode == HVACMode.COOL:
+            return (
+                HVACAction.COOLING
+                if current > target + _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                else HVACAction.IDLE
+            )
 
-        if self.hvac_mode in [HVACMode.HEAT, HVACMode.AUTO] and current < target:
-            return HVACAction.HEATING
+        if self.hvac_mode == HVACMode.HEAT:
+            return (
+                HVACAction.HEATING
+                if current < target - _HVAC_ACTION_TEMPERATURE_THRESHOLD
+                else HVACAction.IDLE
+            )
 
         return HVACAction.IDLE
 
