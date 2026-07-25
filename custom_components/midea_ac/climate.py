@@ -34,11 +34,19 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 _LOGGER = logging.getLogger(__name__)
 
 # Default overshoot past the setpoint, in degrees, that COOL/HEAT keeps
-# reporting as actively running before falling back to idle. The device
-# doesn't report the real compressor state, so this is only an
-# approximation - 0.5 matches the sensor's smallest reporting step, avoiding
-# flip-flopping between COOLING/HEATING and IDLE on trivial fluctuations
-# right at the setpoint.
+# reporting as actively running before falling back to idle.
+#
+# This follows the HA core hvac_action documentation and how hvac_action is
+# normally implemented elsewhere
+# (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action):
+# it is not tightly related to the device's real compressor state. IDLE is
+# used, per its ordinary technical sense, once the device is no longer doing
+# useful heating/cooling work - running at low power/disconnected, or not
+# actively tuned to appropriate use - which is the case once the target
+# temperature has been reached, whether or not the compressor happens to
+# still be physically running. 0.5 matches the sensor's smallest reporting
+# step, avoiding flip-flopping between COOLING/HEATING and IDLE on trivial
+# fluctuations right at the setpoint.
 _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
 
 
@@ -325,7 +333,15 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if self.hvac_mode == HVACMode.AUTO:
             return None
 
-        #  The device doesn't report actual activity, so we'll estimate the action based on sensors and set points
+        # The device doesn't report actual activity, so we'll estimate the
+        # action based on sensors and set points instead. Per the HA core
+        # hvac_action documentation
+        # (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action),
+        # a device set to HEAT (or COOL) that has already reached its target
+        # temperature is no longer actively heating (or cooling) - it should
+        # report IDLE rather than HEATING/COOLING once the setpoint is
+        # reached, regardless of whether the compressor is still physically
+        # cycling.
         current = self.current_temperature
         target = self.target_temperature
 
