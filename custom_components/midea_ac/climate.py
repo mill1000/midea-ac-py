@@ -342,14 +342,14 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if self.hvac_mode == HVACMode.COOL:
             return (
                 HVACAction.IDLE
-                if current < target - self._hvac_action_temperature_threshold
+                if current <= target - self._hvac_action_temperature_threshold
                 else HVACAction.COOLING
             )
 
         if self.hvac_mode == HVACMode.HEAT:
             return (
                 HVACAction.IDLE
-                if current > target + self._hvac_action_temperature_threshold
+                if current >= target + self._hvac_action_temperature_threshold
                 else HVACAction.HEATING
             )
 

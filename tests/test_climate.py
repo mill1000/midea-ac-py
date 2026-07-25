@@ -259,18 +259,18 @@ async def test_preset_modes(
         (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
         (True, AC.OperationalMode.COOL, 24, 24, HVACAction.COOLING),
         (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
-        # Cool - within/at the idle threshold: stays COOLING until the
-        # undershoot exceeds the threshold, then falls back to IDLE
-        (True, AC.OperationalMode.COOL, 23.5, 24, HVACAction.COOLING),
-        (True, AC.OperationalMode.COOL, 23.4, 24, HVACAction.IDLE),
+        # Cool - at the idle threshold: falls back to IDLE at the boundary,
+        # not just once the undershoot exceeds it
+        (True, AC.OperationalMode.COOL, 23.5, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, 23.6, 24, HVACAction.COOLING),
         # Heat
         (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
         (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.HEATING),
         (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Heat - within/at the idle threshold: stays HEATING until the
-        # overshoot exceeds the threshold, then falls back to IDLE
-        (True, AC.OperationalMode.HEAT, 24.5, 24, HVACAction.HEATING),
-        (True, AC.OperationalMode.HEAT, 24.6, 24, HVACAction.IDLE),
+        # Heat - at the idle threshold: falls back to IDLE at the boundary,
+        # not just once the overshoot exceeds it
+        (True, AC.OperationalMode.HEAT, 24.5, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 24.4, 24, HVACAction.HEATING),
         # Auto - direction cannot be reliably determined locally, see #449
         (True, AC.OperationalMode.AUTO, 22, 24, None),
         (True, AC.OperationalMode.AUTO, 24, 24, None),
