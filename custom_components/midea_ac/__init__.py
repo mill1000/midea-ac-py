@@ -16,11 +16,11 @@ from msmart.device import AirConditioner as AC
 from msmart.device import CommercialAirConditioner as CC
 from msmart.lan import AuthenticationError
 
+from .config_flow import _DEFAULT_OPTIONS
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
                     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION,
-                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_KEY,
+                    CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
@@ -215,9 +215,8 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
             new_options = {**config_entry.options}
 
             new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, False)
-            new_options.setdefault(CONF_HVAC_ACTION, {
-                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
-            })
+            new_options.setdefault(
+                CONF_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_HVAC_ACTION])
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=7)

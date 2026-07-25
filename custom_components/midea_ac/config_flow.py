@@ -45,8 +45,6 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
 
 _LOGGER = logging.getLogger(__name__)
 
-_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
-
 _DEFAULT_OPTIONS = {
     CONF_TEMP_STEP: 1.0,
     CONF_MAX_CONNECTION_LIFETIME: None,
@@ -55,7 +53,7 @@ _DEFAULT_OPTIONS = {
     CONF_MERGE_CAPABILITY_OVERRIDES: True,
     CONF_ESTIMATE_HVAC_ACTION: False,
     CONF_HVAC_ACTION: {
-        CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+        CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
     },
 }
 
@@ -473,7 +471,7 @@ class MideaOptionsFlow(OptionsFlow):
         vol.Schema({
             vol.Optional(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
-                default=_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD
+                default=_DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]
             ): NumberSelector(
                 NumberSelectorConfig(
                     min=0,
