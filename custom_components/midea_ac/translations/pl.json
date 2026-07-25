@@ -127,7 +127,7 @@
               "temperature_threshold": "Próg temperatury"
             },
             "data_description": {
-              "temperature_threshold": "Minimalne przekroczenie temperatury ponad nastawę, w stopniach, zanim CHŁODZENIE/OGRZEWANIE zostanie zgłoszone jako aktywne zamiast bezczynne"
+              "temperature_threshold": "Przekroczenie temperatury ponad nastawę, w stopniach, podczas którego CHŁODZENIE/OGRZEWANIE nadal jest zgłaszane jako aktywne, zanim przejdzie w stan bezczynności"
             }
           }
         }

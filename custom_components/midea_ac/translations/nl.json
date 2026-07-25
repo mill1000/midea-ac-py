@@ -128,7 +128,7 @@
               "temperature_threshold": "Temperatuurdrempel"
             },
             "data_description": {
-              "temperature_threshold": "Minimale temperatuuroverschrijding ten opzichte van het instelpunt, in graden, voordat KOELEN/VERWARMEN als actief in plaats van inactief wordt gerapporteerd"
+              "temperature_threshold": "Temperatuuroverschrijding ten opzichte van het instelpunt, in graden, waarbij KOELEN/VERWARMEN als actief blijft gerapporteerd voordat er wordt teruggevallen op inactief"
             }
           }
         }

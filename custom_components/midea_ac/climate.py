@@ -33,12 +33,12 @@ from .coordinator import MideaCoordinatorEntity, MideaDeviceUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-# Default minimum overshoot past the setpoint, in degrees, before COOL/HEAT
-# is reported as actively running rather than idle. The device doesn't
-# report the real compressor state, so this is only an approximation - 0.5
-# matches the sensor's smallest reporting step, avoiding flip-flopping
-# between COOLING/HEATING and IDLE on trivial fluctuations right at the
-# setpoint.
+# Default overshoot past the setpoint, in degrees, that COOL/HEAT keeps
+# reporting as actively running before falling back to idle. The device
+# doesn't report the real compressor state, so this is only an
+# approximation - 0.5 matches the sensor's smallest reporting step, avoiding
+# flip-flopping between COOLING/HEATING and IDLE on trivial fluctuations
+# right at the setpoint.
 _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD = 0.5
 
 
@@ -334,16 +334,16 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         if self.hvac_mode == HVACMode.COOL:
             return (
-                HVACAction.COOLING
-                if current > target + self._hvac_action_temperature_threshold
-                else HVACAction.IDLE
+                HVACAction.IDLE
+                if current < target - self._hvac_action_temperature_threshold
+                else HVACAction.COOLING
             )
 
         if self.hvac_mode == HVACMode.HEAT:
             return (
-                HVACAction.HEATING
-                if current < target - self._hvac_action_temperature_threshold
-                else HVACAction.IDLE
+                HVACAction.IDLE
+                if current > target + self._hvac_action_temperature_threshold
+                else HVACAction.HEATING
             )
 
         return HVACAction.IDLE

@@ -127,7 +127,7 @@
               "temperature_threshold": "Tenperatura atalasea"
             },
             "data_description": {
-              "temperature_threshold": "Konsigna gainditzeko gutxieneko tenperatura, graduetan, HOZTEA/BEROTZEA aktibo gisa jakinarazi aurretik, inaktibo izan beharrean"
+              "temperature_threshold": "Konsigna gaindituz gero graduetan gertatzen den tenperatura-desbiderapena, HOZTEA/BEROTZEA aktibo gisa jakinarazten jarraitzen duena inaktibora itzuli aurretik"
             }
           }
         }

@@ -127,7 +127,7 @@
               "temperature_threshold": "溫度閾值"
             },
             "data_description": {
-              "temperature_threshold": "在將製冷/製熱回報為運作中而非閒置之前，超出設定溫度的最小溫差（攝氏度）"
+              "temperature_threshold": "超出設定溫度的溫差（攝氏度），在此範圍內製冷/製熱將持續回報為運作中，直到超出該溫差後才回落為閒置狀態"
             }
           }
         }

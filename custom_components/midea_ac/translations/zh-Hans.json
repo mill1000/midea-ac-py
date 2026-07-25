@@ -127,7 +127,7 @@
               "temperature_threshold": "温度阈值"
             },
             "data_description": {
-              "temperature_threshold": "在将制冷/制热报告为运行状态而非空闲状态之前，超出设定温度的最小温差（摄氏度）"
+              "temperature_threshold": "超出设定温度的温差（摄氏度），在此范围内制冷/制热将持续报告为运行状态，直到超出该温差后才回落为空闲状态"
             }
           }
         }

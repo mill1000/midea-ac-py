@@ -127,7 +127,7 @@
               "temperature_threshold": "Seuil de température"
             },
             "data_description": {
-              "temperature_threshold": "Dépassement minimal de température par rapport à la consigne, en degrés, avant que REFROIDISSEMENT/CHAUFFAGE ne soit signalé comme actif plutôt qu'inactif"
+              "temperature_threshold": "Dépassement de température par rapport à la consigne, en degrés, pendant lequel REFROIDISSEMENT/CHAUFFAGE continue d'être signalé comme actif avant de repasser à inactif"
             }
           }
         }

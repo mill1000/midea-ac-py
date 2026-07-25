@@ -255,18 +255,20 @@ async def test_preset_modes(
         (True, AC.OperationalMode.FAN_ONLY, None, 24, HVACAction.FAN),
         # Cool
         (True, AC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
-        (True, AC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.COOL, 24, 24, HVACAction.COOLING),
         (True, AC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
-        # Cool - within/at the idle threshold
-        (True, AC.OperationalMode.COOL, 24.5, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.COOL, 24.6, 24, HVACAction.COOLING),
+        # Cool - within/at the idle threshold: stays COOLING until the
+        # undershoot exceeds the threshold, then falls back to IDLE
+        (True, AC.OperationalMode.COOL, 23.5, 24, HVACAction.COOLING),
+        (True, AC.OperationalMode.COOL, 23.4, 24, HVACAction.IDLE),
         # Heat
         (True, AC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
-        (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        (True, AC.OperationalMode.HEAT, 24, 24, HVACAction.HEATING),
         (True, AC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
-        # Heat - within/at the idle threshold
-        (True, AC.OperationalMode.HEAT, 23.5, 24, HVACAction.IDLE),
-        (True, AC.OperationalMode.HEAT, 23.4, 24, HVACAction.HEATING),
+        # Heat - within/at the idle threshold: stays HEATING until the
+        # overshoot exceeds the threshold, then falls back to IDLE
+        (True, AC.OperationalMode.HEAT, 24.5, 24, HVACAction.HEATING),
+        (True, AC.OperationalMode.HEAT, 24.6, 24, HVACAction.IDLE),
         # Auto - direction cannot be reliably determined locally, see #449
         (True, AC.OperationalMode.AUTO, 22, 24, None),
         (True, AC.OperationalMode.AUTO, 24, 24, None),
@@ -333,19 +335,20 @@ async def test_ac_hvac_action_custom_threshold(
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = True
     mock_device._operational_mode = AC.OperationalMode.COOL
-    mock_device._indoor_temperature = 25
+    mock_device._indoor_temperature = 23
     mock_device._target_temperature = 24
 
     mock_coordinator = MagicMock()
     mock_coordinator.apply = AsyncMock()
     mock_coordinator.device = mock_device
 
-    # A 1 degree overshoot is beyond the default 0.5 threshold
+    # A 1 degree undershoot is beyond the default 0.5 threshold, so the
+    # default threshold has already fallen back to idle
     default_climate_device = MideaClimateACDevice(
         hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
-    assert default_climate_device.hvac_action == HVACAction.COOLING
+    assert default_climate_device.hvac_action == HVACAction.IDLE
 
-    # ... but within a custom, wider threshold
+    # ... but a custom, wider threshold keeps reporting active for longer
     options = {
         CONF_ESTIMATE_HVAC_ACTION: True,
         CONF_HVAC_ACTION: {
@@ -354,7 +357,7 @@ async def test_ac_hvac_action_custom_threshold(
     }
     custom_climate_device = MideaClimateACDevice(
         hass, mock_coordinator, options)
-    assert custom_climate_device.hvac_action == HVACAction.IDLE
+    assert custom_climate_device.hvac_action == HVACAction.COOLING
 
 
 @pytest.mark.parametrize(
@@ -433,11 +436,11 @@ async def test_ac_hvac_action_disabled_always_none(
         (True, CC.OperationalMode.FAN, None, 24, HVACAction.FAN),
         # Cool
         (True, CC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
-        (True, CC.OperationalMode.COOL, 24, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.COOL, 24, 24, HVACAction.COOLING),
         (True, CC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
         # Heat
         (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
-        (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.HEATING),
         (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
         # Auto - direction cannot be reliably determined locally, see #449
         (True, CC.OperationalMode.AUTO, 22, 24, None),
