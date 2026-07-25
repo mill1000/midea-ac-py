@@ -451,7 +451,8 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            estimate_hvac_action=options.get(CONF_ESTIMATE_HVAC_ACTION, False),
+            estimate_hvac_action=options.get(
+                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION]),
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),
@@ -690,7 +691,8 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            estimate_hvac_action=options.get(CONF_ESTIMATE_HVAC_ACTION, False),
+            estimate_hvac_action=options.get(
+                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION]),
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),

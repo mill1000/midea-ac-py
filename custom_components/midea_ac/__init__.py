@@ -214,7 +214,8 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
         if config_entry.minor_version == 6:
             new_options = {**config_entry.options}
 
-            new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, False)
+            new_options.setdefault(
+                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION])
             new_options.setdefault(
                 CONF_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_HVAC_ACTION])
 
