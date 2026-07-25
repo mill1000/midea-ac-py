@@ -336,9 +336,10 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         # The device doesn't report actual activity, so we'll estimate the
         # action based on sensors and set points instead. Per the HA core
         # hvac_action documentation
-        # (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action),
-        # a device set to HEAT (or COOL) that has already reached its target
-        # temperature is no longer actively heating (or cooling) - it should
+        # (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action)
+        # and the common interpretation across many integrations, a device
+        # set to HEAT (or COOL) that has already reached its target
+        # temperature is no longer actively heating (or cooling): it should
         # report IDLE rather than HEATING/COOLING once the setpoint is
         # reached, regardless of whether the compressor is still physically
         # cycling.
