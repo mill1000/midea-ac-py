@@ -103,8 +103,9 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
     _attr_translation_key = DOMAIN
     _enable_turn_on_off_backwards_compatibility = False
 
-    # Off by default - hvac_action is only ever an approximation, and only
-    # MideaClimateACDevice currently exposes an option to opt into it.
+    # Off by default - hvac_action is only ever an approximation, since
+    # this protocol never reports the device's real compressor state.
+    # Overridden per-instance from the estimate_hvac_action option.
     _estimate_hvac_action = False
 
     _OPERATIONAL_MODE_TO_HVAC_MODE: ClassVar[Mapping[Any, HVACMode]]
@@ -707,9 +708,8 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            # _estimate_hvac_action defaults to False and is never set for
-            # commercial AC devices, so this value is unused.
-            hvac_action_temperature_threshold=_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+            hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
+                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD),
             supported_operation_modes=device.supported_operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,
@@ -717,6 +717,9 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
         )
 
         MideaClimateDevice.__init__(self, hass, coordinator, config)
+
+        self._estimate_hvac_action = options.get(
+            CONF_ESTIMATE_HVAC_ACTION, False)
 
     @property
     def supported_features(self) -> int:

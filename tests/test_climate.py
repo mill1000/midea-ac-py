@@ -426,14 +426,30 @@ async def test_ac_hvac_action_disabled_always_none(
 
 
 @pytest.mark.parametrize(
-    ("power_state", "operational_mode", "indoor_temperature", "target_temperature"),
+    ("power_state", "operational_mode", "indoor_temperature",
+     "target_temperature", "expected_action"),
     [
-        (False, CC.OperationalMode.COOL, 26, 24),
-        (True, CC.OperationalMode.DRY, None, 24),
-        (True, CC.OperationalMode.FAN, None, 24),
-        (True, CC.OperationalMode.COOL, 26, 24),
-        (True, CC.OperationalMode.HEAT, 22, 24),
-        (True, CC.OperationalMode.AUTO, 22, 24),
+        # Off
+        (False, CC.OperationalMode.COOL, 26, 24, HVACAction.OFF),
+        # Basic modes
+        (True, CC.OperationalMode.DRY, None, 24, HVACAction.DRYING),
+        (True, CC.OperationalMode.FAN, None, 24, HVACAction.FAN),
+        # Cool
+        (True, CC.OperationalMode.COOL, 26, 24, HVACAction.COOLING),
+        (True, CC.OperationalMode.COOL, 24, 24, HVACAction.COOLING),
+        (True, CC.OperationalMode.COOL, 22, 24, HVACAction.IDLE),
+        # Heat
+        (True, CC.OperationalMode.HEAT, 22, 24, HVACAction.HEATING),
+        (True, CC.OperationalMode.HEAT, 24, 24, HVACAction.HEATING),
+        (True, CC.OperationalMode.HEAT, 26, 24, HVACAction.IDLE),
+        # Auto - direction cannot be reliably determined locally, see #449
+        (True, CC.OperationalMode.AUTO, 22, 24, None),
+        (True, CC.OperationalMode.AUTO, 24, 24, None),
+        (True, CC.OperationalMode.AUTO, 26, 24, None),
+        # No sensor input
+        (True, CC.OperationalMode.HEAT, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.COOL, None, 24, HVACAction.IDLE),
+        (True, CC.OperationalMode.AUTO, None, 24, None),
     ],
 )
 async def test_cc_hvac_action(
@@ -442,14 +458,49 @@ async def test_cc_hvac_action(
     operational_mode: "CC.OperationalMode",
     indoor_temperature: float | None,
     target_temperature: float,
+    expected_action: HVACAction | None,
 ):
-    """Test hvac_action estimation isn't implemented for the CC device."""
+    """Test hvac_action reflects the mode for the CC device."""
 
     mock_device = CC("0.0.0.0", 0, 0)
     mock_device._power_state = power_state
     mock_device._operational_mode = operational_mode
     mock_device._indoor_temperature = indoor_temperature
     mock_device._target_temperature = target_temperature
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateCCDevice(
+        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
+
+    assert climate_device.hvac_action == expected_action
+
+
+@pytest.mark.parametrize(
+    ("power_state", "operational_mode"),
+    [
+        (False, CC.OperationalMode.COOL),
+        (True, CC.OperationalMode.FAN),
+        (True, CC.OperationalMode.DRY),
+        (True, CC.OperationalMode.COOL),
+        (True, CC.OperationalMode.HEAT),
+        (True, CC.OperationalMode.AUTO),
+    ],
+)
+async def test_cc_hvac_action_disabled_always_none(
+    hass: HomeAssistant,
+    power_state: bool,
+    operational_mode: "CC.OperationalMode",
+):
+    """Test hvac_action is always None when disabled, regardless of mode."""
+
+    mock_device = CC("0.0.0.0", 0, 0)
+    mock_device._power_state = power_state
+    mock_device._operational_mode = operational_mode
+    mock_device._indoor_temperature = 26
+    mock_device._target_temperature = 24
 
     mock_coordinator = MagicMock()
     mock_coordinator.apply = AsyncMock()
