@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Activează beep-ul",
+          "estimate_hvac_action": "Estimează acțiunea HVAC",
           "temp_step": "Pas de temperatură",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Durata maximă a conexiunii",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "estimate_hvac_action": "Afișează o stare de funcționare estimată (răcire/încălzire/inactiv) pe cardul de climă. Dispozitivul nu raportează starea sa reală, deci aceasta este doar o aproximare.",
           "temp_step": "Mărime pas incremental pentru temperatură",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 15 de secunde) "

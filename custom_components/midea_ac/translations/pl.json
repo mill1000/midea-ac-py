@@ -75,12 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Włącz sygnał dźwiękowy",
+          "estimate_hvac_action": "Szacuj akcję HVAC",
           "temp_step": "Krok nastawy temperatury",
           "fan_speed_step": "Krok prędkości wentylatora",
           "max_connection_lifetime": "Maksymalny czas połączenia",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
+          "estimate_hvac_action": "Pokazuje szacowany stan pracy (chłodzenie/ogrzewanie/bezczynność) na karcie klimatyzacji. Urządzenie nie zgłasza swojego rzeczywistego stanu, więc jest to jedynie przybliżenie.",
           "temp_step": "Wielkość kroku dla nastawy temperatury",
           "fan_speed_step": "Rozmiar kroku dla niestandardowych prędkości wentylatora",
           "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 15 sekund)"
