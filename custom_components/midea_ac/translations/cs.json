@@ -127,7 +127,7 @@
               "temperature_threshold": "Teplotní práh"
             },
             "data_description": {
-              "temperature_threshold": "Překročení teploty nad požadovanou hodnotu, ve stupních, po které je CHLAZENÍ/TOPENÍ stále hlášeno jako aktivní, než přejde do nečinnosti"
+              "temperature_threshold": "Překročení teploty nad požadovanou hodnotu, ve stupních, od kterého je CHLAZENÍ/TOPENÍ hlášeno jako nečinné místo aktivní"
             }
           }
         }

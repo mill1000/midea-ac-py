@@ -127,7 +127,7 @@
               "temperature_threshold": "Umbral de temperatura"
             },
             "data_description": {
-              "temperature_threshold": "Desviación de temperatura respecto al punto de ajuste, en grados, durante la cual REFRIGERACIÓN/CALEFACCIÓN se sigue indicando como activa antes de volver a inactiva"
+              "temperature_threshold": "Desviación de temperatura respecto al punto de ajuste, en grados, a partir de la cual REFRIGERACIÓN/CALEFACCIÓN se indica como inactiva en lugar de activa"
             }
           }
         }

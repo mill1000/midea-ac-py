@@ -128,7 +128,7 @@
               "temperature_threshold": "Temperaturschwelle"
             },
             "data_description": {
-              "temperature_threshold": "Temperaturüberschreitung über den Sollwert hinaus, in Grad, bei der KÜHLEN/HEIZEN weiterhin als aktiv gemeldet wird, bevor auf Leerlauf zurückgefallen wird"
+              "temperature_threshold": "Temperaturüberschreitung über den Sollwert hinaus, in Grad, ab der KÜHLEN/HEIZEN als Leerlauf statt als aktiv gemeldet wird"
             }
           }
         }

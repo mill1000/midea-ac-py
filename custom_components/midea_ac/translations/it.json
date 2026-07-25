@@ -127,7 +127,7 @@
               "temperature_threshold": "Soglia di temperatura"
             },
             "data_description": {
-              "temperature_threshold": "Scostamento di temperatura rispetto al setpoint, in gradi, durante il quale RAFFREDDAMENTO/RISCALDAMENTO continua a essere segnalato come attivo prima di tornare inattivo"
+              "temperature_threshold": "Scostamento di temperatura rispetto al setpoint, in gradi, a partire dal quale RAFFREDDAMENTO/RISCALDAMENTO viene segnalato come inattivo anziché attivo"
             }
           }
         }

@@ -127,7 +127,7 @@
               "temperature_threshold": "Hőmérséklet-küszöb"
             },
             "data_description": {
-              "temperature_threshold": "Az alappont feletti hőmérséklet-túllépés fokban, ameddig a HŰTÉS/FŰTÉS továbbra is aktívként jelenik meg, mielőtt tétlenre váltana"
+              "temperature_threshold": "Az alappont feletti hőmérséklet-túllépés fokban, amelytől kezdve a HŰTÉS/FŰTÉS tétlenként jelenik meg aktív helyett"
             }
           }
         }

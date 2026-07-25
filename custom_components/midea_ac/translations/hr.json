@@ -127,7 +127,7 @@
               "temperature_threshold": "Temperaturni prag"
             },
             "data_description": {
-              "temperature_threshold": "Prekoračenje temperature iznad zadane vrijednosti, u stupnjevima, tijekom kojeg se HLAĐENJE/GRIJANJE i dalje prijavljuje kao aktivno prije prelaska u neaktivno"
+              "temperature_threshold": "Prekoračenje temperature iznad zadane vrijednosti, u stupnjevima, od kojeg se HLAĐENJE/GRIJANJE prijavljuje kao neaktivno umjesto aktivno"
             }
           }
         }

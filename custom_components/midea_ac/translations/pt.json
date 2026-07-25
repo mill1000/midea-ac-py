@@ -127,7 +127,7 @@
               "temperature_threshold": "Limite de temperatura"
             },
             "data_description": {
-              "temperature_threshold": "Desvio de temperatura além do ponto de ajuste, em graus, durante o qual REFRIGERAÇÃO/AQUECIMENTO continua a ser reportado como ativo antes de voltar a inativo"
+              "temperature_threshold": "Desvio de temperatura além do ponto de ajuste, em graus, a partir do qual REFRIGERAÇÃO/AQUECIMENTO é reportado como inativo em vez de ativo"
             }
           }
         }

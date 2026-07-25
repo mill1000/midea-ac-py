@@ -127,7 +127,7 @@
               "temperature_threshold": "Tenperatura atalasea"
             },
             "data_description": {
-              "temperature_threshold": "Konsigna gaindituz gero graduetan gertatzen den tenperatura-desbiderapena, HOZTEA/BEROTZEA aktibo gisa jakinarazten jarraitzen duena inaktibora itzuli aurretik"
+              "temperature_threshold": "Konsignaren gainetiko tenperatura-desbiderapena, graduetan, zeinetik aurrera HOZTEA/BEROTZEA aktibo ordez inaktibo gisa jakinaraziko den"
             }
           }
         }

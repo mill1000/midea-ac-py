@@ -130,7 +130,7 @@
               "temperature_threshold": "Temperature Threshold"
             },
             "data_description": {
-              "temperature_threshold": "Temperature overshoot past the setpoint, in degrees, that COOL/HEAT keeps reporting as active before falling back to idle"
+              "temperature_threshold": "Temperature overshoot past the setpoint, in degrees, from which COOL/HEAT reports idle instead of active"
             }
           }
         }

@@ -127,7 +127,7 @@
               "temperature_threshold": "Sıcaklık Eşiği"
             },
             "data_description": {
-              "temperature_threshold": "SOĞUTMA/ISITMA'nın boşta duruma dönmeden önce etkin olarak bildirilmeye devam ettiği, ayar noktasının üzerindeki sıcaklık aşımı (derece cinsinden)"
+              "temperature_threshold": "SOĞUTMA/ISITMA'nın etkin yerine boşta olarak bildirildiği, ayar noktasının üzerindeki sıcaklık aşımı (derece cinsinden)"
             }
           }
         }

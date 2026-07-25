@@ -127,7 +127,7 @@
               "temperature_threshold": "Temperaturterskel"
             },
             "data_description": {
-              "temperature_threshold": "Temperaturoverskridelse over settpunktet, i grader, der KJØLING/OPPVARMING fortsetter å rapporteres som aktiv før den faller tilbake til inaktiv"
+              "temperature_threshold": "Temperaturoverskridelse over settpunktet, i grader, som KJØLING/OPPVARMING rapporteres som inaktiv i stedet for aktiv fra og med"
             }
           }
         }

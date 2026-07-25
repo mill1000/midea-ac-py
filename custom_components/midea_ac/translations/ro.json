@@ -127,7 +127,7 @@
               "temperature_threshold": "Prag de temperatură"
             },
             "data_description": {
-              "temperature_threshold": "Depășirea temperaturii peste punctul de referință, în grade, pe durata căreia RĂCIRE/ÎNCĂLZIRE continuă să fie raportată ca activă înainte de a reveni la inactivă"
+              "temperature_threshold": "Depășirea temperaturii peste punctul de referință, în grade, de la care RĂCIRE/ÎNCĂLZIRE este raportată ca inactivă în loc de activă"
             }
           }
         }

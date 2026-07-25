@@ -127,7 +127,7 @@
               "temperature_threshold": "Llindar de temperatura"
             },
             "data_description": {
-              "temperature_threshold": "Desviació de temperatura per sobre del punt de consigna, en graus, durant la qual REFRIGERACIÓ/CALEFACCIÓ es continua informant com a activa abans de tornar a inactiva"
+              "temperature_threshold": "Desviació de temperatura per sobre del punt de consigna, en graus, a partir de la qual REFRIGERACIÓ/CALEFACCIÓ s'informa com a inactiva en lloc d'activa"
             }
           }
         }

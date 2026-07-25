@@ -127,7 +127,7 @@
               "temperature_threshold": "Teplotný prah"
             },
             "data_description": {
-              "temperature_threshold": "Prekročenie teploty nad nastavenú hodnotu, v stupňoch, počas ktorého sa CHLADENIE/KÚRENIE naďalej hlási ako aktívne, kým neprejde do nečinnosti"
+              "temperature_threshold": "Prekročenie teploty nad nastavenú hodnotu, v stupňoch, od ktorého sa CHLADENIE/KÚRENIE hlási ako nečinné namiesto aktívne"
             }
           }
         }

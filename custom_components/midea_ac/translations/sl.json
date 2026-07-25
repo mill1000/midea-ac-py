@@ -127,7 +127,7 @@
               "temperature_threshold": "Temperaturni prag"
             },
             "data_description": {
-              "temperature_threshold": "Preseganje temperature nad nastavljeno vrednostjo, v stopinjah, med katerim se HLAJENJE/OGREVANJE še naprej javlja kot aktivno, preden preide v mirovanje"
+              "temperature_threshold": "Preseganje temperature nad nastavljeno vrednostjo, v stopinjah, od katerega se HLAJENJE/OGREVANJE javlja kot mirujoče namesto aktivno"
             }
           }
         }
