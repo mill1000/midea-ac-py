@@ -53,14 +53,14 @@ _DEFAULT_OPTIONS = {
     CONF_SWING_ANGLE_RTL: False,
     CONF_CAPABILITY_OVERRIDES: "",
     CONF_MERGE_CAPABILITY_OVERRIDES: True,
-    CONF_HVAC_ACTION: {
-        CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
-    }
 }
 
 _DEFAULT_AC_OPTIONS = {
     CONF_BEEP: True,
     CONF_ESTIMATE_HVAC_ACTION: False,
+    CONF_HVAC_ACTION: {
+        CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
+    },
     CONF_FAN_SPEED_STEP: 1,
     CONF_ENERGY_SENSOR: {
         CONF_ENERGY_DATA_FORMAT: EnergyFormat.BCD,
@@ -550,15 +550,8 @@ class MideaOptionsFlow(OptionsFlow):
         }
     )
 
-    _CC_OPTION_SCHEMA = vol.Schema(
-        {
-            vol.Optional(CONF_HVAC_ACTION): _HVAC_ACTION_SCHEMA,
-        }
-    )
-
     _DEVICE_SCHEMAS = {
         DeviceType.AIR_CONDITIONER: _AC_OPTION_SCHEMA,
-        DeviceType.COMMERCIAL_AC: _CC_OPTION_SCHEMA,
     }
 
     async def async_step_init(self, user_input=None) -> ConfigFlowResult:

@@ -305,11 +305,9 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
             CONF_ESTIMATE_HVAC_ACTION: True,
             CONF_HVAC_ACTION: {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0},
         }, True, {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0}),
-        # Non-AC entry: estimate_hvac_action doesn't apply, but the
-        # temperature threshold still does since both AC and commercial
-        # entries derive hvac_action from the shared base implementation
-        (DeviceType.COMMERCIAL_AC, {}, None,
-         {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5}),
+        # Non-AC entry: neither option applies - hvac_action estimation
+        # isn't implemented for commercial entries
+        (DeviceType.COMMERCIAL_AC, {}, None, None),
     ],
 )
 async def test_config_entry_migration_from_6(

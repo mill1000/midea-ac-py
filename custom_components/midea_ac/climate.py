@@ -703,8 +703,9 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
-                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, _DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD),
+            # hvac_action isn't estimated for commercial AC devices (see
+            # hvac_action below), so this value is unused.
+            hvac_action_temperature_threshold=_DEFAULT_HVAC_ACTION_TEMPERATURE_THRESHOLD,
             supported_operation_modes=device.supported_operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,
@@ -712,6 +713,12 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
         )
 
         MideaClimateDevice.__init__(self, hass, coordinator, config)
+
+    @property
+    def hvac_action(self) -> HVACAction | None:
+        """Return the current running hvac action, used to select the state icon."""
+        # hvac_action estimation isn't implemented for commercial AC devices.
+        return None
 
     @property
     def supported_features(self) -> int:

@@ -207,19 +207,17 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=6)
 
-        # 1.6 -> 1.7: Add defaults for the new hvac_action options.
-        # estimate_hvac_action only applies to AC entries (see #451);
-        # temperature_threshold applies to both AC and commercial entries,
-        # since both derive hvac_action from the shared base implementation.
+        # 1.6 -> 1.7: Add defaults for the new hvac_action options. Both only
+        # apply to AC entries - hvac_action estimation isn't implemented for
+        # commercial entries.
         if config_entry.minor_version == 6:
             new_options = {**config_entry.options}
 
             if config_entry.data.get(CONF_DEVICE_TYPE) == DeviceType.AIR_CONDITIONER:
                 new_options.setdefault(CONF_ESTIMATE_HVAC_ACTION, False)
-
-            new_options.setdefault(CONF_HVAC_ACTION, {
-                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
-            })
+                new_options.setdefault(CONF_HVAC_ACTION, {
+                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
+                })
 
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=7)
