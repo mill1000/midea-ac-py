@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from msmart.const import DeviceType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.midea_ac.config_flow import _DEFAULT_OPTIONS
 from custom_components.midea_ac.const import (
     CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
     CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
@@ -297,10 +298,13 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
     ("device_type", "existing_options",
      "expected_estimate_hvac_action", "expected_hvac_action"),
     [
-        # AC entry missing both options gets both defaults backfilled
-        (DeviceType.AIR_CONDITIONER, {}, False,
-         {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5}),
-        # AC entry with explicit values keeps them untouched
+        # AC entry missing both options gets both defaults backfilled, from
+        # the same _DEFAULT_OPTIONS the options flow uses
+        (DeviceType.AIR_CONDITIONER, {},
+         _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION],
+         _DEFAULT_OPTIONS[CONF_HVAC_ACTION]),
+        # AC entry with explicit values (deliberately not matching the
+        # defaults) keeps them untouched
         (DeviceType.AIR_CONDITIONER, {
             CONF_ESTIMATE_HVAC_ACTION: True,
             CONF_HVAC_ACTION: {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0},
@@ -308,8 +312,9 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         # Commercial entry missing both options gets both defaults
         # backfilled too - estimation only needs current/target temperature,
         # which both device types report
-        (DeviceType.COMMERCIAL_AC, {}, False,
-         {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5}),
+        (DeviceType.COMMERCIAL_AC, {},
+         _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION],
+         _DEFAULT_OPTIONS[CONF_HVAC_ACTION]),
     ],
 )
 async def test_config_entry_migration_from_6(
