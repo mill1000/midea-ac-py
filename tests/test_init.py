@@ -9,18 +9,13 @@ from homeassistant.core import HomeAssistant
 from msmart.const import DeviceType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
-                                              CONF_CAPABILITY_OVERRIDES,
-                                              CONF_DEVICE_TYPE,
-                                              CONF_ENERGY_DATA_FORMAT,
-                                              CONF_ENERGY_DATA_SCALE,
-                                              CONF_ENERGY_SENSOR,
-                                              CONF_ESTIMATE_HVAC_ACTION,
-                                              CONF_POWER_SENSOR,
-                                              CONF_SHOW_ALL_PRESETS,
-                                              CONF_USE_FAN_ONLY_WORKAROUND,
-                                              CONF_WORKAROUNDS, DOMAIN,
-                                              EnergyFormat)
+from custom_components.midea_ac.const import (
+    CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
+    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+    CONF_ENERGY_SENSOR, CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION,
+    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_POWER_SENSOR,
+    CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS,
+    DOMAIN, EnergyFormat)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -299,22 +294,30 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
 
 
 @pytest.mark.parametrize(
-    ("device_type", "existing_options", "expected_value"),
+    ("device_type", "existing_options",
+     "expected_estimate_hvac_action", "expected_hvac_action"),
     [
-        # AC entry missing the option gets the default backfilled
-        (DeviceType.AIR_CONDITIONER, {}, False),
-        # AC entry with an explicit value keeps it untouched
+        # AC entry missing both options gets both defaults backfilled
+        (DeviceType.AIR_CONDITIONER, {}, False,
+         {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5}),
+        # AC entry with explicit values keeps them untouched
         (DeviceType.AIR_CONDITIONER, {
-         CONF_ESTIMATE_HVAC_ACTION: False}, False),
-        # Non-AC entry is left alone, the option doesn't apply to it
-        (DeviceType.COMMERCIAL_AC, {}, None),
+            CONF_ESTIMATE_HVAC_ACTION: True,
+            CONF_HVAC_ACTION: {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0},
+        }, True, {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0}),
+        # Non-AC entry: estimate_hvac_action doesn't apply, but the
+        # temperature threshold still does since both AC and commercial
+        # entries derive hvac_action from the shared base implementation
+        (DeviceType.COMMERCIAL_AC, {}, None,
+         {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5}),
     ],
 )
 async def test_config_entry_migration_from_6(
     hass: HomeAssistant,
     device_type: DeviceType,
     existing_options: dict[str, Any],
-    expected_value: bool | None,
+    expected_estimate_hvac_action: bool | None,
+    expected_hvac_action: dict[str, float],
 ) -> None:
     """Test migration of config entry from 1.6"""
 
@@ -337,4 +340,6 @@ async def test_config_entry_migration_from_6(
     assert mock_config_entry.version == 1
     assert mock_config_entry.minor_version == 7
     assert mock_config_entry.options.get(
-        CONF_ESTIMATE_HVAC_ACTION) == expected_value
+        CONF_ESTIMATE_HVAC_ACTION) == expected_estimate_hvac_action
+    assert mock_config_entry.options.get(
+        CONF_HVAC_ACTION) == expected_hvac_action
