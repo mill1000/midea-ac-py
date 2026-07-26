@@ -68,17 +68,15 @@ _DEFAULT_AC_OPTIONS = {
     }
 }
 
-_CLOUD_CREDENTIALS = {
-    "DE": ("midea_eu@mailinator.com", "das_ist_passwort1"),
-    "KR": ("midea_sea@mailinator.com", "password_for_sea1")
-}
-
 
 class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Midea Smart AC."""
 
     VERSION = 1
     MINOR_VERSION = 6
+
+    _discovered_devices: list[Device] = []
+    _country_code: str = CONF_DEFAULT_CLOUD_COUNTRY
 
     async def async_step_user(self, user_input=None) -> ConfigFlowResult:
         """Handle a config flow initialized by the user."""
@@ -91,26 +89,23 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the discovery step of config flow."""
-        errors = {}
+        errors: dict[str, str] = {}
+        placeholders: dict[str, str] = {}
 
         if user_input is not None:
-            country_code = cast(str, user_input.get(CONF_COUNTRY_CODE))
+            self._country_code = cast(str, user_input.get(
+                CONF_COUNTRY_CODE) or CONF_DEFAULT_CLOUD_COUNTRY)
 
             # If host was not provided, discover all devices
             if not (host := user_input.get(CONF_HOST)):
-                return await self.async_step_pick_device(country_code=country_code)
-
-            # Get credentials for region
-            account, password = _CLOUD_CREDENTIALS.get(
-                country_code, (None, None))
+                return await self.async_step_pick_device()
 
             # Attempt to find specified device
             device = await Discover.discover_single(
                 host,
                 auto_connect=False,
                 timeout=2,
-                account=account,
-                password=password,
+                region=self._country_code,
                 get_async_client=self._get_async_client
             )
 
@@ -124,17 +119,19 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
-                try:
-                    if await Discover.connect(device):
-                        assert isinstance(device, (AC, CC))
-                        return await self.async_step_show_token_key(device=device)
-                    else:
-                        # Indicate a connection could not be made
-                        return self.async_abort(reason="cannot_connect")
-                except CloudError:
-                    # Catch cloud errors and report to user
-                    return self.async_abort(reason="cloud_connection_failed")
+                result, errors, placeholders = await self._async_connect_device(device)
+                if result is not None:
+                    return result
 
+        return self._show_discover_form(user_input, errors, placeholders)
+
+    def _show_discover_form(
+        self,
+        user_input: dict[str, Any] | None,
+        errors: dict[str, str],
+        placeholders: dict[str, str]
+    ) -> ConfigFlowResult:
+        """Show the discovery form, optionally with errors."""
         data_schema = self.add_suggested_values_to_schema(
             vol.Schema({
                 vol.Optional(CONF_HOST, default=""): str,
@@ -144,60 +141,58 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                     CountrySelectorConfig(
                         countries=CONF_CLOUD_COUNTRY_CODES)
                 ),
-            }), user_input)
+            }), user_input or {CONF_COUNTRY_CODE: self._country_code})
 
         return self.async_show_form(
             step_id="discover",
             data_schema=data_schema,
-            errors=errors
+            errors=errors,
+            description_placeholders=placeholders
         )
 
     async def async_step_pick_device(
-        self, user_input: dict[str, Any] | None = None,
-        *,
-        country_code: str = CONF_DEFAULT_CLOUD_COUNTRY
+        self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle the pick device step of config flow."""
+        errors: dict[str, str] = {}
+        placeholders: dict[str, str] = {}
 
         if user_input is not None:
             # Find selected device
-            device = next(dev
-                          for dev in self._discovered_devices
-                          if dev.id == user_input[CONF_ID])
+            device = next((dev
+                           for dev in self._discovered_devices
+                           if dev.id == user_input[CONF_ID]), None)
 
-            if device:
+            if device is None:
+                errors["base"] = "device_not_found"
+            else:
                 # Check if device has already been configured
                 await self.async_set_unique_id(str(device.id))
                 self._abort_if_unique_id_configured()
 
                 # Finish connection
-                try:
-                    if await Discover.connect(device):
-                        assert isinstance(device, (AC, CC))
-                        return await self.async_step_show_token_key(device=device)
-                    else:
-                        # Indicate a connection could not be made
-                        return self.async_abort(reason="cannot_connect")
-                except CloudError:
-                    # Catch cloud errors and report to user
-                    return self.async_abort(reason="cloud_connection_failed")
+                result, errors, placeholders = await self._async_connect_device(device)
+                if result is not None:
+                    return result
+
+                # A cloud failure is usually a wrong region, but the region
+                # can only be changed on the discovery form. Return there so
+                # the error is actionable instead of stranding the user here.
+                if errors.get("base") == "cloud_connection_failed":
+                    return self._show_discover_form(None, errors, placeholders)
+        else:
+            # Discover all devices
+            self._discovered_devices = await Discover.discover(
+                auto_connect=False,
+                timeout=2,
+                region=self._country_code,
+                get_async_client=self._get_async_client
+            )
 
         # Create a set of already configured devices by ID
         configured_devices = {
             entry.unique_id for entry in self._async_current_entries()
         }
-
-        # Get credentials for region
-        account, password = _CLOUD_CREDENTIALS.get(country_code, (None, None))
-
-        # Discover all devices
-        self._discovered_devices = await Discover.discover(
-            auto_connect=False,
-            timeout=2,
-            account=account,
-            password=password,
-            get_async_client=self._get_async_client
-        )
 
         # Create a dict of supported devices
         supported_devices = {
@@ -221,7 +216,9 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
                 step_id="pick_device",
                 data_schema=vol.Schema({
                     vol.Required(CONF_ID): vol.In(new_devices)
-                })
+                }),
+                errors=errors,
+                description_placeholders=placeholders
             )
 
         # No new devices, show existing devices
@@ -398,6 +395,29 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
     def _get_async_client(self, *args, **kwargs) -> httpx.AsyncClient:
         """Create an httpx AsyncClient in a HA friendly way."""
         return httpx_client.get_async_client(self.hass, *args, **kwargs)
+
+    async def _async_connect_device(
+        self, device: Device
+    ) -> tuple[ConfigFlowResult | None, dict[str, str], dict[str, str]]:
+        """Connect to a discovered device and advance the flow.
+
+        Returns the next flow result on success. On failure returns no result
+        along with the errors and description placeholders needed to redisplay
+        the current form, so the user can correct their input and retry.
+        """
+        try:
+            connected = await Discover.connect(device)
+        except CloudError as e:
+            # Surface the underlying cloud error, it's often actionable
+            _LOGGER.error("Could not connect to the Midea cloud. Error: %s", e)
+            return None, {"base": "cloud_connection_failed"}, {"error": str(e)}
+
+        if not connected:
+            # Indicate a connection could not be made
+            return None, {"base": "cannot_connect"}, {}
+
+        assert isinstance(device, (AC, CC))
+        return await self.async_step_show_token_key(device=device), {}, {}
 
     async def _test_manual_connection(self, config) -> AC | CC | None:
         DEVICE_TYPES = {
