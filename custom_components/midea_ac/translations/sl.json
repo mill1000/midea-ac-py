@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Omogoči piskanje(Beep)",
-          "estimate_hvac_action": "Oceni HVAC dejanje",
+          "enable_hvac_action": "Omogoči dejanje HVAC",
           "temp_step": "Temperaturni korak",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "Najdalši čas povezave",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "estimate_hvac_action": "Prikazuje ocenjeno stanje delovanja (hlajenje/gretje/mirovanje) na kartici klime. Naprava ne sporoča dejanskega stanja, zato gre le za približek.",
+          "enable_hvac_action": "Prikazuje stanje hlajenja/gretja/mirovanja na kartici klime samo za način Hlajenje/Gretje, na podlagi trenutne temperature glede na ciljno in spodaj navedenega praga. Ni na voljo za način Auto ali druge načine, ker naprava ne sporoča, v katero smer dejansko deluje.",
           "temp_step": "Velikost koraka za nastavljeno temperaturo",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 15 sekund)"

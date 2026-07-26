@@ -26,7 +26,7 @@ from msmart.device import CommercialAirConditioner as CC
 from msmart.utils import MideaIntEnum
 
 from .config_flow import _DEFAULT_OPTIONS
-from .const import (CONF_BEEP, CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION,
+from .const import (CONF_BEEP, CONF_ENABLE_HVAC_ACTION, CONF_HVAC_ACTION,
                     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     PRESET_IECO, PRESET_SILENT, MideaDevice)
@@ -75,7 +75,7 @@ class ClimateConfig:
     temperature_step: float
     min_target_temperature: float
     max_target_temperature: float
-    estimate_hvac_action: bool
+    enable_hvac_action: bool
     hvac_action_temperature_threshold: float
     supported_operation_modes: Sequence[MideaIntEnum]
     supported_fan_speeds: Sequence[MideaIntEnum]
@@ -106,7 +106,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self._target_temperature_step = config.temperature_step
         self._min_temperature = config.min_target_temperature
         self._max_temperature = config.max_target_temperature
-        self._estimate_hvac_action = config.estimate_hvac_action
+        self._enable_hvac_action = config.enable_hvac_action
         self._hvac_action_temperature_threshold = config.hvac_action_temperature_threshold
 
         # Setup default supported features
@@ -302,7 +302,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
     def hvac_action(self) -> HVACAction | None:
         """Return the current HVAC action."""
 
-        if not self._estimate_hvac_action:
+        if not self._enable_hvac_action:
             return None
 
         # For basic modes return the matching action
@@ -315,7 +315,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
             return action
 
         # In auto mode the device doesn't report which direction it is
-        # actually operating in, so estimating from current vs. target
+        # actually operating in, so deriving one from current vs. target
         # temperature can be actively wrong (e.g. reporting "cooling" while
         # the unit is heating past an overshoot). Report nothing rather than
         # a potentially misleading value. See
@@ -323,16 +323,21 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         if self.hvac_mode == HVACMode.AUTO:
             return None
 
-        # The device doesn't report actual activity, so we'll estimate the
-        # action based on sensors and set points instead. Per the HA core
-        # hvac_action documentation
+        # HEAT/COOL are the only modes where the operating direction is
+        # unambiguous. Any other mode is unsupported and we won't guess, so
+        # report no action rather than a potentially misleading one.
+        if self.hvac_mode not in (HVACMode.COOL, HVACMode.HEAT):
+            return None
+
+        # The device doesn't report actual activity, but for HEAT/COOL its
+        # intent is known, so hvac_action can be derived from current vs.
+        # target temperature. Per the HA core hvac_action documentation
         # (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action)
-        # and the common interpretation across many integrations, a device
-        # set to HEAT (or COOL) that has already reached its target
-        # temperature is no longer actively heating (or cooling): it should
-        # report IDLE rather than HEATING/COOLING once the setpoint is
-        # reached, regardless of whether the compressor is still physically
-        # cycling.
+        # and standard practice in other integrations, a device set to HEAT
+        # (or COOL) that has already reached its target temperature is no
+        # longer actively pursuing that intent: it should report IDLE
+        # rather than HEATING/COOLING once the setpoint is reached,
+        # regardless of whether the compressor is still physically cycling.
         current = self.current_temperature
         target = self.target_temperature
 
@@ -346,14 +351,11 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
                 else HVACAction.COOLING
             )
 
-        if self.hvac_mode == HVACMode.HEAT:
-            return (
-                HVACAction.IDLE
-                if current >= target + self._hvac_action_temperature_threshold
-                else HVACAction.HEATING
-            )
-
-        return HVACAction.IDLE
+        return (
+            HVACAction.IDLE
+            if current >= target + self._hvac_action_temperature_threshold
+            else HVACAction.HEATING
+        )
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
@@ -451,8 +453,8 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            estimate_hvac_action=options.get(
-                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION]),
+            enable_hvac_action=options.get(
+                CONF_ENABLE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ENABLE_HVAC_ACTION]),
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),
@@ -691,8 +693,8 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             temperature_step=options.get(CONF_TEMP_STEP, 1.0),
             min_target_temperature=device.min_target_temperature,
             max_target_temperature=device.max_target_temperature,
-            estimate_hvac_action=options.get(
-                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION]),
+            enable_hvac_action=options.get(
+                CONF_ENABLE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ENABLE_HVAC_ACTION]),
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),

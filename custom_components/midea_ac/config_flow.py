@@ -33,11 +33,11 @@ from msmart.lan import AuthenticationError
 
 from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_CLOUD_COUNTRY_CODES, CONF_DEFAULT_CLOUD_COUNTRY,
-                    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
-                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_ESTIMATE_HVAC_ACTION, CONF_FAN_SPEED_STEP,
-                    CONF_HVAC_ACTION, CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
-                    CONF_KEY, CONF_MAX_CONNECTION_LIFETIME,
+                    CONF_DEVICE_TYPE, CONF_ENABLE_HVAC_ACTION,
+                    CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+                    CONF_ENERGY_SENSOR, CONF_FAN_SPEED_STEP, CONF_HVAC_ACTION,
+                    CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_KEY,
+                    CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
@@ -51,7 +51,7 @@ _DEFAULT_OPTIONS = {
     CONF_SWING_ANGLE_RTL: False,
     CONF_CAPABILITY_OVERRIDES: "",
     CONF_MERGE_CAPABILITY_OVERRIDES: True,
-    CONF_ESTIMATE_HVAC_ACTION: False,
+    CONF_ENABLE_HVAC_ACTION: False,
     CONF_HVAC_ACTION: {
         CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
     },
@@ -506,7 +506,7 @@ class MideaOptionsFlow(OptionsFlow):
                 )
             ),
             vol.Optional(CONF_MERGE_CAPABILITY_OVERRIDES): cv.boolean,
-            vol.Optional(CONF_ESTIMATE_HVAC_ACTION): cv.boolean,
+            vol.Optional(CONF_ENABLE_HVAC_ACTION): cv.boolean,
             vol.Optional(CONF_HVAC_ACTION): _HVAC_ACTION_SCHEMA,
         }
     )

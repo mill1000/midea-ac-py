@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "启用蜂鸣器",
-          "estimate_hvac_action": "估算 HVAC 状态",
+          "enable_hvac_action": "启用 HVAC 状态",
           "temp_step": "温度步进",
           "fan_speed_step": "Fan Speed Step",
           "max_connection_lifetime": "最大连接有效期",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "estimate_hvac_action": "在气候卡片上显示估计的运行状态（制冷/制热/空闲）。设备不会报告其实际状态，因此这只是一个近似值。",
+          "enable_hvac_action": "仅在制冷/制热模式下，根据当前温度与目标温度及下方阈值，在气候卡片上显示制冷/制热/空闲状态。自动模式或其他模式不支持此功能，因为设备不会报告其实际运行方向。",
           "temp_step": "温度设定的步进值",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "单次连接的最大有效期(单位为秒，最短15秒)"

@@ -76,14 +76,14 @@
         "description": "Erweiterte Integrationseinstellungen.",
         "data": {
           "prompt_tone": "Signalton aktivieren",
-          "estimate_hvac_action": "HVAC-Aktion schätzen",
+          "enable_hvac_action": "HVAC-Aktion aktivieren",
           "temp_step": "Temperaturschritte",
           "fan_speed_step": "Lüftergeschwindigkeitsschritte",
           "max_connection_lifetime": "Maximale Verbindungsdauer",
           "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
         },
         "data_description": {
-          "estimate_hvac_action": "Zeigt einen geschätzten Betriebszustand (Kühlen/Heizen/Leerlauf) auf der Klimakarte an. Das Gerät meldet seinen tatsächlichen Zustand nicht, daher handelt es sich nur um eine Annäherung.",
+          "enable_hvac_action": "Zeigt den Kühl-/Heiz-/Leerlaufzustand auf der Klimakarte nur für den Modus Kühlen/Heizen an, basierend auf der aktuellen und der Zieltemperatur sowie der unten angegebenen Schwelle. Nicht verfügbar für Auto oder andere Modi, da das Gerät nicht meldet, in welche Richtung es tatsächlich arbeitet.",
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
           "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"

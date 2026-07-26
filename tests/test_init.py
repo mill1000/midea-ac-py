@@ -12,8 +12,8 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.midea_ac.config_flow import _DEFAULT_OPTIONS
 from custom_components.midea_ac.const import (
     CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
-    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
-    CONF_ENERGY_SENSOR, CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION,
+    CONF_DEVICE_TYPE, CONF_ENABLE_HVAC_ACTION, CONF_ENERGY_DATA_FORMAT,
+    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_HVAC_ACTION,
     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_POWER_SENSOR,
     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS,
     DOMAIN, EnergyFormat)
@@ -296,24 +296,24 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
 
 @pytest.mark.parametrize(
     ("device_type", "existing_options",
-     "expected_estimate_hvac_action", "expected_hvac_action"),
+     "expected_enable_hvac_action", "expected_hvac_action"),
     [
         # AC entry missing both options gets both defaults backfilled, from
         # the same _DEFAULT_OPTIONS the options flow uses
         (DeviceType.AIR_CONDITIONER, {},
-         _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION],
+         _DEFAULT_OPTIONS[CONF_ENABLE_HVAC_ACTION],
          _DEFAULT_OPTIONS[CONF_HVAC_ACTION]),
         # AC entry with explicit values (deliberately not matching the
         # defaults) keeps them untouched
         (DeviceType.AIR_CONDITIONER, {
-            CONF_ESTIMATE_HVAC_ACTION: True,
+            CONF_ENABLE_HVAC_ACTION: True,
             CONF_HVAC_ACTION: {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0},
         }, True, {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0}),
         # Commercial entry missing both options gets both defaults
-        # backfilled too - estimation only needs current/target temperature,
-        # which both device types report
+        # backfilled too - deriving hvac_action only needs current/target
+        # temperature, which both device types report
         (DeviceType.COMMERCIAL_AC, {},
-         _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION],
+         _DEFAULT_OPTIONS[CONF_ENABLE_HVAC_ACTION],
          _DEFAULT_OPTIONS[CONF_HVAC_ACTION]),
     ],
 )
@@ -321,7 +321,7 @@ async def test_config_entry_migration_from_6(
     hass: HomeAssistant,
     device_type: DeviceType,
     existing_options: dict[str, Any],
-    expected_estimate_hvac_action: bool | None,
+    expected_enable_hvac_action: bool | None,
     expected_hvac_action: dict[str, float],
 ) -> None:
     """Test migration of config entry from 1.6"""
@@ -345,6 +345,6 @@ async def test_config_entry_migration_from_6(
     assert mock_config_entry.version == 1
     assert mock_config_entry.minor_version == 7
     assert mock_config_entry.options.get(
-        CONF_ESTIMATE_HVAC_ACTION) == expected_estimate_hvac_action
+        CONF_ENABLE_HVAC_ACTION) == expected_enable_hvac_action
     assert mock_config_entry.options.get(
         CONF_HVAC_ACTION) == expected_hvac_action

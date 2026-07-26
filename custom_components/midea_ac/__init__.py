@@ -18,9 +18,9 @@ from msmart.lan import AuthenticationError
 
 from .config_flow import _DEFAULT_OPTIONS
 from .const import (CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
-                    CONF_DEVICE_TYPE, CONF_ENERGY_DATA_FORMAT,
-                    CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR,
-                    CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION, CONF_KEY,
+                    CONF_DEVICE_TYPE, CONF_ENABLE_HVAC_ACTION,
+                    CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
+                    CONF_ENERGY_SENSOR, CONF_HVAC_ACTION, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND,
@@ -208,14 +208,14 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
                 config_entry, options=new_options, minor_version=6)
 
         # 1.6 -> 1.7: Add defaults for the new hvac_action options. Both
-        # options apply to every device type - estimation only needs
-        # current/target temperature, which AC and commercial entries alike
-        # report.
+        # options apply to every device type - deriving hvac_action only
+        # needs current/target temperature, which AC and commercial entries
+        # alike report.
         if config_entry.minor_version == 6:
             new_options = {**config_entry.options}
 
             new_options.setdefault(
-                CONF_ESTIMATE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ESTIMATE_HVAC_ACTION])
+                CONF_ENABLE_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_ENABLE_HVAC_ACTION])
             new_options.setdefault(
                 CONF_HVAC_ACTION, _DEFAULT_OPTIONS[CONF_HVAC_ACTION])
 

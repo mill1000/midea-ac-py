@@ -2,7 +2,7 @@
 
 import logging
 from typing import Mapping
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 import pytest
 from homeassistant.components.climate.const import (PRESET_ECO, PRESET_SLEEP,
@@ -18,7 +18,7 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateCCDevice,
                                                 MideaClimateDevice)
 from custom_components.midea_ac.const import (
-    CONF_ESTIMATE_HVAC_ACTION, CONF_HVAC_ACTION,
+    CONF_ENABLE_HVAC_ACTION, CONF_HVAC_ACTION,
     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -43,7 +43,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
-        estimate_hvac_action=True,
+        enable_hvac_action=True,
         hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[],
@@ -80,7 +80,7 @@ async def test_base_config(
         temperature_step=1,
         min_target_temperature=17,
         max_target_temperature=30,
-        estimate_hvac_action=True,
+        enable_hvac_action=True,
         hvac_action_temperature_threshold=0.5,
         supported_operation_modes=[],
         supported_fan_speeds=[AC.FanSpeed.AUTO],
@@ -302,7 +302,7 @@ async def test_ac_hvac_action(
     mock_coordinator.device = mock_device
 
     climate_device = MideaClimateACDevice(
-        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
 
     assert climate_device.hvac_action == expected_action
 
@@ -324,7 +324,7 @@ async def test_ac_hvac_action_defrosting(
     mock_coordinator.device = mock_device
 
     climate_device = MideaClimateACDevice(
-        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
 
     assert climate_device.hvac_action == HVACAction.DEFROSTING
 
@@ -347,12 +347,12 @@ async def test_ac_hvac_action_custom_threshold(
     # A 1 degree undershoot is beyond the default 0.5 threshold, so the
     # default threshold has already fallen back to idle
     default_climate_device = MideaClimateACDevice(
-        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
     assert default_climate_device.hvac_action == HVACAction.IDLE
 
     # ... but a custom, wider threshold keeps reporting active for longer
     options = {
-        CONF_ESTIMATE_HVAC_ACTION: True,
+        CONF_ENABLE_HVAC_ACTION: True,
         CONF_HVAC_ACTION: {
             CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 2.0,
         }
@@ -362,13 +362,40 @@ async def test_ac_hvac_action_custom_threshold(
     assert custom_climate_device.hvac_action == HVACAction.COOLING
 
 
+async def test_ac_hvac_action_unsupported_mode(
+    hass: HomeAssistant,
+):
+    """Test hvac_action reports no action for a mode other than HEAT/COOL/AUTO/basic ones."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = AC.OperationalMode.COOL
+    mock_device._indoor_temperature = 22
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateACDevice(
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
+
+    # No supported operational mode maps to HVACMode.HEAT_COOL today, but we
+    # still shouldn't guess an action for it if one ever did.
+    with patch.object(
+        type(climate_device), "hvac_mode",
+        new_callable=PropertyMock, return_value=HVACMode.HEAT_COOL,
+    ):
+        assert climate_device.hvac_action is None
+
+
 @pytest.mark.parametrize(
     ("options", "expected_action"),
     [
         # Default (option absent) - behaves as if disabled
         ({}, None),
-        (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], True), HVACAction.COOLING),
-        (dict.fromkeys([CONF_ESTIMATE_HVAC_ACTION], False), None),
+        (dict.fromkeys([CONF_ENABLE_HVAC_ACTION], True), HVACAction.COOLING),
+        (dict.fromkeys([CONF_ENABLE_HVAC_ACTION], False), None),
     ],
 )
 async def test_ac_hvac_action_enable_option(
@@ -376,7 +403,7 @@ async def test_ac_hvac_action_enable_option(
     options: Mapping[str, bool],
     expected_action: HVACAction | None,
 ):
-    """Test the estimate_hvac_action option gates hvac_action reporting."""
+    """Test the enable_hvac_action option gates hvac_action reporting."""
 
     mock_device = AC("0.0.0.0", 0, 0)
     mock_device._power_state = True
@@ -422,7 +449,7 @@ async def test_ac_hvac_action_disabled_always_none(
     mock_coordinator.device = mock_device
 
     climate_device = MideaClimateACDevice(
-        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: False})
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: False})
 
     assert climate_device.hvac_action is None
 
@@ -475,7 +502,7 @@ async def test_cc_hvac_action(
     mock_coordinator.device = mock_device
 
     climate_device = MideaClimateCCDevice(
-        hass, mock_coordinator, {CONF_ESTIMATE_HVAC_ACTION: True})
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
 
     assert climate_device.hvac_action == expected_action
 

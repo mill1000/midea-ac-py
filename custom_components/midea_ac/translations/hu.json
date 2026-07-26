@@ -75,14 +75,14 @@
         "description": "Advanced integration settings.",
         "data": {
           "prompt_tone": "Hangjelzés engedélyezése",
-          "estimate_hvac_action": "HVAC művelet becslése",
+          "enable_hvac_action": "HVAC művelet engedélyezése",
           "temp_step": "Hőmérséklet lépésköz",
           "fan_speed_step": "Ventilátor sebesség lépésköz",
           "max_connection_lifetime": "Maximális kapcsolat időtartama",
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "estimate_hvac_action": "Becsült működési állapotot (hűtés/fűtés/üresjárat) jelenít meg a klíma kártyán. Az eszköz nem jelzi a tényleges állapotát, ezért ez csak közelítés.",
+          "enable_hvac_action": "A klíma kártyán csak Hűtés/Fűtés módban jeleníti meg a hűtési/fűtési/üresjárati állapotot, az aktuális és a célhőmérséklet, valamint az alábbi küszöbérték alapján. Automata módban vagy más módokban nem érhető el, mivel a készülék nem jelzi, milyen irányban működik ténylegesen.",
           "temp_step": "A hőmérséklet beállítás lépésköze",
           "fan_speed_step": "A ventilátor sebesség egyéni lépésköze",
           "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 15 másodperc)"
