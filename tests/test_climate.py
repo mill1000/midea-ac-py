@@ -538,3 +538,58 @@ async def test_cc_hvac_action_disabled_always_none(
     climate_device = MideaClimateCCDevice(hass, mock_coordinator, {})
 
     assert climate_device.hvac_action is None
+
+
+async def test_cc_hvac_action_unsupported_mode(
+    hass: HomeAssistant,
+):
+    """Test hvac_action reports no action for a mode other than HEAT/COOL/AUTO/basic ones."""
+
+    mock_device = CC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = CC.OperationalMode.COOL
+    mock_device._indoor_temperature = 22
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateCCDevice(
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
+
+    # No supported operational mode maps to HVACMode.HEAT_COOL today, but we
+    # still shouldn't guess an action for it if one ever did.
+    with patch.object(
+        type(climate_device), "hvac_mode",
+        new_callable=PropertyMock, return_value=HVACMode.HEAT_COOL,
+    ):
+        assert climate_device.hvac_action is None
+
+
+async def test_cc_hvac_action_never_defrosting(
+    hass: HomeAssistant,
+):
+    """Test hvac_action never reports DEFROSTING for the CC device.
+
+    Unlike the AC device, commercial units don't expose a defrost signal,
+    and MideaClimateCCDevice doesn't override hvac_action to check for one.
+    """
+
+    mock_device = MagicMock()
+    mock_device.power_state = True
+    mock_device.operational_mode = CC.OperationalMode.HEAT
+    mock_device.indoor_temperature = 22
+    mock_device.target_temperature = 24
+    # A real CC device has no defrost_active attribute at all, but even if
+    # something set a defrost-like flag, hvac_action must ignore it.
+    mock_device.defrost_active = True
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    climate_device = MideaClimateCCDevice(
+        hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: True})
+
+    assert climate_device.hvac_action == HVACAction.HEATING
