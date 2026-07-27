@@ -14,6 +14,7 @@ from custom_components.midea_ac.const import (
     CONF_ADDITIONAL_OPERATION_MODES, CONF_CAPABILITY_OVERRIDES,
     CONF_DEVICE_TYPE, CONF_ENABLE_HVAC_ACTION, CONF_ENERGY_DATA_FORMAT,
     CONF_ENERGY_DATA_SCALE, CONF_ENERGY_SENSOR, CONF_HVAC_ACTION,
+    CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_POWER_SENSOR,
     CONF_SHOW_ALL_PRESETS, CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS,
     DOMAIN, EnergyFormat)
@@ -307,8 +308,25 @@ async def test_config_entry_migration_from_1(hass: HomeAssistant) -> None:
         # defaults) keeps them untouched
         (DeviceType.AIR_CONDITIONER, {
             CONF_ENABLE_HVAC_ACTION: True,
+            CONF_HVAC_ACTION: {
+                CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0,
+                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK: False,
+            },
+        }, True, {
+            CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0,
+            CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK: False,
+        }),
+        # AC entry with a partial hvac_action dict (only threshold set, e.g.
+        # from before derive_from_temp_fallback existed) gets just the
+        # missing sub-key backfilled, not the whole dict skipped
+        (DeviceType.AIR_CONDITIONER, {
+            CONF_ENABLE_HVAC_ACTION: True,
             CONF_HVAC_ACTION: {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0},
-        }, True, {CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0}),
+        }, True, {
+            CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 1.0,
+            CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK:
+                _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK],
+        }),
         # Commercial entry missing both options gets both defaults
         # backfilled too - deriving hvac_action only needs current/target
         # temperature, which both device types report
