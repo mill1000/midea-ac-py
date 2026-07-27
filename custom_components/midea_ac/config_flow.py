@@ -159,27 +159,24 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             # Find selected device
-            device = next((dev
-                           for dev in self._discovered_devices
-                           if dev.id == user_input[CONF_ID]), None)
+            device = next(dev
+                          for dev in self._discovered_devices
+                          if dev.id == user_input[CONF_ID])
 
-            if device is None:
-                errors["base"] = "device_not_found"
-            else:
-                # Check if device has already been configured
-                await self.async_set_unique_id(str(device.id))
-                self._abort_if_unique_id_configured()
+            # Check if device has already been configured
+            await self.async_set_unique_id(str(device.id))
+            self._abort_if_unique_id_configured()
 
-                # Finish connection
-                result, errors, placeholders = await self._async_connect_device(device)
-                if result is not None:
-                    return result
+            # Finish connection
+            result, errors, placeholders = await self._async_connect_device(device)
+            if result is not None:
+                return result
 
-                # A cloud failure is usually a wrong region, but the region
-                # can only be changed on the discovery form. Return there so
-                # the error is actionable instead of stranding the user here.
-                if errors.get("base") == "cloud_connection_failed":
-                    return self._show_discover_form(None, errors, placeholders)
+            # A cloud failure is usually a wrong region, but the region
+            # can only be changed on the discovery form. Return there so
+            # the error is actionable instead of stranding the user here.
+            if errors.get("base") == "cloud_connection_failed":
+                return self._show_discover_form(None, errors, placeholders)
         else:
             # Discover all devices
             self._discovered_devices = await Discover.discover(
