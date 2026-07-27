@@ -441,7 +441,7 @@ async def test_manual_flow_cc_device(hass: HomeAssistant) -> None:
         assert "errors" not in result
 
 
-async def test_ac_device_does_not_leak_default_options_into_later_cc_device(
+async def test_default_options_isolation(
     hass: HomeAssistant,
 ) -> None:
     """Test that configuring an AC device doesn't affect the default options given to a CC device configured afterward."""
