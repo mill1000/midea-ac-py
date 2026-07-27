@@ -19,6 +19,7 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateDevice)
 from custom_components.midea_ac.const import (
     CONF_ENABLE_HVAC_ACTION, CONF_HVAC_ACTION,
+    CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -454,6 +455,43 @@ async def test_ac_hvac_action_disabled_always_none(
         hass, mock_coordinator, {CONF_ENABLE_HVAC_ACTION: False})
 
     assert climate_device.hvac_action is None
+
+
+@pytest.mark.parametrize(
+    ("operational_mode", "expected_action"),
+    [
+        (AC.OperationalMode.COOL, None),
+        (AC.OperationalMode.HEAT, None),
+        (AC.OperationalMode.AUTO, None),
+    ],
+)
+async def test_ac_hvac_action_fallback_disabled(
+    hass: HomeAssistant,
+    operational_mode: AC.OperationalMode,
+    expected_action: HVACAction | None,
+):
+    """Test hvac_action returns None when fallback is disabled, even if enable_hvac_action=True."""
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = operational_mode
+    mock_device._indoor_temperature = 26
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    options = {
+        CONF_ENABLE_HVAC_ACTION: True,
+        CONF_HVAC_ACTION: {
+            CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK: False,
+        }
+    }
+    climate_device = MideaClimateACDevice(hass, mock_coordinator, options)
+
+    # With fallback disabled, hvac_action should be None for COOL/HEAT/AUTO modes
+    assert climate_device.hvac_action is expected_action
 
 
 @pytest.mark.parametrize(
