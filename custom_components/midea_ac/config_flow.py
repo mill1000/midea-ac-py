@@ -462,9 +462,10 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         }
 
         # Build default options based on device type
-        default_options = _DEFAULT_OPTIONS
         if device.type == DeviceType.AIR_CONDITIONER:
-            default_options |= _DEFAULT_AC_OPTIONS
+            default_options = _DEFAULT_OPTIONS | _DEFAULT_AC_OPTIONS
+        else:
+            default_options = _DEFAULT_OPTIONS
 
         # Create a config entry with the config data and default options
         return self.async_create_entry(title=f"{DOMAIN} {device.id}", data=data, options=default_options)

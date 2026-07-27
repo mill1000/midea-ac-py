@@ -16,11 +16,18 @@ from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import (CONF_BEEP,
-                                              CONF_CLOUD_COUNTRY_CODES,
-                                              CONF_DEFAULT_CLOUD_COUNTRY,
-                                              CONF_DEVICE_TYPE, CONF_KEY,
-                                              DOMAIN)
+from custom_components.midea_ac.const import (
+    CONF_BEEP,
+    CONF_CLOUD_COUNTRY_CODES,
+    CONF_DEFAULT_CLOUD_COUNTRY,
+    CONF_DEVICE_TYPE,
+    CONF_ENERGY_SENSOR,
+    CONF_FAN_SPEED_STEP,
+    CONF_KEY,
+    CONF_POWER_SENSOR,
+    CONF_WORKAROUNDS,
+    DOMAIN,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -746,6 +753,82 @@ async def test_manual_flow_cc_device(hass: HomeAssistant) -> None:
 
         # No errors
         assert "errors" not in result
+
+
+async def test_default_options_isolation(
+    hass: HomeAssistant,
+) -> None:
+    """Test that configuring an AC device doesn't affect the default options given to a CC device configured afterward."""
+
+    # Configure an AC device first
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "manual"}
+    )
+    assert result
+
+    with (
+        patch("custom_components.midea_ac.async_setup_entry", return_value=True),
+        patch("custom_components.midea_ac.config_flow.AC.refresh"),
+        patch("custom_components.midea_ac.config_flow.AC.online",
+              new_callable=PropertyMock(return_value=True)),
+        patch("custom_components.midea_ac.config_flow.AC.supported",
+              new_callable=PropertyMock(return_value=True)),
+    ):
+        # Configure device
+        ac_result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+                CONF_ID: "1234",
+                CONF_DEVICE_TYPE: "AC",
+            },
+        )
+
+    assert ac_result["type"] is FlowResultType.CREATE_ENTRY
+
+    # Assert AC specific options are present
+    options = ac_result["result"].options
+    assert CONF_BEEP in options
+    assert CONF_FAN_SPEED_STEP in options
+    assert CONF_ENERGY_SENSOR in options
+    assert CONF_POWER_SENSOR in options
+    assert CONF_WORKAROUNDS in options
+
+    # Now configure an unrelated CC device
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "manual"}
+    )
+    assert result
+
+    with (
+        patch("custom_components.midea_ac.async_setup_entry", return_value=True),
+        patch("custom_components.midea_ac.config_flow.CC.refresh"),
+        patch("custom_components.midea_ac.config_flow.CC.online",
+              new_callable=PropertyMock(return_value=True)),
+        patch("custom_components.midea_ac.config_flow.CC.supported",
+              new_callable=PropertyMock(return_value=True)),
+    ):
+        # Configure device
+        cc_result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={
+                CONF_HOST: "localhost",
+                CONF_PORT: 6444,
+                CONF_ID: "5678",
+                CONF_DEVICE_TYPE: "CC",
+            },
+        )
+
+    assert cc_result["type"] is FlowResultType.CREATE_ENTRY
+
+    # Assert no AC options are present in CC device
+    options = cc_result["result"].options
+    assert CONF_BEEP not in options
+    assert CONF_FAN_SPEED_STEP not in options
+    assert CONF_ENERGY_SENSOR not in options
+    assert CONF_POWER_SENSOR not in options
+    assert CONF_WORKAROUNDS not in options
 
 
 async def test_options_flow_init(
