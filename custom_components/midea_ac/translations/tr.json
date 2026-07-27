@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "HVAC eylem raporlamasını etkinleştirin. Cihaz çoğu mod için gerçek HVAC eylemini bildirmez (OFF, FAN_ONLY, DRY sabit kodlanmıştır). Heat/Cool modları için sıcaklık tabanlı yedek etkinleştirmek amacıyla 'HVAC Eylem Yapılandırması' panelini kullanın.",
+          "enable_hvac_action": "HVAC eylem raporlamasını etkinleştirin. Yerel durum Kapalı, Kuru ve Yelpaze modları için kullanılır. Soğutma ve ısıtma modları için, modele özgü algılama henüz uygulanmadığından, sıcaklık tabanlı bir yedek kullanılır (aşağıda yapılandırılabilir).",
           "temp_step": "Sıcaklık ayar noktası için adım boyutu",
           "fan_speed_step": "Özel fan hızı için adım boyutu",
           "max_connection_lifetime": "Bir bağlantının maksimum kullanacağı süre (minimum 15 saniye)"

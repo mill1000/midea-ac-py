@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Omogoči poročanje dejanja HVAC. Naprava ne poroča dejanskega dejanja HVAC za večino načinov (OFF, FAN_ONLY, DRY so trdo kodirani). Uporabite 'Konfiguracija dejanja HVAC' za omogočenje rezervne temperature za Heat/Cool načine.",
+          "enable_hvac_action": "Omogoči poročanje dejanja HVAC. Rodiljno stanje se uporablja za načine Izklopljeno, Suho in Ventilator. Za načine hlajenja in ogrevanja zaznavanje specifično za model še ni implementirano, zato se uporablja rezervna temperatura (nastavljivo spodaj).",
           "temp_step": "Velikost koraka za nastavljeno temperaturo",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 15 sekund)"

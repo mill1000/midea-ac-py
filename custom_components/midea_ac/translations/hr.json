@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Omogući izvještavanje o HVAC akciji. Uređaj ne izvještava stvarnu HVAC akciju za većinu načina rada (OFF, FAN_ONLY, DRY su tvrdo kodirani). Upotrijebite ploču 'Konfiguracija HVAC akcije' da omogućite povratnu vrijednost temeljenu na temperaturi za načine Heat/Cool.",
+          "enable_hvac_action": "Omogućite HVAC izvještaj o akciji. Nativni status koristi se za načine Isključeno, Suho i Ventilator. Za načine hlađenja i grijanja, detekcija specifična za model još nije implementirana, pa se koristi sigurnosna vrijednost na osnovu temperature (konfigurabilna dolje).",
           "temp_step": "Veličina koraka za zadanu vrijednost temperature",
           "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "max_connection_lifetime": "Maksimalno vrijeme u sekundama tijekom kojeg će se veza koristiti (najmanje 15 sekundi)"

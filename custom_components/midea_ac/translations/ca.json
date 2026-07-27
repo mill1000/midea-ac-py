@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Habilita l'informe d'acció HVAC. El dispositiu no informa de l'acció HVAC real per a la majoria dels modes (OFF, FAN_ONLY, DRY estan codificats). Utilitza el panell 'Configuració d'acció HVAC' per habilitar la reserva basada en temperatura per als modes Heat/Cool.",
+          "enable_hvac_action": "Habilita la notificació d'accions HVAC. L'estat natiu s'utilitza per als modes Apagat, Sec i Ventilador. Per als modes de refrigeració i calefacció, la detecció específica del model no s'ha implementat encara, per la qual cosa s'utilitza una reserva basada en temperatura (configurable a continuació).",
           "temp_step": "Mida del pas de la consigna de temperatura",
           "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
           "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 15 segons)"

@@ -85,7 +85,7 @@
           "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
-          "enable_hvac_action": "Use model-specific HVAC action if available (not implemented yet) and will fallback to temperature difference if HVAC action is not implemented for your model. You can disable the fallback in the panel below and adjust the temperature threshold.",
+          "enable_hvac_action": "Enable HVAC action reporting. Native status is used for Off, Dry, and Fan modes. For Cool and Heat modes, model-specific detection is not yet implemented, so a temperature-based fallback is used (configurable below).",
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",

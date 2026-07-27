@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Włącz raportowanie akcji HVAC. Urządzenie nie raportuje rzeczywistej akcji HVAC dla większości trybów (OFF, FAN_ONLY, DRY są hardcoded). Użyj panelu 'Konfiguracja akcji HVAC', aby włączyć fallback oparty na temperaturze dla trybów Heat/Cool.",
+          "enable_hvac_action": "Włącz raportowanie akcji HVAC. Stan natywny jest używany dla trybów Wył., Suchy i Wentylator. W przypadku trybów Chłodzenia i Ogrzewania, wykrywanie specyficzne dla modelu nie jest jeszcze zaimplementowane, dlatego używany jest rezerwowy fallback oparty na temperaturze (konfigurowalny poniżej).",
           "temp_step": "Wielkość kroku dla nastawy temperatury",
           "fan_speed_step": "Rozmiar kroku dla niestandardowych prędkości wentylatora",
           "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 15 sekund)"

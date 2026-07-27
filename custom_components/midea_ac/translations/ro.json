@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Activați raportarea acțiunilor HVAC. Dispozitivul nu raportează acțiunea HVAC reală pentru majoritatea modurilor (OFF, FAN_ONLY, DRY sunt codificate). Utilizați panoul 'Configurație acțiune HVAC' pentru a activa revenirul pe bază de temperatură pentru modurile Heat/Cool.",
+          "enable_hvac_action": "Activați raportarea acțiunilor HVAC. Starea nativă este utilizată pentru modurile Oprit, Uscare și Ventilator. Pentru modurile de răcire și încălzire, detectarea specifică modelului nu este încă implementată, deci se utilizează o salvare bazată pe temperatură (configurabilă mai jos).",
           "temp_step": "Mărime pas incremental pentru temperatură",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 15 de secunde) "

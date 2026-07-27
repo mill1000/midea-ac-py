@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "僅在製冷/製熱模式下，根據目前溫度與目標溫度及下方閾值，在氣候卡片上顯示製冷/製熱/閒置狀態。自動模式或其他模式不支援此功能，因為裝置不會回報其實際運行方向。",
+          "enable_hvac_action": "啟用 HVAC 操作報告。本機狀態用於關閉、乾燥和風扇模式。對於冷卻和加熱模式，尚未實現特定於型號的檢測，因此使用基於溫度的備用（可在下方配置）。",
           "temp_step": "溫度設置的步進值",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "單次連結的最大有效期(單位為秒，最短15秒)"

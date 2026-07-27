@@ -83,7 +83,7 @@
           "swing_angle_rtl": "Horizontale blaasrichting omdraaien"
         },
         "data_description": {
-          "enable_hvac_action": "HVAC-actie rapportage inschakelen. Het apparaat rapporteert niet de werkelijke HVAC-actie voor de meeste modi (OFF, FAN_ONLY, DRY zijn hardcoded). Gebruik het paneel 'HVAC-actieconfiguratie' om fallback op basis van temperatuur in te schakelen voor Heat/Cool-modi.",
+          "enable_hvac_action": "HVAC-actierapportage inschakelen. Native status wordt gebruikt voor modi Uit, Droog en Ventilator. Voor Koelen- en Verwarmingsmodi is modelspecifieke detectie nog niet geïmplementeerd, dus wordt een temperatuurgebaseerde fallback gebruikt (configureerbaar hieronder).",
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
           "fan_speed_step": "Stapgrootte voor aangepaste ventilatorsnelheden",
           "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 15)"

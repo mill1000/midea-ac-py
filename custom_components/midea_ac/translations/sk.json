@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Povolte nahlasovanie akcií HVAC. Zariadenie nehlasuje skutočnú akciu HVAC pre väčšinu režimov (OFF, FAN_ONLY, DRY sú zakódované). Pomocou 'Konfigurácia akcie HVAC' povolte záložné riešenie na základe teploty pre režimy Heat/Cool.",
+          "enable_hvac_action": "Povoľte hlásenie akcií HVAC. Natívny stav sa používa pre režimy Vypnuto, Suchý a Ventilátor. Pre režimy chladenia a vykurovania detekcia špecifická pre model ešte nie je implementovaná, preto sa používa záložné riešenie na báze teploty (konfigurabilné nižšie).",
           "temp_step": "Veľkosť kroku pre nastavenú hodnotu teploty",
           "fan_speed_step": "Veľkosť kroku voliteľnej rýchlosti ventilátora",
           "max_connection_lifetime": "Maximálny čas v sekundách, počas ktorého sa bude používať pripojenie (minimálne 15 sekúnd)"

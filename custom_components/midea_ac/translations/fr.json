@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Utiliser l'action HVAC spécifique au modèle si disponible (pas encore implémenté) et utiliser la différence de température en secours si l'action HVAC n'est pas implémentée pour votre modèle. Vous pouvez désactiver le secours dans le panneau ci-dessous et ajuster le seuil de température.",
+          "enable_hvac_action": "Activez le rapport d'action HVAC. L'état natif est utilisé pour les modes Arrêt, Sec et Ventilation. Pour les modes Refroidissement et Chauffage, la détection spécifique au modèle n'est pas encore implémentée, donc un secours basé sur la température est utilisé (configurable ci-dessous).",
           "temp_step": "Taille du palier pour le réglage de la température",
           "fan_speed_step": "Taille du palier pour le réglage de la vitesses personnalisé du ventilateur",
           "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 15 secondes)"

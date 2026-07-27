@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Aktiver HVAC-handlingsrapportering. Enheten rapporterer ikke den faktiske HVAC-handlingen for de fleste moduser (OFF, FAN_ONLY, DRY er hardkodet). Bruk 'HVAC-handlingskonfigurering' for å aktivere temperaturbasert tilbakefall for Heat/Cool-moduser.",
+          "enable_hvac_action": "Aktiver HVAC-handlingsrapportering. Innebygd status brukes for moduene Av, Tørking og Vifte. For kjøle- og varmemodus er modellspesifikk deteksjon ikke implementert ennå, så en temperaturbasert backup brukes (konfigurerbar nedenfor).",
           "temp_step": "Trinnstørrelse for temperaturinnstilling",
           "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
           "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 15 sekunder)"

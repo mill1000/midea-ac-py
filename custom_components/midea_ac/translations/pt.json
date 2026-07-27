@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Habilitar relatório de ação HVAC. O dispositivo não relata a ação HVAC real para a maioria dos modos (OFF, FAN_ONLY, DRY são codificados). Use o painel 'Configuração de Ação HVAC' para habilitar fallback baseado em temperatura para modos Heat/Cool.",
+          "enable_hvac_action": "Ativar relatório de ação HVAC. O status nativo é usado para os modos Desligar, Secar e Ventilador. Para os modos Refrigeração e Aquecimento, a detecção específica do modelo ainda não foi implementada, portanto, um fallback baseado em temperatura é usado (configurável abaixo).",
           "temp_step": "Valor de incremento/decremento para a temperatura",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Tempo máximo, em segundos, que uma ligação é usada (mínimo 15 segundos)"

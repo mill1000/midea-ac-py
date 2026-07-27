@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "HVAC műveleti jelentés engedélyezése. Az eszköz nem jelenti az HVAC műveletet a legtöbb üzemmódhoz (OFF, FAN_ONLY, DRY hardkódolva). A 'HVAC Műveleti Konfiguráció' panel segítségével engedélyezze a hőmérséklet-alapú tartalékot Heat/Cool módokhoz.",
+          "enable_hvac_action": "Engedélyezze a HVAC műveleti jelentést. A natív állapot a Ki, Szárító és Ventilátor üzemmódokhoz használatos. A hűtés és fűtés üzemmódjaihoz a modellspecifikus detektálás még nem implementálva, ezért hőmérséklet-alapú tartalékot használunk (lent konfigurálható).",
           "temp_step": "A hőmérséklet beállítás lépésköze",
           "fan_speed_step": "A ventilátor sebesség egyéni lépésköze",
           "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 15 másodperc)"

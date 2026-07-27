@@ -83,7 +83,7 @@
           "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
         },
         "data_description": {
-          "enable_hvac_action": "HVAC-Aktion aktivieren. Das Gerät meldet die tatsächliche HVAC-Aktion für die meisten Modi nicht (OFF, FAN_ONLY, DRY sind hartcodiert). Verwenden Sie das Panel 'HVAC-Aktionskonfiguration', um das Fallback basierend auf der Temperatur für Heat/Cool-Modi zu aktivieren.",
+          "enable_hvac_action": "HVAC-Aktionsmeldung aktivieren. Der native Status wird für Aus-, Trocken- und Lüftermodi verwendet. Für Kühl- und Heizmodi ist die modellspezifische Erkennung noch nicht implementiert, daher wird ein temperaturbasiertes Fallback verwendet (konfigurierbar unten).",
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
           "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"

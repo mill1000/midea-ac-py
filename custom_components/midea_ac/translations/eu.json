@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "HVAC ekintzaren txostena gaitu. Gailuak ez du HVAC ekintzaren benetako informazioa ematen modu gehienetan (OFF, FAN_ONLY, DRY kodean daude). Erabili 'HVAC ekintzaren konfigurazio' panela tenperatura-oinarritutako atzealdetik gaitzeko Heat/Cool moduentzat.",
+          "enable_hvac_action": "Gaitu HVAC ekintza txostena. Jatorrizko egoera erabiltzen da Itzalita, Lehorra eta Aireztaria modentzat. Hozgarri eta Berogailu modentzat, modeloari espezifikoa den detekzioa oraindik ez dago inplementatuta, beraz tenperatura-oinarritutako atzealdea erabiltzen da (konfiguragarria behean).",
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
           "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
           "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (15 segundo gutxienez)"
