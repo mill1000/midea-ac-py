@@ -14,8 +14,7 @@ from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import (CONF_BEEP, CONF_DEVICE_TYPE,
-                                              CONF_KEY, DOMAIN)
+from custom_components.midea_ac.const import *
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -445,29 +444,23 @@ async def test_manual_flow_cc_device(hass: HomeAssistant) -> None:
 async def test_ac_device_does_not_leak_default_options_into_later_cc_device(
     hass: HomeAssistant,
 ) -> None:
-    """Test that configuring an AC device doesn't affect the default
-    options given to a CC device configured afterward.
+    """Test that configuring an AC device doesn't affect the default options given to a CC device configured afterward."""
 
-    Regression test for #452: _create_entry_from_device used to alias
-    _DEFAULT_OPTIONS instead of copying it, so merging in
-    _DEFAULT_AC_OPTIONS for an AC device mutated the shared global in
-    place - leaking AC-only option keys into every device configured
-    afterward, regardless of its actual type.
-    """
     # Configure an AC device first
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "manual"}
     )
+    assert result
+
     with (
         patch("custom_components.midea_ac.async_setup_entry", return_value=True),
         patch("custom_components.midea_ac.config_flow.AC.refresh"),
         patch("custom_components.midea_ac.config_flow.AC.online",
-              new_callable=PropertyMock) as ac_online,
+              new_callable=PropertyMock(return_value=True)),
         patch("custom_components.midea_ac.config_flow.AC.supported",
-              new_callable=PropertyMock) as ac_supported,
+              new_callable=PropertyMock(return_value=True)),
     ):
-        ac_online.return_value = True
-        ac_supported.return_value = True
+        # Configure device
         ac_result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             user_input={
@@ -479,23 +472,30 @@ async def test_ac_device_does_not_leak_default_options_into_later_cc_device(
         )
 
     assert ac_result["type"] is FlowResultType.CREATE_ENTRY
-    # Sanity check: the AC device correctly got its AC-specific options
-    assert CONF_BEEP in ac_result["result"].options
+
+    # Assert AC specific options are present
+    options = ac_result["result"].options
+    assert CONF_BEEP in options
+    assert CONF_FAN_SPEED_STEP in options
+    assert CONF_ENERGY_SENSOR in options
+    assert CONF_POWER_SENSOR in options
+    assert CONF_WORKAROUNDS in options
 
     # Now configure an unrelated CC device
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "manual"}
     )
+    assert result
+
     with (
         patch("custom_components.midea_ac.async_setup_entry", return_value=True),
         patch("custom_components.midea_ac.config_flow.CC.refresh"),
         patch("custom_components.midea_ac.config_flow.CC.online",
-              new_callable=PropertyMock) as cc_online,
+              new_callable=PropertyMock(return_value=True)),
         patch("custom_components.midea_ac.config_flow.CC.supported",
-              new_callable=PropertyMock) as cc_supported,
+              new_callable=PropertyMock(return_value=True)),
     ):
-        cc_online.return_value = True
-        cc_supported.return_value = True
+        # Configure device
         cc_result = await hass.config_entries.flow.async_configure(
             result["flow_id"],
             user_input={
@@ -508,9 +508,13 @@ async def test_ac_device_does_not_leak_default_options_into_later_cc_device(
 
     assert cc_result["type"] is FlowResultType.CREATE_ENTRY
 
-    # CC's own option schema never exposes CONF_BEEP - it should never
-    # appear in a CC device's stored options.
-    assert CONF_BEEP not in cc_result["result"].options
+    # Assert no AC options are present in CC device
+    options = cc_result["result"].options
+    assert CONF_BEEP not in options
+    assert CONF_FAN_SPEED_STEP not in options
+    assert CONF_ENERGY_SENSOR not in options
+    assert CONF_POWER_SENSOR not in options
+    assert CONF_WORKAROUNDS not in options
 
 
 async def test_options_flow_init(
