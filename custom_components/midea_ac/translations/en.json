@@ -85,7 +85,7 @@
           "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
-          "enable_hvac_action": "Enable HVAC action reporting. The device doesn't report actual HVAC action for most modes (OFF, FAN_ONLY, DRY are hardcoded). Use the 'HVAC Action Configuration' panel to enable temperature-based fallback for Heat/Cool modes.",
+          "enable_hvac_action": "Use model-specific HVAC action if available (not implemented yet) and will fallback to temperature difference if HVAC action is not implemented for your model. You can disable the fallback in the panel below and adjust the temperature threshold.",
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",
@@ -132,7 +132,7 @@
             },
             "data_description": {
               "temperature_threshold": "Temperature overshoot past the setpoint, in degrees, from which COOL/HEAT reports idle instead of active",
-              "derive_from_temp_fallback": "For Heat/Cool modes, enable fallback to derive HVAC action (heating/cooling/idle) from current vs. target temperature. Note: The device doesn't report HVAC action natively, so if this is disabled, no HVAC action will be reported regardless of the 'Enable HVAC Action' setting."
+              "derive_from_temp_fallback": "For Heat/Cool modes only (other modes are not yet implemented), enable fallback to derive HVAC action (heating/cooling/idle) from current vs. target temperature. If disabled, no HVAC action will be reported for these modes."
             }
           }
         }
