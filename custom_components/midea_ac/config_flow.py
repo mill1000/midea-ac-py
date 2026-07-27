@@ -472,6 +472,10 @@ class MideaOptionsFlow(OptionsFlow):
     _HVAC_ACTION_SCHEMA = section(
         vol.Schema({
             vol.Optional(
+                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
+                default=_DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK]
+            ): cv.boolean,
+            vol.Optional(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 default=_DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]
             ): NumberSelector(
@@ -482,10 +486,6 @@ class MideaOptionsFlow(OptionsFlow):
                     unit_of_measurement=DEGREE
                 )
             ),
-            vol.Optional(
-                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
-                default=_DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK]
-            ): cv.boolean,
         }),
         {"collapsed": True},
     )
