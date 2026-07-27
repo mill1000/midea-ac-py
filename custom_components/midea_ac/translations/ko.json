@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "냉방/난방 모드에서만 현재 온도와 목표 온도, 아래 임계값을 기준으로 냉방/난방/유휴 상태를 기후 카드에 표시합니다. 자동 모드 또는 기타 모드에서는 기기가 실제로 어느 방향으로 작동하는지 보고하지 않으므로 사용할 수 없습니다.",
+          "enable_hvac_action": "HVAC 작동 보고를 활성화합니다. 장치는 대부분의 모드에 대해 실제 HVAC 작동을 보고하지 않습니다(OFF, FAN_ONLY, DRY는 하드코딩됨). 'HVAC 작동 구성' 패널을 사용하여 Heat/Cool 모드에 대한 온도 기반 폴백을 활성화하세요.",
           "temp_step": "온도 조절 간격 설정",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "최대 연결 시간(초), 최소 15초"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "HVAC 작동 구성",
             "data": {
-              "temperature_threshold": "온도 임계값"
+              "temperature_threshold": "온도 임계값",
+              "derive_from_temp_fallback": "온도에서 폴백으로 도출"
             },
             "data_description": {
-              "temperature_threshold": "설정 온도를 초과하는 온도 차이(도 단위)로, 이 값에 도달하면 냉방/난방이 작동 중 대신 유휴 상태로 표시됩니다"
+              "temperature_threshold": "설정 온도를 초과하는 온도 차이(도 단위)로, 이 값에 도달하면 냉방/난방이 작동 중 대신 유휴 상태로 표시됩니다",
+              "derive_from_temp_fallback": "Heat/Cool 모드에서만 현재 온도와 목표 온도의 비교를 기반으로 HVAC 작동을 도출하기 위한 폴백을 활성화합니다. 참고: 이 옵션이 비활성화되면 'HVAC 작동 활성화' 설정과 관계없이 HVAC 작동이 보고되지 않습니다."
             }
           }
         }

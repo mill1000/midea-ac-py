@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Viser kjøle-/varme-/inaktiv-status på klimakortet kun for modusen Kjøling/Varme, basert på gjeldende temperatur mot måltemperatur og terskelen nedenfor. Ikke tilgjengelig for Auto-modus eller andre moduser, siden enheten ikke rapporterer hvilken retning den faktisk opererer i.",
+          "enable_hvac_action": "Aktiver HVAC-handlingsrapportering. Enheten rapporterer ikke den faktiske HVAC-handlingen for de fleste moduser (OFF, FAN_ONLY, DRY er hardkodet). Bruk 'HVAC-handlingskonfigurering' for å aktivere temperaturbasert tilbakefall for Heat/Cool-moduser.",
           "temp_step": "Trinnstørrelse for temperaturinnstilling",
           "fan_speed_step": "Trinnstørrelse for egendefinerte viftehastigheter",
           "max_connection_lifetime": "Maksimal tid i sekunder en tilkobling vil bli brukt (minimum 15 sekunder)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "HVAC-handlingskonfigurasjon",
             "data": {
-              "temperature_threshold": "Temperaturterskel"
+              "temperature_threshold": "Temperaturterskel",
+              "derive_from_temp_fallback": "Utled fra temperatur som tilbakefall"
             },
             "data_description": {
-              "temperature_threshold": "Temperaturoverskridelse over settpunktet, i grader, som KJØLING/OPPVARMING rapporteres som inaktiv i stedet for aktiv fra og med"
+              "temperature_threshold": "Temperaturoverskridelse over settpunktet, i grader, som KJØLING/OPPVARMING rapporteres som inaktiv i stedet for aktiv fra og med",
+              "derive_from_temp_fallback": "Aktiver tilbakefall for å utlede HVAC-handling fra gjeldende sammenlignet med måltemperatur for Heat/Cool-moduser. Merk: Hvis dette alternativet er deaktivert, rapporteres ingen HVAC-handling, uavhengig av innstillingen 'Aktiver HVAC-handling'."
             }
           }
         }

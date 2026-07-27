@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Muestra el estado de enfriamiento/calentamiento/inactivo en la tarjeta de clima solo para el modo Frío/Calor, según la temperatura actual frente a la deseada y el umbral indicado a continuación. No disponible para el modo Automático u otros modos, ya que el dispositivo no informa en qué dirección está funcionando realmente.",
+          "enable_hvac_action": "Habilitar informes de acción HVAC. El dispositivo no informa de la acción HVAC real para la mayoría de los modos (OFF, FAN_ONLY, DRY están codificados). Utilice el panel 'Configuración de acción HVAC' para habilitar el fallback basado en temperatura para modos Heat/Cool.",
           "temp_step": "Tamaño del escalón para la consigna de temperatura",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Tiempo máximo en segundos que se usará una connexión (mínimo 15 segundos)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Configuración de la acción HVAC",
             "data": {
-              "temperature_threshold": "Umbral de temperatura"
+              "temperature_threshold": "Umbral de temperatura",
+              "derive_from_temp_fallback": "Derivar de la temperatura como alternativa"
             },
             "data_description": {
-              "temperature_threshold": "Desviación de temperatura respecto al punto de ajuste, en grados, a partir de la cual REFRIGERACIÓN/CALEFACCIÓN se indica como inactiva en lugar de activa"
+              "temperature_threshold": "Desviación de temperatura respecto al punto de ajuste, en grados, a partir de la cual REFRIGERACIÓN/CALEFACCIÓN se indica como inactiva en lugar de activa",
+              "derive_from_temp_fallback": "Habilitar fallback para derivar la acción HVAC de la temperatura actual frente a la temperatura objetivo cuando el dispositivo no la informa. Nota: La implementación actual no admite informes de acciones HVAC por modelo de dispositivo, por lo que no se informará de ninguna acción HVAC si esta opción está deshabilitada, independientemente de la configuración 'Habilitar acción HVAC'."
             }
           }
         }

@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Mostra l'estat de refredament/escalfament/inactiu a la targeta de clima només per al mode Fred/Calor, basant-se en la temperatura actual respecte a l'objectiu i el llindar de sota. No disponible per al mode Auto ni altres modes, ja que el dispositiu no informa en quina direcció està funcionant realment.",
+          "enable_hvac_action": "Habilita l'informe d'acció HVAC. El dispositiu no informa de l'acció HVAC real per a la majoria dels modes (OFF, FAN_ONLY, DRY estan codificats). Utilitza el panell 'Configuració d'acció HVAC' per habilitar la reserva basada en temperatura per als modes Heat/Cool.",
           "temp_step": "Mida del pas de la consigna de temperatura",
           "fan_speed_step": "Mida del pas de les velocitats del ventilador personalitzades",
           "max_connection_lifetime": "Temps màxim que s'utilitzarà una connexió en segons (mínim 15 segons)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Configuració de l'acció HVAC",
             "data": {
-              "temperature_threshold": "Llindar de temperatura"
+              "temperature_threshold": "Llindar de temperatura",
+              "derive_from_temp_fallback": "Derivar de la temperatura com a reserva"
             },
             "data_description": {
-              "temperature_threshold": "Desviació de temperatura per sobre del punt de consigna, en graus, a partir de la qual REFRIGERACIÓ/CALEFACCIÓ s'informa com a inactiva en lloc d'activa"
+              "temperature_threshold": "Desviació de temperatura per sobre del punt de consigna, en graus, a partir de la qual REFRIGERACIÓ/CALEFACCIÓ s'informa com a inactiva en lloc d'activa",
+              "derive_from_temp_fallback": "Habilita la reserva per derivar l'acció HVAC de la temperatura actual respecte a la temperatura objectiu quan el dispositiu no la informa. Nota: La implementació actual no admet informes d'accions HVAC per model de dispositiu, de manera que no s'informarà de cap acció HVAC si aquesta opció està deshabilitada, independentment de la configuració 'Habilita acció HVAC'."
             }
           }
         }

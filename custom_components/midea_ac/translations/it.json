@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Mostra lo stato di raffreddamento/riscaldamento/inattivo sulla scheda del clima solo per la modalità Caldo/Freddo, in base alla temperatura attuale rispetto a quella impostata e alla soglia sottostante. Non disponibile per la modalità Auto o altre modalità, poiché il dispositivo non segnala in quale direzione sta effettivamente operando.",
+          "enable_hvac_action": "Abilita report azioni HVAC. Il dispositivo non riporta l'azione HVAC effettiva per la maggior parte delle modalità (OFF, FAN_ONLY, DRY sono hardcodificate). Utilizza il pannello 'Configurazione azione HVAC' per abilitare il fallback basato sulla temperatura per le modalità Heat/Cool.",
           "temp_step": "Incremento per la configurazione della temperatura",
           "fan_speed_step": "Incremento per la configurazione della velocità della ventola",
           "max_connection_lifetime": "Tempo massimo di utilizzo per ciascuna connessione in secondi (minimo 15 secondi)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Configurazione dell'azione HVAC",
             "data": {
-              "temperature_threshold": "Soglia di temperatura"
+              "temperature_threshold": "Soglia di temperatura",
+              "derive_from_temp_fallback": "Derivare dalla temperatura come fallback"
             },
             "data_description": {
-              "temperature_threshold": "Scostamento di temperatura rispetto al setpoint, in gradi, a partire dal quale RAFFREDDAMENTO/RISCALDAMENTO viene segnalato come inattivo anziché attivo"
+              "temperature_threshold": "Scostamento di temperatura rispetto al setpoint, in gradi, a partire dal quale RAFFREDDAMENTO/RISCALDAMENTO viene segnalato come inattivo anziché attivo",
+              "derive_from_temp_fallback": "Abilita il fallback per derivare l'azione HVAC dalla temperatura attuale rispetto alla temperatura target quando il dispositivo non la riporta. Nota: L'implementazione attuale non supporta il reporting dell'azione HVAC per modello di dispositivo, quindi nessuna azione HVAC verrà riportata se questa opzione è disabilitata, indipendentemente dall'impostazione 'Abilita azione HVAC'."
             }
           }
         }

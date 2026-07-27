@@ -83,7 +83,7 @@
           "swing_angle_rtl": "Horizontale blaasrichting omdraaien"
         },
         "data_description": {
-          "enable_hvac_action": "Toont de koel-/verwarmings-/inactieve status op de klimaatkaart alleen voor de modus Koelen/Verwarmen, op basis van de huidige temperatuur ten opzichte van de doeltemperatuur en de onderstaande drempel. Niet beschikbaar voor de modus Auto of andere modi, omdat het apparaat niet meldt in welke richting het daadwerkelijk werkt.",
+          "enable_hvac_action": "HVAC-actie rapportage inschakelen. Het apparaat rapporteert niet de werkelijke HVAC-actie voor de meeste modi (OFF, FAN_ONLY, DRY zijn hardcoded). Gebruik het paneel 'HVAC-actieconfiguratie' om fallback op basis van temperatuur in te schakelen voor Heat/Cool-modi.",
           "temp_step": "Stapgrootte voor ingestelde temperatuur",
           "fan_speed_step": "Stapgrootte voor aangepaste ventilatorsnelheden",
           "max_connection_lifetime": "Hoe lang een verbinding maximaal wordt gebruikt in seconden (minimaal 15)"
@@ -125,10 +125,12 @@
           "hvac_action": {
             "name": "HVAC-actieconfiguratie",
             "data": {
-              "temperature_threshold": "Temperatuurdrempel"
+              "temperature_threshold": "Temperatuurdrempel",
+              "derive_from_temp_fallback": "Afleiden van temperatuur als fallback"
             },
             "data_description": {
-              "temperature_threshold": "Temperatuuroverschrijding ten opzichte van het instelpunt, in graden, vanaf welke KOELEN/VERWARMEN als inactief in plaats van actief wordt gerapporteerd"
+              "temperature_threshold": "Temperatuuroverschrijding ten opzichte van het instelpunt, in graden, vanaf welke KOELEN/VERWARMEN als inactief in plaats van actief wordt gerapporteerd",
+              "derive_from_temp_fallback": "Schakel fallback in om HVAC-actie van huidige versus doeltemperatuur af te leiden wanneer het apparaat dit niet rapporteert. Opmerking: De huidige implementatie ondersteunt geen HVAC-actierapporten per apparaatmodel, dus als deze optie is uitgeschakeld, wordt geen HVAC-actie gerapporteerd, ongeacht de instelling 'HVAC-actie inschakelen'."
             }
           }
         }

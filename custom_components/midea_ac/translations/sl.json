@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Prikazuje stanje hlajenja/gretja/mirovanja na kartici klime samo za način Hlajenje/Gretje, na podlagi trenutne temperature glede na ciljno in spodaj navedenega praga. Ni na voljo za način Auto ali druge načine, ker naprava ne sporoča, v katero smer dejansko deluje.",
+          "enable_hvac_action": "Omogoči poročanje dejanja HVAC. Naprava ne poroča dejanskega dejanja HVAC za večino načinov (OFF, FAN_ONLY, DRY so trdo kodirani). Uporabite 'Konfiguracija dejanja HVAC' za omogočenje rezervne temperature za Heat/Cool načine.",
           "temp_step": "Velikost koraka za nastavljeno temperaturo",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Najdaljši čas v sekundah uporabljene povezava (najmanj 15 sekund)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Konfiguracija dejanja HVAC",
             "data": {
-              "temperature_threshold": "Temperaturni prag"
+              "temperature_threshold": "Temperaturni prag",
+              "derive_from_temp_fallback": "Izpelji iz temperature kot rezervna možnost"
             },
             "data_description": {
-              "temperature_threshold": "Preseganje temperature nad nastavljeno vrednostjo, v stopinjah, od katerega se HLAJENJE/OGREVANJE javlja kot mirujoče namesto aktivno"
+              "temperature_threshold": "Preseganje temperature nad nastavljeno vrednostjo, v stopinjah, od katerega se HLAJENJE/OGREVANJE javlja kot mirujoče namesto aktivno",
+              "derive_from_temp_fallback": "Omogočite rezervno možnost za izpeljavo dejanja HVAC iz trenutne temperature v primerjavi s ciljno za Heat/Cool načine. Opomba: Če je ta možnost onemogočena, se dejanje HVAC ne bo poročalo, ne glede na nastavko 'Omogoči dejanje HVAC'."
             }
           }
         }

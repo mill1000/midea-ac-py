@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Prikazuje stanje hlađenja/grijanja/mirovanja na kartici klime samo za način Hlađenje/Grijanje, na temelju trenutne temperature u odnosu na ciljnu i praga navedenog ispod. Nije dostupno za način Auto ili druge načine, jer uređaj ne prijavljuje u kojem smjeru zapravo radi.",
+          "enable_hvac_action": "Omogući izvještavanje o HVAC akciji. Uređaj ne izvještava stvarnu HVAC akciju za većinu načina rada (OFF, FAN_ONLY, DRY su tvrdo kodirani). Upotrijebite ploču 'Konfiguracija HVAC akcije' da omogućite povratnu vrijednost temeljenu na temperaturi za načine Heat/Cool.",
           "temp_step": "Veličina koraka za zadanu vrijednost temperature",
           "fan_speed_step": "Veličina koraka za prilagođene brzine ventilatora",
           "max_connection_lifetime": "Maksimalno vrijeme u sekundama tijekom kojeg će se veza koristiti (najmanje 15 sekundi)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Konfiguracija HVAC radnje",
             "data": {
-              "temperature_threshold": "Temperaturni prag"
+              "temperature_threshold": "Temperaturni prag",
+              "derive_from_temp_fallback": "Izvedite iz temperature kao povratnu vrijednost"
             },
             "data_description": {
-              "temperature_threshold": "Prekoračenje temperature iznad zadane vrijednosti, u stupnjevima, od kojeg se HLAĐENJE/GRIJANJE prijavljuje kao neaktivno umjesto aktivno"
+              "temperature_threshold": "Prekoračenje temperature iznad zadane vrijednosti, u stupnjevima, od kojeg se HLAĐENJE/GRIJANJE prijavljuje kao neaktivno umjesto aktivno",
+              "derive_from_temp_fallback": "Omogući povratnu vrijednost za izvedbu HVAC akcije iz trenutne temperature u odnosu na ciljanu temperaturu kada uređaj ne izvještava. Napomena: Trenutna implementacija ne podržava izvještavanje HVAC akcije po modelu uređaja, zato ako je ova opcija onemogućena, neće se izvještavati nikakva HVAC akcija, bez obzira na postavku 'Omogući HVAC akciju'."
             }
           }
         }

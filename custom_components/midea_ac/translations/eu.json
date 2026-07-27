@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Klima txartelean hozte/berotze/inaktibo egoera erakusten du Hoztu/Berotu moduan bakarrik, uneko tenperatura xede-tenperaturarekin eta beheko atalasearekin alderatuz. Ez dago erabilgarri Auto moduan edo beste moduetan, gailuak ez baitu jakinarazten benetan zein noranzkotan ari den funtzionatzen.",
+          "enable_hvac_action": "HVAC ekintzaren txostena gaitu. Gailuak ez du HVAC ekintzaren benetako informazioa ematen modu gehienetan (OFF, FAN_ONLY, DRY kodean daude). Erabili 'HVAC ekintzaren konfigurazio' panela tenperatura-oinarritutako atzealdetik gaitzeko Heat/Cool moduentzat.",
           "temp_step": "Tenperaturaren ezarpen-punturako urratsaren tamaina",
           "fan_speed_step": "Urrats-tamaina haizagailuen abiadura pertsonalizatuetarako",
           "max_connection_lifetime": "Konexio bat gehienezko denbora segundotan erabiliko dena (15 segundo gutxienez)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "HVAC ekintzaren konfigurazioa",
             "data": {
-              "temperature_threshold": "Tenperatura atalasea"
+              "temperature_threshold": "Tenperatura atalasea",
+              "derive_from_temp_fallback": "Atzealdetik tenperaturatik atera"
             },
             "data_description": {
-              "temperature_threshold": "Konsignaren gainetiko tenperatura-desbiderapena, graduetan, zeinetik aurrera HOZTEA/BEROTZEA aktibo ordez inaktibo gisa jakinaraziko den"
+              "temperature_threshold": "Konsignaren gainetiko tenperatura-desbiderapena, graduetan, zeinetik aurrera HOZTEA/BEROTZEA aktibo ordez inaktibo gisa jakinaraziko den",
+              "derive_from_temp_fallback": "Gaitu atzealdetik HVAC ekintza uneko tenperaturatik atera nahi duzunean xede tenperaturarekin konparatuta, gailuak ez duenean ematen. Oharra: Uneko inplementazioak ez du onartzen HVAC ekintzaren txostena gailuaren modeloaren arabera, beraz, opsio hau desgaituta badago, ez da HVAC ekintzarik emango."
             }
           }
         }

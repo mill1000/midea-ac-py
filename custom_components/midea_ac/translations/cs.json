@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Zobrazuje stav chlazení/topení/nečinnosti na kartě klimatizace pouze pro režim Chlazení/Topení, na základě aktuální teploty vůči cílové a níže uvedené prahové hodnoty. Není k dispozici pro režim Auto ani jiné režimy, protože zařízení nehlásí, jakým směrem skutečně pracuje.",
+          "enable_hvac_action": "Povolte zpravodajství akcí HVAC. Zařízení nehlásí skutečné akce HVAC pro většinu režimů (OFF, FAN_ONLY, DRY jsou hardkódovány). Pomocí panela 'Konfigurace akce HVAC' povolte záložní řešení založené na teplotě pro režimy Heat/Cool.",
           "temp_step": "Velikost kroku pro nastavení teploty",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximální čas v sekundách, po který se bude používat připojení (minimálně 15 sekund)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Konfigurace akce HVAC",
             "data": {
-              "temperature_threshold": "Teplotní práh"
+              "temperature_threshold": "Teplotní práh",
+              "derive_from_temp_fallback": "Odvozovat z teploty jako záložní řešení"
             },
             "data_description": {
-              "temperature_threshold": "Překročení teploty nad požadovanou hodnotu, ve stupních, od kterého je CHLAZENÍ/TOPENÍ hlášeno jako nečinné místo aktivní"
+              "temperature_threshold": "Překročení teploty nad požadovanou hodnotu, ve stupních, od kterého je CHLAZENÍ/TOPENÍ hlášeno jako nečinné místo aktivní",
+              "derive_from_temp_fallback": "Povolte záložní řešení pro odvozování akce HVAC z aktuální teploty v porovnání s cílovou teplotou, když zařízení tuto informaci nehlásí. Poznámka: Současná implementace nepodporuje hlášení akcí HVAC podle modelu zařízení, takže pokud je tato možnost zakázána, nebude hlášena žádná akce HVAC, bez ohledu na nastavení 'Povolit akci HVAC'."
             }
           }
         }

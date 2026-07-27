@@ -36,6 +36,7 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_DEVICE_TYPE, CONF_ENABLE_HVAC_ACTION,
                     CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
                     CONF_ENERGY_SENSOR, CONF_FAN_SPEED_STEP, CONF_HVAC_ACTION,
+                    CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
                     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
@@ -54,6 +55,7 @@ _DEFAULT_OPTIONS = {
     CONF_ENABLE_HVAC_ACTION: False,
     CONF_HVAC_ACTION: {
         CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD: 0.5,
+        CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK: True,
     },
 }
 
@@ -479,7 +481,11 @@ class MideaOptionsFlow(OptionsFlow):
                     mode=NumberSelectorMode.BOX,
                     unit_of_measurement=DEGREE
                 )
-            )
+            ),
+            vol.Optional(
+                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
+                default=_DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK]
+            ): cv.boolean,
         }),
         {"collapsed": True},
     )

@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Afișează starea de răcire/încălzire/inactiv pe cardul de climă doar pentru modul Răcire/Încălzire, pe baza temperaturii curente față de cea țintă și a pragului de mai jos. Nu este disponibil pentru modul Auto sau alte moduri, deoarece dispozitivul nu raportează în ce direcție funcționează de fapt.",
+          "enable_hvac_action": "Activați raportarea acțiunilor HVAC. Dispozitivul nu raportează acțiunea HVAC reală pentru majoritatea modurilor (OFF, FAN_ONLY, DRY sunt codificate). Utilizați panoul 'Configurație acțiune HVAC' pentru a activa revenirul pe bază de temperatură pentru modurile Heat/Cool.",
           "temp_step": "Mărime pas incremental pentru temperatură",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Numărul maxim în secunde pentru care va fi folosită conexiunea (minim 15 de secunde) "
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Configurarea acțiunii HVAC",
             "data": {
-              "temperature_threshold": "Prag de temperatură"
+              "temperature_threshold": "Prag de temperatură",
+              "derive_from_temp_fallback": "Derivă din temperatură ca revenire"
             },
             "data_description": {
-              "temperature_threshold": "Depășirea temperaturii peste punctul de referință, în grade, de la care RĂCIRE/ÎNCĂLZIRE este raportată ca inactivă în loc de activă"
+              "temperature_threshold": "Depășirea temperaturii peste punctul de referință, în grade, de la care RĂCIRE/ÎNCĂLZIRE este raportată ca inactivă în loc de activă",
+              "derive_from_temp_fallback": "Activați revenirul pentru a deriva acțiunea HVAC din temperatura curentă comparată cu temperatura țintă pentru modurile Heat/Cool. Notă: Dacă această opțiune este dezactivată, nu se va raporta nicio acțiune HVAC, indiferent de setarea 'Activare acțiune HVAC'."
             }
           }
         }

@@ -83,7 +83,7 @@
           "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
         },
         "data_description": {
-          "enable_hvac_action": "Zeigt den Kühl-/Heiz-/Leerlaufzustand auf der Klimakarte nur für den Modus Kühlen/Heizen an, basierend auf der aktuellen und der Zieltemperatur sowie der unten angegebenen Schwelle. Nicht verfügbar für Auto oder andere Modi, da das Gerät nicht meldet, in welche Richtung es tatsächlich arbeitet.",
+          "enable_hvac_action": "HVAC-Aktion aktivieren. Das Gerät meldet die tatsächliche HVAC-Aktion für die meisten Modi nicht (OFF, FAN_ONLY, DRY sind hartcodiert). Verwenden Sie das Panel 'HVAC-Aktionskonfiguration', um das Fallback basierend auf der Temperatur für Heat/Cool-Modi zu aktivieren.",
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
           "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
@@ -125,10 +125,12 @@
           "hvac_action": {
             "name": "HVAC-Aktionskonfiguration",
             "data": {
-              "temperature_threshold": "Temperaturschwelle"
+              "temperature_threshold": "Temperaturschwelle",
+              "derive_from_temp_fallback": "Von Temperatur als Fallback ableiten"
             },
             "data_description": {
-              "temperature_threshold": "Temperaturüberschreitung über den Sollwert hinaus, in Grad, ab der KÜHLEN/HEIZEN als Leerlauf statt als aktiv gemeldet wird"
+              "temperature_threshold": "Temperaturüberschreitung über den Sollwert hinaus, in Grad, ab der KÜHLEN/HEIZEN als Leerlauf statt als aktiv gemeldet wird",
+              "derive_from_temp_fallback": "Aktivieren Sie das Fallback, um die HVAC-Aktion von der aktuellen im Vergleich zur Solltemperatur abzuleiten, wenn das Gerät diese nicht meldet. Hinweis: Die aktuelle Implementierung unterstützt das Melden von HVAC-Aktionen nach Gerätemodell nicht, daher wird keine HVAC-Aktion gemeldet, wenn diese Option deaktiviert ist, unabhängig von der Einstellung 'HVAC-Aktion aktivieren'."
             }
           }
         }

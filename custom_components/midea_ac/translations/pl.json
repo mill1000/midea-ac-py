@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Pokazuje stan chłodzenia/ogrzewania/bezczynności na karcie klimatyzacji tylko dla trybu Chłodzenie/Ogrzewanie, na podstawie aktualnej temperatury względem docelowej i progu podanego poniżej. Niedostępne dla trybu Auto ani innych trybów, ponieważ urządzenie nie zgłasza, w którym kierunku faktycznie działa.",
+          "enable_hvac_action": "Włącz raportowanie akcji HVAC. Urządzenie nie raportuje rzeczywistej akcji HVAC dla większości trybów (OFF, FAN_ONLY, DRY są hardcoded). Użyj panelu 'Konfiguracja akcji HVAC', aby włączyć fallback oparty na temperaturze dla trybów Heat/Cool.",
           "temp_step": "Wielkość kroku dla nastawy temperatury",
           "fan_speed_step": "Rozmiar kroku dla niestandardowych prędkości wentylatora",
           "max_connection_lifetime": "Maksymalny czas w sekundach, przez który połączenie będzie używane (minimum 15 sekund)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Konfiguracja działania HVAC",
             "data": {
-              "temperature_threshold": "Próg temperatury"
+              "temperature_threshold": "Próg temperatury",
+              "derive_from_temp_fallback": "Wyprowadź z temperatury jako fallback"
             },
             "data_description": {
-              "temperature_threshold": "Przekroczenie temperatury ponad nastawę, w stopniach, od którego CHŁODZENIE/OGRZEWANIE jest zgłaszane jako bezczynne zamiast aktywne"
+              "temperature_threshold": "Przekroczenie temperatury ponad nastawę, w stopniach, od którego CHŁODZENIE/OGRZEWANIE jest zgłaszane jako bezczynne zamiast aktywne",
+              "derive_from_temp_fallback": "Włącz fallback, aby wyprowadzić akcję HVAC z bieżącej temperatury w stosunku do temperatury docelowej, gdy urządzenie jej nie raportuje. Uwaga: Bieżąca implementacja nie obsługuje raportowania akcji HVAC dla modelu urządzenia, więc jeśli ta opcja jest wyłączona, żadna akcja HVAC nie będzie raportowana, niezależnie od ustawienia 'Włącz akcję HVAC'."
             }
           }
         }

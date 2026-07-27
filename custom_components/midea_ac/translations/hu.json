@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "A klíma kártyán csak Hűtés/Fűtés módban jeleníti meg a hűtési/fűtési/üresjárati állapotot, az aktuális és a célhőmérséklet, valamint az alábbi küszöbérték alapján. Automata módban vagy más módokban nem érhető el, mivel a készülék nem jelzi, milyen irányban működik ténylegesen.",
+          "enable_hvac_action": "HVAC műveleti jelentés engedélyezése. Az eszköz nem jelenti az HVAC műveletet a legtöbb üzemmódhoz (OFF, FAN_ONLY, DRY hardkódolva). A 'HVAC Műveleti Konfiguráció' panel segítségével engedélyezze a hőmérséklet-alapú tartalékot Heat/Cool módokhoz.",
           "temp_step": "A hőmérséklet beállítás lépésköze",
           "fan_speed_step": "A ventilátor sebesség egyéni lépésköze",
           "max_connection_lifetime": "A kapcsolat maximális időtartama másodpercben (minimum 15 másodperc)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "HVAC művelet konfigurációja",
             "data": {
-              "temperature_threshold": "Hőmérséklet-küszöb"
+              "temperature_threshold": "Hőmérséklet-küszöb",
+              "derive_from_temp_fallback": "Származtasson a hőmérsékletből tartalékként"
             },
             "data_description": {
-              "temperature_threshold": "Az alappont feletti hőmérséklet-túllépés fokban, amelytől kezdve a HŰTÉS/FŰTÉS tétlenként jelenik meg aktív helyett"
+              "temperature_threshold": "Az alappont feletti hőmérséklet-túllépés fokban, amelytől kezdve a HŰTÉS/FŰTÉS tétlenként jelenik meg aktív helyett",
+              "derive_from_temp_fallback": "Engedélyezze a tartalékot az HVAC műveleti származtatásához az aktuális hőmérséklet alapján a célhőmérséklethez képest, ha az eszköz nem jelenti. Megjegyzés: A jelenlegi implementáció nem támogatja az HVAC műveleti jelentést eszközmodell szerint, ezért ha ez az opció letiltott, akkor az eszköz nem jelent HVAC műveletet az 'HVAC Műveleti Engedélyezés' beállítástól függetlenül."
             }
           }
         }

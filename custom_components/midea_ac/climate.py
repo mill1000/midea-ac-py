@@ -27,6 +27,7 @@ from msmart.utils import MideaIntEnum
 
 from .config_flow import _DEFAULT_OPTIONS
 from .const import (CONF_BEEP, CONF_ENABLE_HVAC_ACTION, CONF_HVAC_ACTION,
+                    CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
                     CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD, CONF_TEMP_STEP,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     PRESET_IECO, PRESET_SILENT, MideaDevice)
@@ -77,6 +78,7 @@ class ClimateConfig:
     max_target_temperature: float
     enable_hvac_action: bool
     hvac_action_temperature_threshold: float
+    hvac_action_derive_from_temp_fallback: bool
     supported_operation_modes: Sequence[MideaIntEnum]
     supported_fan_speeds: Sequence[MideaIntEnum]
     supported_swing_modes: Sequence[MideaIntEnum]
@@ -108,6 +110,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         self._max_temperature = config.max_target_temperature
         self._enable_hvac_action = config.enable_hvac_action
         self._hvac_action_temperature_threshold = config.hvac_action_temperature_threshold
+        self._hvac_action_derive_from_temp_fallback = config.hvac_action_derive_from_temp_fallback
 
         # Setup default supported features
         self._supported_features = (
@@ -298,6 +301,30 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         return self._OPERATIONAL_MODE_TO_HVAC_MODE.get(self._device.operational_mode, HVACMode.OFF)
 
+    def _derive_hvac_action_from_temp(self) -> HVACAction | None:
+        """Derive HVAC action from current vs target temperature for HEAT/COOL modes."""
+        if self.hvac_mode not in (HVACMode.COOL, HVACMode.HEAT):
+            return None
+
+        current = self.current_temperature
+        target = self.target_temperature
+
+        if current is None or target is None:
+            return HVACAction.IDLE
+
+        if self.hvac_mode == HVACMode.COOL:
+            return (
+                HVACAction.IDLE
+                if current <= target - self._hvac_action_temperature_threshold
+                else HVACAction.COOLING
+            )
+
+        return (
+            HVACAction.IDLE
+            if current >= target + self._hvac_action_temperature_threshold
+            else HVACAction.HEATING
+        )
+
     @property
     def hvac_action(self) -> HVACAction | None:
         """Return the current HVAC action."""
@@ -321,6 +348,8 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         # a potentially misleading value. See
         # https://github.com/mill1000/midea-ac-py/issues/449
         if self.hvac_mode == HVACMode.AUTO:
+            if self._hvac_action_derive_from_temp_fallback:
+                return self._derive_hvac_action_from_temp()
             return None
 
         # HEAT/COOL are the only modes where the operating direction is
@@ -331,31 +360,17 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         # The device doesn't report actual activity, but for HEAT/COOL its
         # intent is known, so hvac_action can be derived from current vs.
-        # target temperature. Per the HA core hvac_action documentation
+        # target temperature if the fallback is enabled. Per the HA core
+        # hvac_action documentation
         # (https://developers.home-assistant.io/docs/core/entity/climate/#hvac-action)
         # and standard practice in other integrations, a device set to HEAT
         # (or COOL) that has already reached its target temperature is no
         # longer actively pursuing that intent: it should report IDLE
         # rather than HEATING/COOLING once the setpoint is reached,
         # regardless of whether the compressor is still physically cycling.
-        current = self.current_temperature
-        target = self.target_temperature
-
-        if current is None or target is None:
-            return HVACAction.IDLE
-
-        if self.hvac_mode == HVACMode.COOL:
-            return (
-                HVACAction.IDLE
-                if current <= target - self._hvac_action_temperature_threshold
-                else HVACAction.COOLING
-            )
-
-        return (
-            HVACAction.IDLE
-            if current >= target + self._hvac_action_temperature_threshold
-            else HVACAction.HEATING
-        )
+        if self._hvac_action_derive_from_temp_fallback:
+            return self._derive_hvac_action_from_temp()
+        return None
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set the HVAC mode."""
@@ -458,6 +473,9 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),
+            hvac_action_derive_from_temp_fallback=options.get(CONF_HVAC_ACTION, {}).get(
+                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
+                _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK]),
             supported_operation_modes=operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,
@@ -698,6 +716,9 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             hvac_action_temperature_threshold=options.get(CONF_HVAC_ACTION, {}).get(
                 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD,
                 _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD]),
+            hvac_action_derive_from_temp_fallback=options.get(CONF_HVAC_ACTION, {}).get(
+                CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK,
+                _DEFAULT_OPTIONS[CONF_HVAC_ACTION][CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK]),
             supported_operation_modes=device.supported_operation_modes,
             supported_fan_speeds=device.supported_fan_speeds,
             supported_swing_modes=device.supported_swing_modes,

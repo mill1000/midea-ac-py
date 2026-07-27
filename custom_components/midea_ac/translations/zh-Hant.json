@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "HVAC 動作設定",
             "data": {
-              "temperature_threshold": "溫度閾值"
+              "temperature_threshold": "溫度閾值",
+              "derive_from_temp_fallback": "從溫度派生作為備用"
             },
             "data_description": {
-              "temperature_threshold": "超出設定溫度的溫差(攝氏度)，達到該溫差後製冷/製熱將回報為閒置狀態而非運作中"
+              "temperature_threshold": "超出設定溫度的溫差(攝氏度)，達到該溫差後製冷/製熱將回報為閒置狀態而非運作中",
+              "derive_from_temp_fallback": "對於製冷/製熱模式，從當前溫度與目標溫度推導HVAC動作（加熱/冷卻/空閒）的備用方案。注意：設備本身不報告HVAC動作，因此如果禁用此功能，無論「啟用HVAC動作」設置如何，都不會報告任何HVAC動作。"
             }
           }
         }

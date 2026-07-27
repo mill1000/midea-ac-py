@@ -29,6 +29,7 @@ CONF_CAPABILITY_OVERRIDES = "capability_overrides"
 CONF_MERGE_CAPABILITY_OVERRIDES = "merge_capability_overrides"
 CONF_HVAC_ACTION = "hvac_action"
 CONF_HVAC_ACTION_TEMPERATURE_THRESHOLD = "temperature_threshold"
+CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK = "derive_from_temp_fallback"
 
 PRESET_IECO = "ieco"
 PRESET_SILENT = "silent"

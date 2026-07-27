@@ -82,7 +82,7 @@
           "swing_angle_rtl": "Reverse Horizontal Swing Angle"
         },
         "data_description": {
-          "enable_hvac_action": "Affiche l'état de refroidissement/chauffage/inactif sur la carte climatisation uniquement pour le mode Chaud/Froid, en fonction de la température actuelle par rapport à la consigne et du seuil ci-dessous. Non disponible pour le mode Auto ou les autres modes, car l'appareil ne signale pas la direction dans laquelle il fonctionne réellement.",
+          "enable_hvac_action": "Activer la déclaration de l'action HVAC. L'appareil ne rapporte pas la véritable action HVAC pour la plupart des modes (OFF, FAN_ONLY, DRY sont codés en dur). Utilisez le panneau 'Configuration de l'action HVAC' pour activer le secours basé sur la température pour les modes Chaud/Froid.",
           "temp_step": "Taille du palier pour le réglage de la température",
           "fan_speed_step": "Taille du palier pour le réglage de la vitesses personnalisé du ventilateur",
           "max_connection_lifetime": "Durée maximale en secondes pour laquelle une connexion sera utilisée (minimum 15 secondes)"
@@ -124,10 +124,12 @@
           "hvac_action": {
             "name": "Configuration de l'action HVAC",
             "data": {
-              "temperature_threshold": "Seuil de température"
+              "temperature_threshold": "Seuil de température",
+              "derive_from_temp_fallback": "Dériver de la température en secours"
             },
             "data_description": {
-              "temperature_threshold": "Dépassement de température par rapport à la consigne, en degrés, à partir duquel REFROIDISSEMENT/CHAUFFAGE est signalé comme inactif au lieu d'actif"
+              "temperature_threshold": "Dépassement de température par rapport à la consigne, en degrés, à partir duquel REFROIDISSEMENT/CHAUFFAGE est signalé comme inactif au lieu d'actif",
+              "derive_from_temp_fallback": "Pour les modes Chaud/Froid, activer le secours pour dériver l'action HVAC (chauffage/refroidissement/inactif) de la température actuelle par rapport à la température cible. Remarque : L'appareil ne rapporte pas nativement l'action HVAC, donc si cette option est désactivée, aucune action HVAC ne sera rapportée, quel que soit le paramètre 'Activer l'action HVAC'."
             }
           }
         }
