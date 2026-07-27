@@ -495,6 +495,51 @@ async def test_ac_hvac_action_fallback_disabled(
 
 
 @pytest.mark.parametrize(
+    ("operational_mode", "expected_action", "fallback_enabled"),
+    [
+        # DRY always returns DRYING, regardless of fallback setting (not temp-derived)
+        (AC.OperationalMode.DRY, HVACAction.DRYING, True),
+        (AC.OperationalMode.DRY, HVACAction.DRYING, False),
+        # FAN_ONLY always returns FAN, regardless of fallback setting (not temp-derived)
+        (AC.OperationalMode.FAN_ONLY, HVACAction.FAN, True),
+        (AC.OperationalMode.FAN_ONLY, HVACAction.FAN, False),
+    ],
+)
+async def test_ac_hvac_action_hardcoded_modes_ignore_fallback(
+    hass: HomeAssistant,
+    operational_mode: AC.OperationalMode,
+    expected_action: HVACAction,
+    fallback_enabled: bool,
+):
+    """Test that hardcoded modes (DRY, FAN_ONLY) return fixed actions regardless of fallback.
+
+    These modes are not temperature-derived (not yet implemented), so their hvac_action
+    is independent of the derive_from_temp_fallback option.
+    """
+
+    mock_device = AC("0.0.0.0", 0, 0)
+    mock_device._power_state = True
+    mock_device._operational_mode = operational_mode
+    mock_device._indoor_temperature = 26
+    mock_device._target_temperature = 24
+
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    options = {
+        CONF_ENABLE_HVAC_ACTION: True,
+        CONF_HVAC_ACTION: {
+            CONF_HVAC_ACTION_DERIVE_FROM_TEMP_FALLBACK: fallback_enabled,
+        }
+    }
+    climate_device = MideaClimateACDevice(hass, mock_coordinator, options)
+
+    # Hardcoded modes always return their fixed action, fallback setting doesn't matter
+    assert climate_device.hvac_action == expected_action
+
+
+@pytest.mark.parametrize(
     ("power_state", "operational_mode", "indoor_temperature",
      "target_temperature", "expected_action"),
     [
