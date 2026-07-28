@@ -16,18 +16,14 @@ from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import (
-    CONF_BEEP,
-    CONF_CLOUD_COUNTRY_CODES,
-    CONF_DEFAULT_CLOUD_COUNTRY,
-    CONF_DEVICE_TYPE,
-    CONF_ENERGY_SENSOR,
-    CONF_FAN_SPEED_STEP,
-    CONF_KEY,
-    CONF_POWER_SENSOR,
-    CONF_WORKAROUNDS,
-    DOMAIN,
-)
+from custom_components.midea_ac.const import (CONF_BEEP,
+                                              CONF_CLOUD_COUNTRY_CODES,
+                                              CONF_DEFAULT_CLOUD_COUNTRY,
+                                              CONF_DEVICE_TYPE,
+                                              CONF_ENERGY_SENSOR,
+                                              CONF_FAN_SPEED_STEP, CONF_KEY,
+                                              CONF_POWER_SENSOR,
+                                              CONF_WORKAROUNDS, DOMAIN)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
