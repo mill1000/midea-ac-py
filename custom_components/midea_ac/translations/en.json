@@ -75,6 +75,7 @@
       "init": {
         "description": "Advanced integration settings.",
         "data": {
+          "update_interval": "Update Interval",
           "prompt_tone": "Enable Beep",
           "temp_step": "Temperature Step",
           "fan_speed_step": "Fan Speed Step",
@@ -84,6 +85,7 @@
           "merge_capability_overrides": "Merge Overrides"
         },
         "data_description": {
+          "update_interval": "How often to poll the device for state updates (1-30 seconds)",
           "temp_step": "Step size for temperature set point",
           "fan_speed_step": "Step size for custom fan speeds",
           "max_connection_lifetime": "Maximum time in seconds a connection will be used (15 second minimum)",

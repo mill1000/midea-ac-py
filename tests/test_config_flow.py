@@ -706,7 +706,8 @@ async def test_options_flow_init(
         result = await hass.config_entries.options.async_configure(
             result["flow_id"],
             user_input={
-                CONF_BEEP: False
+                CONF_BEEP: False,
+                CONF_UPDATE_INTERVAL: 20,
             },
         )
         await hass.async_block_till_done()
@@ -714,6 +715,7 @@ async def test_options_flow_init(
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert mock_config_entry.options == {
         CONF_BEEP: False,
+        CONF_UPDATE_INTERVAL: 20,
     }
     assert len(mock_setup_entry.mock_calls) == 1
 
