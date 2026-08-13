@@ -130,13 +130,20 @@ async def async_setup_entry(
     # Group 1 — outdoor unit performance sensors
     if hasattr(device, "enable_group1_data_requests"):
         group1_sensors = [
-            ("target_compressor_frequency", SensorDeviceClass.FREQUENCY, UnitOfFrequency.HERTZ, "target_compressor_frequency"),
-            ("compressor_frequency", SensorDeviceClass.FREQUENCY, UnitOfFrequency.HERTZ, "compressor_frequency"),
-            ("compressor_current", SensorDeviceClass.CURRENT, UnitOfElectricCurrent.AMPERE, "compressor_current"),
-            ("compressor_voltage", SensorDeviceClass.VOLTAGE, UnitOfElectricPotential.VOLT, "compressor_voltage"),
-            ("indoor_coil_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "indoor_coil_temperature"),
-            ("outdoor_coil_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "outdoor_coil_temperature"),
-            ("discharge_pipe_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "discharge_pipe_temperature"),
+            ("target_compressor_frequency", SensorDeviceClass.FREQUENCY,
+             UnitOfFrequency.HERTZ, "target_compressor_frequency"),
+            ("compressor_frequency", SensorDeviceClass.FREQUENCY,
+             UnitOfFrequency.HERTZ, "compressor_frequency"),
+            ("compressor_current", SensorDeviceClass.CURRENT,
+             UnitOfElectricCurrent.AMPERE, "compressor_current"),
+            ("compressor_voltage", SensorDeviceClass.VOLTAGE,
+             UnitOfElectricPotential.VOLT, "compressor_voltage"),
+            ("indoor_coil_temperature", SensorDeviceClass.TEMPERATURE,
+             UnitOfTemperature.CELSIUS, "indoor_coil_temperature"),
+            ("outdoor_coil_temperature", SensorDeviceClass.TEMPERATURE,
+             UnitOfTemperature.CELSIUS, "outdoor_coil_temperature"),
+            ("discharge_pipe_temperature", SensorDeviceClass.TEMPERATURE,
+             UnitOfTemperature.CELSIUS, "discharge_pipe_temperature"),
         ]
         for prop, device_class, unit, translation_key in group1_sensors:
             if hasattr(device, prop):
