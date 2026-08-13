@@ -39,12 +39,14 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
                     CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
+                    CONF_UPDATE_INTERVAL,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     UPDATE_INTERVAL, EnergyFormat)
 
 _LOGGER = logging.getLogger(__name__)
 
 _DEFAULT_OPTIONS = {
+    CONF_UPDATE_INTERVAL: UPDATE_INTERVAL,
     CONF_TEMP_STEP: 1.0,
     CONF_MAX_CONNECTION_LIFETIME: None,
     CONF_SWING_ANGLE_RTL: False,
@@ -465,6 +467,15 @@ class MideaOptionsFlow(OptionsFlow):
 
     _BASE_SCHEMA = vol.Schema(
         {
+            vol.Optional(CONF_UPDATE_INTERVAL): NumberSelector(
+                NumberSelectorConfig(
+                    min=1,
+                    max=30,
+                    step=1,
+                    unit_of_measurement="s",
+                    mode=NumberSelectorMode.SLIDER,
+                )
+            ),
             vol.Optional(CONF_SWING_ANGLE_RTL): cv.boolean,
             vol.Optional(CONF_TEMP_STEP): NumberSelector(
                 NumberSelectorConfig(

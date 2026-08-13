@@ -3,6 +3,9 @@
     "binary_sensor": {
       "self_clean": {
         "default": "mdi:spray-bottle"
+      },
+      "water_pump": {
+        "default": "mdi:water-pump"
       }
     },
     "climate": {
@@ -49,8 +52,47 @@
       }
     },
     "sensor": {
+      "compressor_current": {
+        "default": "mdi:current-ac"
+      },
+      "compressor_frequency": {
+        "default": "mdi:sine-wave"
+      },
+      "compressor_voltage": {
+        "default": "mdi:lightning-bolt"
+      },
+      "discharge_pipe_temperature": {
+        "default": "mdi:thermometer-high"
+      },
+      "horizontal_louvers_angle": {
+        "default": "mdi:angle-acute"
+      },
+      "indoor_coil_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "indoor_fan_speed": {
+        "default": "mdi:fan"
+      },
+      "outdoor_coil_temperature": {
+        "default": "mdi:sun-thermometer"
+      },
+      "outdoor_fan_speed": {
+        "default": "mdi:fan"
+      },
       "outdoor_temperature": {
         "default": "mdi:sun-thermometer"
+      },
+      "outdoor_unit_power": {
+        "default": "mdi:lightning-bolt"
+      },
+      "target_compressor_frequency": {
+        "default": "mdi:sine-wave"
+      },
+      "target_indoor_fan_speed": {
+        "default": "mdi:fan"
+      },
+      "vertical_louvers_angle": {
+        "default": "mdi:angle-acute"
       }
     },
     "switch": {
