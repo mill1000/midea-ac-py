@@ -38,8 +38,7 @@ from .const import (CONF_BEEP, CONF_CAPABILITY_OVERRIDES,
                     CONF_FAN_SPEED_STEP, CONF_KEY,
                     CONF_MAX_CONNECTION_LIFETIME,
                     CONF_MERGE_CAPABILITY_OVERRIDES, CONF_POWER_SENSOR,
-                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP,
-                    CONF_UPDATE_INTERVAL,
+                    CONF_SWING_ANGLE_RTL, CONF_TEMP_STEP, CONF_UPDATE_INTERVAL,
                     CONF_USE_FAN_ONLY_WORKAROUND, CONF_WORKAROUNDS, DOMAIN,
                     UPDATE_INTERVAL, EnergyFormat)
 

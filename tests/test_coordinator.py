@@ -10,18 +10,14 @@ from homeassistant.core import HomeAssistant
 from msmart.device import AirConditioner as AC
 from msmart.lan import _LanProtocol
 
-from custom_components.midea_ac.binary_sensor import (
-    MideaGroup2BinarySensor,
-    MideaGroup5BinarySensor,
-)
+from custom_components.midea_ac.binary_sensor import (MideaGroup2BinarySensor,
+                                                      MideaGroup5BinarySensor)
 from custom_components.midea_ac.coordinator import MideaDeviceUpdateCoordinator
-from custom_components.midea_ac.sensor import (
-    MideaGroup1Sensor,
-    MideaGroup2Sensor,
-    MideaGroup5Sensor,
-    MideaGroup7Sensor,
-    MideaGroup11Sensor,
-)
+from custom_components.midea_ac.sensor import (MideaGroup1Sensor,
+                                               MideaGroup2Sensor,
+                                               MideaGroup5Sensor,
+                                               MideaGroup7Sensor,
+                                               MideaGroup11Sensor)
 
 _LOGGER = logging.getLogger(__name__)
 
