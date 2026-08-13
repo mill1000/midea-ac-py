@@ -10,9 +10,18 @@ from homeassistant.core import HomeAssistant
 from msmart.device import AirConditioner as AC
 from msmart.lan import _LanProtocol
 
-from custom_components.midea_ac.binary_sensor import MideaGroup5BinarySensor
+from custom_components.midea_ac.binary_sensor import (
+    MideaGroup2BinarySensor,
+    MideaGroup5BinarySensor,
+)
 from custom_components.midea_ac.coordinator import MideaDeviceUpdateCoordinator
-from custom_components.midea_ac.sensor import MideaGroup5Sensor
+from custom_components.midea_ac.sensor import (
+    MideaGroup1Sensor,
+    MideaGroup2Sensor,
+    MideaGroup5Sensor,
+    MideaGroup7Sensor,
+    MideaGroup11Sensor,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -234,5 +243,160 @@ async def test_group5_entity_request_enable(
     await entities[1].async_will_remove_from_hass()
     assert coordinator._group5_entities == 0
     assert device.enable_group5_data_requests == False
+
+    await coordinator.async_shutdown()
+
+
+async def test_group1_entity_request_enable(
+    hass: HomeAssistant
+) -> None:
+    """Test AC device group1 entities enable requests when added to HA."""
+
+    # Create a dummy device and coordinator
+    device = AC("0.0.0.0", 0, 0)
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
+
+    # Create entities
+    entities = [
+        MideaGroup1Sensor(
+            coordinator,
+            "outdoor_coil_temperature",
+            None,
+            None,
+            "outdoor_coil_temperature",
+        )
+    ]
+
+    # Add each sensor to HA
+    for entity in entities:
+        await entity.async_added_to_hass()
+
+    # Verify group 1 requests are enabled when entity is added to HA
+    assert coordinator._group1_entities == len(entities)
+    assert device.enable_group1_data_requests == True
+
+    # Remove 1 entity from HA
+    await entities[0].async_will_remove_from_hass()
+    assert coordinator._group1_entities == 0
+    assert device.enable_group1_data_requests == False
+
+    await coordinator.async_shutdown()
+
+
+async def test_group2_entity_request_enable(
+    hass: HomeAssistant
+) -> None:
+    """Test AC device group2 entities enable requests when added to HA."""
+
+    # Create a dummy device and coordinator
+    device = AC("0.0.0.0", 0, 0)
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
+
+    # Create entities
+    entities = [
+        MideaGroup2Sensor(
+            coordinator,
+            "indoor_fan_speed",
+            None,
+            None,
+            "indoor_fan_speed",
+        ),
+        MideaGroup2BinarySensor(
+            coordinator,
+            "water_pump_running",
+            None,
+            "water_pump"
+        )
+    ]
+
+    # Add each sensor to HA
+    for entity in entities:
+        await entity.async_added_to_hass()
+
+    # Verify group 2 requests are enabled when entity is added to HA
+    assert coordinator._group2_entities == len(entities)
+    assert device.enable_group2_data_requests == True
+
+    # Remove 1 entity from HA
+    await entities[0].async_will_remove_from_hass()
+    assert coordinator._group2_entities == 1
+    assert device.enable_group2_data_requests == True
+
+    # Verify group 2 requests are disabled when last entity is removed
+    await entities[1].async_will_remove_from_hass()
+    assert coordinator._group2_entities == 0
+    assert device.enable_group2_data_requests == False
+
+    await coordinator.async_shutdown()
+
+
+async def test_group7_entity_request_enable(
+    hass: HomeAssistant
+) -> None:
+    """Test AC device group7 entities enable requests when added to HA."""
+
+    # Create a dummy device and coordinator
+    device = AC("0.0.0.0", 0, 0)
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
+
+    # Create entities
+    entities = [
+        MideaGroup7Sensor(
+            coordinator,
+            "outdoor_unit_power",
+            None,
+            None,
+            "outdoor_unit_power",
+        )
+    ]
+
+    # Add each sensor to HA
+    for entity in entities:
+        await entity.async_added_to_hass()
+
+    # Verify group 7 requests are enabled when entity is added to HA
+    assert coordinator._group7_entities == len(entities)
+    assert device.enable_group7_data_requests == True
+
+    # Remove 1 entity from HA
+    await entities[0].async_will_remove_from_hass()
+    assert coordinator._group7_entities == 0
+    assert device.enable_group7_data_requests == False
+
+    await coordinator.async_shutdown()
+
+
+async def test_group11_entity_request_enable(
+    hass: HomeAssistant
+) -> None:
+    """Test AC device group11 entities enable requests when added to HA."""
+
+    # Create a dummy device and coordinator
+    device = AC("0.0.0.0", 0, 0)
+    coordinator = MideaDeviceUpdateCoordinator(hass, device)
+
+    # Create entities
+    entities = [
+        MideaGroup11Sensor(
+            coordinator,
+            "horizontal_louvers_angle",
+            None,
+            None,
+            "horizontal_louvers_angle",
+        )
+    ]
+
+    # Add each sensor to HA
+    for entity in entities:
+        await entity.async_added_to_hass()
+
+    # Verify group 11 requests are enabled when entity is added to HA
+    assert coordinator._group11_entities == len(entities)
+    assert device.enable_group11_data_requests == True
+
+    # Remove 1 entity from HA
+    await entities[0].async_will_remove_from_hass()
+    assert coordinator._group11_entities == 0
+    assert device.enable_group11_data_requests == False
 
     await coordinator.async_shutdown()

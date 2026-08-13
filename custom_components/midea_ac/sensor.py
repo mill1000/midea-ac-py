@@ -6,7 +6,9 @@ import logging
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (PERCENTAGE, UnitOfEnergy, UnitOfPower,
+from homeassistant.const import (PERCENTAGE, UnitOfElectricCurrent,
+                                 UnitOfElectricPotential, UnitOfEnergy,
+                                 UnitOfFrequency, UnitOfPower,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -16,7 +18,9 @@ from .const import (CONF_ENERGY_DATA_FORMAT, CONF_ENERGY_DATA_SCALE,
                     CONF_ENERGY_SENSOR, CONF_POWER_SENSOR, DOMAIN,
                     EnergyFormat)
 from .coordinator import (MideaCoordinatorEntity, MideaDeviceUpdateCoordinator,
-                          MideaGroup5Entity)
+                          MideaGroup1Entity, MideaGroup2Entity,
+                          MideaGroup5Entity, MideaGroup7Entity,
+                          MideaGroup11Entity)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -119,9 +123,57 @@ async def async_setup_entry(
             coordinator,
             "outdoor_fan_speed",
             None,
-            None,
+            "rpm",
             "outdoor_fan_speed",
         ))
+
+    # Group 1 — outdoor unit performance sensors
+    if hasattr(device, "enable_group1_data_requests"):
+        group1_sensors = [
+            ("target_compressor_frequency", SensorDeviceClass.FREQUENCY, UnitOfFrequency.HERTZ, "target_compressor_frequency"),
+            ("compressor_frequency", SensorDeviceClass.FREQUENCY, UnitOfFrequency.HERTZ, "compressor_frequency"),
+            ("compressor_current", SensorDeviceClass.CURRENT, UnitOfElectricCurrent.AMPERE, "compressor_current"),
+            ("compressor_voltage", SensorDeviceClass.VOLTAGE, UnitOfElectricPotential.VOLT, "compressor_voltage"),
+            ("indoor_coil_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "indoor_coil_temperature"),
+            ("outdoor_coil_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "outdoor_coil_temperature"),
+            ("discharge_pipe_temperature", SensorDeviceClass.TEMPERATURE, UnitOfTemperature.CELSIUS, "discharge_pipe_temperature"),
+        ]
+        for prop, device_class, unit, translation_key in group1_sensors:
+            if hasattr(device, prop):
+                entities.append(MideaGroup1Sensor(
+                    coordinator, prop, device_class, unit, translation_key))
+
+    # Group 2 — indoor fan sensors
+    if hasattr(device, "enable_group2_data_requests"):
+        group2_sensors = [
+            ("target_indoor_fan_speed", None, "rpm", "target_indoor_fan_speed"),
+            ("indoor_fan_speed", None, "rpm", "indoor_fan_speed"),
+        ]
+        for prop, device_class, unit, translation_key in group2_sensors:
+            if hasattr(device, prop):
+                entities.append(MideaGroup2Sensor(
+                    coordinator, prop, device_class, unit, translation_key))
+
+    # Group 7 — outdoor unit power sensor
+    if hasattr(device, "outdoor_unit_power") and hasattr(device, "enable_group7_data_requests"):
+        entities.append(MideaGroup7Sensor(
+            coordinator,
+            "outdoor_unit_power",
+            SensorDeviceClass.POWER,
+            UnitOfPower.WATT,
+            "outdoor_unit_power",
+        ))
+
+    # Group 11 — louver angle sensors
+    if hasattr(device, "enable_group11_data_requests"):
+        group11_sensors = [
+            ("horizontal_louvers_angle", None, None, "horizontal_louvers_angle"),
+            ("vertical_louvers_angle", None, None, "vertical_louvers_angle"),
+        ]
+        for prop, device_class, unit, translation_key in group11_sensors:
+            if hasattr(device, prop):
+                entities.append(MideaGroup11Sensor(
+                    coordinator, prop, device_class, unit, translation_key))
 
     add_entities(entities)
 
@@ -250,4 +302,44 @@ class MideaGroup5Sensor(MideaSensor, MideaGroup5Entity):
         MideaSensor.__init__(self, *args, **kwargs)
 
         # Group5 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False
+
+
+class MideaGroup1Sensor(MideaSensor, MideaGroup1Entity):
+    """Sensor for Midea AC group 1 data (outdoor unit performance)."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        # Group 1 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False
+
+
+class MideaGroup2Sensor(MideaSensor, MideaGroup2Entity):
+    """Sensor for Midea AC group 2 data (indoor fan)."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        # Group 2 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False
+
+
+class MideaGroup7Sensor(MideaSensor, MideaGroup7Entity):
+    """Sensor for Midea AC group 7 data (outdoor unit power)."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        # Group 7 sensors start disabled in case device doesn't support them
+        self._attr_entity_registry_enabled_default = False
+
+
+class MideaGroup11Sensor(MideaSensor, MideaGroup11Entity):
+    """Sensor for Midea AC group 11 data (louver angles)."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        MideaSensor.__init__(self, *args, **kwargs)
+
+        # Group 11 sensors start disabled in case device doesn't support them
         self._attr_entity_registry_enabled_default = False
