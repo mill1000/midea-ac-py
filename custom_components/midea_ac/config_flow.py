@@ -11,7 +11,7 @@ import yaml
 from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
                                           ConfigFlowResult, OptionsFlow)
 from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
-                                 CONF_PORT, CONF_TOKEN, DEGREE)
+                                 CONF_PORT, CONF_TOKEN, DEGREE, UnitOfTime)
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import section
 from homeassistant.helpers import httpx_client
@@ -453,7 +453,7 @@ class MideaOptionsFlow(OptionsFlow):
                     min=1,
                     max=30,
                     step=1,
-                    unit_of_measurement="s",
+                    unit_of_measurement=UnitOfTime.SECONDS,
                     mode=NumberSelectorMode.SLIDER,
                 )
             ),
