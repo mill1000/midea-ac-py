@@ -544,13 +544,13 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
     @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
-        if self._device.eco:
+        if self._device.eco and self._device.supports_eco:
             return PRESET_ECO
-        elif self._device.ieco:
+        elif self._device.ieco and self._device.supports_ieco:
             return PRESET_IECO
-        elif self._device.turbo:
+        elif self._device.turbo and self._device.supports_turbo:
             return PRESET_BOOST
-        elif self._device.freeze_protection:
+        elif self._device.freeze_protection and self._device.supports_freeze_protection:
             return PRESET_AWAY
         elif self._device.sleep:
             return PRESET_SLEEP
@@ -635,11 +635,11 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
     @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
-        if self._device.eco:
+        if self._device.eco and self._device.supports_eco:
             return PRESET_ECO
-        elif self._device.silent:
+        elif self._device.silent and self._device.supports_silent:
             return PRESET_SILENT
-        elif self._device.sleep:
+        elif self._device.sleep and self._device.supports_sleep:
             return PRESET_SLEEP
         else:
             return PRESET_NONE
