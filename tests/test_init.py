@@ -326,4 +326,3 @@ async def test_config_entry_migration_from_6(hass: HomeAssistant) -> None:
     options = mock_config_entry.options
     assert CONF_UPDATE_INTERVAL in options
     assert options[CONF_UPDATE_INTERVAL] == UPDATE_INTERVAL
-
