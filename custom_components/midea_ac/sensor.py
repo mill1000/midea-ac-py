@@ -154,7 +154,8 @@ async def async_setup_entry(
     # Group 2 — indoor fan sensors
     if hasattr(device, "enable_group2_data_requests"):
         group2_sensors = [
-            ("target_indoor_fan_speed", None, REVOLUTIONS_PER_MINUTE, "target_indoor_fan_speed"),
+            ("target_indoor_fan_speed", None,
+             REVOLUTIONS_PER_MINUTE, "target_indoor_fan_speed"),
             ("indoor_fan_speed", None, REVOLUTIONS_PER_MINUTE, "indoor_fan_speed"),
         ]
         for prop, device_class, unit, translation_key in group2_sensors:
