@@ -211,6 +211,14 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) ->
             hass.config_entries.async_update_entry(
                 config_entry, options=new_options, minor_version=6)
 
+        # 1.6 -> 1.7: Add update interval option
+        if config_entry.minor_version == 6:
+            new_options = {**config_entry.options}
+            new_options.setdefault(CONF_UPDATE_INTERVAL, UPDATE_INTERVAL)
+
+            hass.config_entries.async_update_entry(
+                config_entry, options=new_options, minor_version=7)
+
     _LOGGER.debug("Migration to configuration version %s.%s successful.",
                   config_entry.version, config_entry.minor_version)
 
