@@ -6,7 +6,8 @@ import logging
 from homeassistant.components.sensor import (SensorDeviceClass, SensorEntity,
                                              SensorStateClass)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (PERCENTAGE, UnitOfElectricCurrent,
+from homeassistant.const import (DEGREE, PERCENTAGE, REVOLUTIONS_PER_MINUTE,
+                                 UnitOfElectricCurrent,
                                  UnitOfElectricPotential, UnitOfEnergy,
                                  UnitOfFrequency, UnitOfPower,
                                  UnitOfTemperature)
@@ -123,7 +124,7 @@ async def async_setup_entry(
             coordinator,
             "outdoor_fan_speed",
             None,
-            "rpm",
+            REVOLUTIONS_PER_MINUTE,
             "outdoor_fan_speed",
         ))
 
@@ -153,8 +154,8 @@ async def async_setup_entry(
     # Group 2 — indoor fan sensors
     if hasattr(device, "enable_group2_data_requests"):
         group2_sensors = [
-            ("target_indoor_fan_speed", None, "rpm", "target_indoor_fan_speed"),
-            ("indoor_fan_speed", None, "rpm", "indoor_fan_speed"),
+            ("target_indoor_fan_speed", None, REVOLUTIONS_PER_MINUTE, "target_indoor_fan_speed"),
+            ("indoor_fan_speed", None, REVOLUTIONS_PER_MINUTE, "indoor_fan_speed"),
         ]
         for prop, device_class, unit, translation_key in group2_sensors:
             if hasattr(device, prop):
@@ -174,8 +175,8 @@ async def async_setup_entry(
     # Group 11 — louver angle sensors
     if hasattr(device, "enable_group11_data_requests"):
         group11_sensors = [
-            ("horizontal_louvers_angle", None, None, "horizontal_louvers_angle"),
-            ("vertical_louvers_angle", None, None, "vertical_louvers_angle"),
+            ("horizontal_louvers_angle", None, DEGREE, "horizontal_louvers_angle"),
+            ("vertical_louvers_angle", None, DEGREE, "vertical_louvers_angle"),
         ]
         for prop, device_class, unit, translation_key in group11_sensors:
             if hasattr(device, prop):
