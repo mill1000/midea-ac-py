@@ -165,11 +165,7 @@ async def test_discover_flow_new_and_already_configured_devices(
 
 
 def test_cloud_country_codes_are_known_to_msmart() -> None:
-    """Test every selectable cloud region has credentials in msmart-ng.
-
-    The integration must not carry its own copy of the cloud credentials, so
-    the regions it offers have to be regions msmart-ng can actually log into.
-    """
+    """Test every selectable cloud region has credentials in msmart-ng."""
     assert set(CONF_CLOUD_COUNTRY_CODES) <= set(
         NetHomePlusCloud.CLOUD_CREDENTIALS)
     assert CONF_DEFAULT_CLOUD_COUNTRY in NetHomePlusCloud.CLOUD_CREDENTIALS
