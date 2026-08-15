@@ -639,7 +639,7 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
             return PRESET_ECO
         elif self._device.silent and self._device.supports_silent:
             return PRESET_SILENT
-        elif self._device.sleep and self._device.supports_sleeps:
+        elif self._device.sleep and self._device.supports_sleep:
             return PRESET_SLEEP
         else:
             return PRESET_NONE
