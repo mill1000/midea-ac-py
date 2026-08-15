@@ -1,12 +1,13 @@
 """Tests for the climate platform."""
 
 import logging
-from typing import List, Mapping
+from enum import Flag
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
-                                                    PRESET_ECO, PRESET_SLEEP,
+                                                    PRESET_ECO, PRESET_NONE,
+                                                    PRESET_SLEEP,
                                                     ClimateEntityFeature,
                                                     HVACMode)
 from homeassistant.core import HomeAssistant
@@ -196,23 +197,29 @@ async def test_fan_speed_config(
 @pytest.mark.parametrize(
     ("device_class", "config_modes"),
     [
-        (AC, {}),
-        (AC, {PRESET_ECO: "_supports_eco"}),
-        (CC, {}),
-        (CC, {PRESET_SLEEP: "_supports_sleep"}),
+        (AC, (True, None, PRESET_NONE)),  # Always supported
+        (AC, (True, None, PRESET_SLEEP)),  # Always supported
+        (AC, (False, AC.Capability.ECO, PRESET_ECO)),  # Defaults to supported
+        (AC, (True, AC.Capability.IECO, PRESET_IECO)),
+        (CC, (True, None, PRESET_NONE)),  # Always supported
+        (CC, (False, CC.Capability.ECO, PRESET_ECO)),  # Defaults to supported
+        (CC, (False, CC.Capability.SLEEP, PRESET_SLEEP)),  # Defaults to supported
+
     ],
 )
 async def test_preset_modes(
     hass: HomeAssistant,
     device_class: type[AC | CC],
-    config_modes: Mapping[str, str],
+    config_modes: tuple[bool, Flag, str],
 ):
     """Test preset modes are properly configured"""
 
-    # Mock the device
+    support, capability, preset = config_modes
+
+    # Mock the device & it's capbilities
     mock_device = device_class("0.0.0.0", 0, 0)
-    for _, v in config_modes.items():
-        setattr(mock_device, v, True)
+    if capability:
+        mock_device._capabilities.set(capability, support)
 
     # Mock the coordinator
     mock_coordinator = MagicMock()
@@ -228,16 +235,17 @@ async def test_preset_modes(
 
     assert climate_device
 
-    # Assert feature flag is set if modes are present
-    if config_modes:
-        assert ClimateEntityFeature.PRESET_MODE & climate_device.supported_features
+    # Assert feature flag is set
+    assert ClimateEntityFeature.PRESET_MODE & climate_device.supported_features
 
     # Climate device should always have the property defined
     assert climate_device.preset_modes is not None
 
     # Assert configured modes are present
-    for k, _ in config_modes.items():
-        assert k in climate_device.preset_modes
+    if support:
+        assert preset in climate_device.preset_modes
+    else:
+        assert preset not in climate_device.preset_modes
 
 
 @pytest.mark.parametrize(
