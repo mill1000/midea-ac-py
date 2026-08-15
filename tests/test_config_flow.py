@@ -6,15 +6,24 @@ from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 import pytest
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
+from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
+                                 CONF_PORT, CONF_TOKEN)
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData
+from msmart.cloud import CloudError, NetHomePlusCloud
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import *
+from custom_components.midea_ac.const import (CONF_BEEP,
+                                              CONF_CLOUD_COUNTRY_CODES,
+                                              CONF_DEFAULT_CLOUD_COUNTRY,
+                                              CONF_DEVICE_TYPE,
+                                              CONF_ENERGY_SENSOR,
+                                              CONF_FAN_SPEED_STEP, CONF_KEY,
+                                              CONF_POWER_SENSOR,
+                                              CONF_WORKAROUNDS, DOMAIN)
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -48,7 +57,7 @@ async def test_config_flow_options(hass: HomeAssistant) -> None:
     assert not manual_form_result["errors"]
 
 
-async def test_pick_device_flow_no_devices_found(hass: HomeAssistant) -> None:
+async def test_discover_flow_no_devices_found(hass: HomeAssistant) -> None:
     """Test the discover flow aborts with no_devices_found when nothing is discovered."""
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "discover"}
@@ -69,9 +78,10 @@ async def test_pick_device_flow_no_devices_found(hass: HomeAssistant) -> None:
     assert result["reason"] == "no_devices_found"
 
 
-async def test_pick_device_flow_already_configured_devices_found(
+async def test_discover_flow_already_configured_devices_found(
     hass: HomeAssistant,
     mock_config_entry: MockConfigEntry,
+    create_mock_device
 ) -> None:
     """Test the discover flow surfaces already-configured devices when no new device is found."""
     # Add config entry for existing device
@@ -83,11 +93,11 @@ async def test_pick_device_flow_already_configured_devices_found(
     assert result
 
     # Create mock device for discovery
-    mock_device = MagicMock()
-    mock_device.id = int(mock_config_entry.unique_id)
-    mock_device.ip = "10.0.0.40"
-    mock_device.name = "net_ac_6888"
-    mock_device.type = DeviceType.AIR_CONDITIONER
+    mock_device = create_mock_device(
+        int(mock_config_entry.unique_id),
+        "10.0.0.40",
+        "net_ac_6888",
+    )
 
     with patch(
         "custom_components.midea_ac.config_flow.Discover.discover",
@@ -106,26 +116,27 @@ async def test_pick_device_flow_already_configured_devices_found(
     }
 
 
-async def test_pick_device_flow_new_and_already_configured_devices(
+async def test_discover_flow_new_and_already_configured_devices(
     hass: HomeAssistant,
     mock_config_entry: MockConfigEntry,
+    create_mock_device
 ) -> None:
     """Test the discover flow only lists new devices when both new and already-configured devices are found."""
     # Add config entry for existing device
     mock_config_entry.add_to_hass(hass)
 
     # Create mock devices for discovery
-    mock_existing_device = MagicMock()
-    mock_existing_device.id = int(mock_config_entry.unique_id)
-    mock_existing_device.ip = "10.0.0.40"
-    mock_existing_device.name = "net_ac_6888"
-    mock_existing_device.type = DeviceType.AIR_CONDITIONER
+    mock_existing_device = create_mock_device(
+        int(mock_config_entry.unique_id),
+        "10.0.0.40",
+        "net_ac_6888"
+    )
 
-    mock_new_device = MagicMock()
-    mock_new_device.id = 5678
-    mock_new_device.ip = "10.0.0.41"
-    mock_new_device.name = "net_ac_1234"
-    mock_new_device.type = DeviceType.AIR_CONDITIONER
+    mock_new_device = create_mock_device(
+        5678,
+        "10.0.0.41",
+        "net_ac_1234"
+    )
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": "discover"}
@@ -151,6 +162,156 @@ async def test_pick_device_flow_new_and_already_configured_devices(
     # Assert only the new device is present
     assert mock_new_device.id in device_ids
     assert mock_existing_device.id not in device_ids
+
+
+def test_cloud_country_codes_are_known_to_msmart() -> None:
+    """Test every selectable cloud region has credentials in msmart-ng."""
+    assert set(CONF_CLOUD_COUNTRY_CODES) <= set(
+        NetHomePlusCloud.CLOUD_CREDENTIALS)
+    assert CONF_DEFAULT_CLOUD_COUNTRY in NetHomePlusCloud.CLOUD_CREDENTIALS
+
+
+@pytest.mark.parametrize(
+    "country_code",
+    CONF_CLOUD_COUNTRY_CODES
+)
+async def test_discover_flow_uses_selected_region(
+    hass: HomeAssistant,
+    country_code: str,
+) -> None:
+    """Test the selected country is passed to discovery as the cloud region."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    # Check cloud region is passed to discover method
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[]
+    ) as mock_discover:
+        await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: "", CONF_COUNTRY_CODE: country_code}
+        )
+
+    mock_discover.assert_awaited_once()
+    kwargs = mock_discover.await_args.kwargs
+
+    # Region must be forwarded so msmart-ng selects the right credentials
+    assert kwargs["region"] == country_code
+
+    # The integration must not supply its own credentials
+    assert "account" not in kwargs
+    assert "password" not in kwargs
+
+    # Restart flow
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    # Check cloud region is passed to discover_single method
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover_single",
+        new_callable=AsyncMock,
+        return_value=None
+    ) as mock_discover_single:
+        await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: "10.0.0.41",
+                        CONF_COUNTRY_CODE: country_code}
+        )
+
+    mock_discover_single.assert_awaited_once()
+    kwargs = mock_discover_single.await_args.kwargs
+
+    # Region must be forwarded so msmart-ng selects the right credentials
+    assert kwargs["region"] == country_code
+
+    # The integration must not supply its own credentials
+    assert "account" not in kwargs
+    assert "password" not in kwargs
+
+
+async def test_discover_flow_cloud_error(
+        hass: HomeAssistant,
+        create_mock_device
+) -> None:
+    """Test the discover flow aborts with cloud_connection_failed if a cloud exception is thrown."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    mock_device = create_mock_device()
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[mock_device]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "pick_device"
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.connect",
+        side_effect=CloudError(
+            "Failed to login to cloud. Code: 3102, Message: this account does not exist")
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_ID: mock_device.id}
+        )
+
+    # Flow should abort with a reason
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "cloud_connection_failed"
+
+
+async def test_discover_flow_cant_connect(
+        hass: HomeAssistant,
+        create_mock_device
+) -> None:
+    """Test the discover flow aborts with cannot_connect a device can't connect."""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": "discover"}
+    )
+    assert result
+
+    mock_device = create_mock_device()
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.discover",
+        new_callable=AsyncMock,
+        return_value=[mock_device]
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_HOST: ""}
+        )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "pick_device"
+
+    with patch(
+        "custom_components.midea_ac.config_flow.Discover.connect",
+        return_value=False
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={CONF_ID: mock_device.id}
+        )
+
+    # Connection should fail
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "cannot_connect"
 
 
 async def test_manual_flow_invalid_input(hass: HomeAssistant) -> None:
