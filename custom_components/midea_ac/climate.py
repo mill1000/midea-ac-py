@@ -635,11 +635,11 @@ class MideaClimateCCDevice(MideaClimateDevice[CC]):
     @property
     def preset_mode(self) -> str:
         """Get the current preset mode."""
-        if self._device.eco:
+        if self._device.eco and self._device.supports_eco:
             return PRESET_ECO
-        elif self._device.silent:
+        elif self._device.silent and self._device.supports_silent:
             return PRESET_SILENT
-        elif self._device.sleep:
+        elif self._device.sleep and self._device.supports_sleeps:
             return PRESET_SLEEP
         else:
             return PRESET_NONE
