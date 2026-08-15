@@ -1,11 +1,12 @@
 """Tests for the climate platform."""
 
 import logging
-from typing import Mapping
+from typing import List, Mapping
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from homeassistant.components.climate.const import (PRESET_ECO, PRESET_SLEEP,
+from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_BOOST,
+                                                    PRESET_ECO, PRESET_SLEEP,
                                                     ClimateEntityFeature,
                                                     HVACMode)
 from homeassistant.core import HomeAssistant
@@ -17,6 +18,7 @@ from custom_components.midea_ac.climate import (ClimateConfig,
                                                 MideaClimateACDevice,
                                                 MideaClimateCCDevice,
                                                 MideaClimateDevice)
+from custom_components.midea_ac.const import PRESET_IECO, PRESET_SILENT
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -236,3 +238,56 @@ async def test_preset_modes(
     # Assert configured modes are present
     for k, _ in config_modes.items():
         assert k in climate_device.preset_modes
+
+
+@pytest.mark.parametrize(
+    ("device_class", "config_modes"),
+    [
+        (AC, (PRESET_ECO, "eco", AC.Capability.ECO)),
+        (AC, (PRESET_IECO, "ieco", AC.Capability.IECO)),
+        (AC, (PRESET_BOOST, "turbo", AC.Capability.TURBO)),
+        (AC, (PRESET_AWAY, "freeze_protection", AC.Capability.FREEZE_PROTECTION)),
+        (CC, (PRESET_ECO, "eco", CC.Capability.ECO)),
+        (CC, (PRESET_SILENT, "silent", CC.Capability.SILENT)),
+        (CC, (PRESET_SLEEP, "sleep", CC.Capability.SLEEP)),
+
+    ],
+)
+async def test_preset_mode_requires_capability(
+    hass: HomeAssistant,
+    device_class: type[AC | CC],
+    config_modes: tuple[str, str, Flag],
+):
+    """Test preset mode is gated by support for that preset"""
+
+    # Mock the device
+    mock_device = device_class("0.0.0.0", 0, 0)
+
+    # Mock the coordinator
+    mock_coordinator = MagicMock()
+    mock_coordinator.apply = AsyncMock()
+    mock_coordinator.device = mock_device
+
+    # Create climate device with config
+    climate_device = None
+    if device_class == AC:
+        climate_device = MideaClimateACDevice(hass, mock_coordinator, {})
+    elif device_class == CC:
+        climate_device = MideaClimateCCDevice(hass, mock_coordinator, {})
+
+    preset, attr, capability = config_modes
+
+    for support in [True, False]:
+        # Enable/disable the capability for the target preset
+        mock_device._capabilities.set(capability, support)
+
+        # Assert device reports preset mode when active AND supported
+        setattr(mock_device, attr, True)
+        if support:
+            assert climate_device.preset_mode == preset
+        else:
+            assert climate_device.preset_mode != preset
+
+        # Assert device doesnt report preset mode when its inactive
+        setattr(mock_device, attr, False)
+        assert climate_device.preset_mode != preset
