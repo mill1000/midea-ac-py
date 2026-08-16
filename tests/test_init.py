@@ -5,6 +5,7 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from msmart.const import DeviceType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -326,3 +327,60 @@ async def test_config_entry_migration_from_6(hass: HomeAssistant) -> None:
     options = mock_config_entry.options
     assert CONF_UPDATE_INTERVAL in options
     assert options[CONF_UPDATE_INTERVAL] == UPDATE_INTERVAL
+
+
+async def test_unload_entry_success(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test a successful unload removes the coordinator from global data."""
+
+    # Patch refresh and get_capabilities calls to allow integration to setup
+    with (patch("custom_components.midea_ac.config_flow.AC.get_capabilities"),
+          patch("custom_components.midea_ac.config_flow.AC.refresh")):
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert mock_config_entry.state is ConfigEntryState.LOADED
+    assert mock_config_entry.entry_id in hass.data[DOMAIN]
+
+    unload_ok = await hass.config_entries.async_unload(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert unload_ok is True
+    assert mock_config_entry.state is ConfigEntryState.NOT_LOADED
+    assert mock_config_entry.entry_id not in hass.data[DOMAIN]
+
+
+async def test_unload_entry_platform_failure(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+) -> None:
+    """Test a failed platform unload leaves the coordinator in global data."""
+
+    # Patch refresh and get_capabilities calls to allow integration to setup
+    with (patch("custom_components.midea_ac.config_flow.AC.get_capabilities"),
+          patch("custom_components.midea_ac.config_flow.AC.refresh")):
+        mock_config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert mock_config_entry.state is ConfigEntryState.LOADED
+
+    # Simulate a platform refusing to unload
+    with patch(
+        "homeassistant.config_entries.ConfigEntries.async_unload_platforms",
+        return_value=False,
+    ):
+        unload_ok = await hass.config_entries.async_unload(mock_config_entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert unload_ok is False
+    assert mock_config_entry.entry_id in hass.data[DOMAIN]
+
+    # A failed unload leaves the entry in a non-recoverable state, so it
+    # can't be unloaded again. Shut down the coordinator directly so its
+    # refresh timer doesn't linger past the end of the test.
+    coordinator = hass.data[DOMAIN][mock_config_entry.entry_id]
+    await coordinator.async_shutdown()
