@@ -75,16 +75,22 @@
       "init": {
         "description": "Erweiterte Integrationseinstellungen.",
         "data": {
+          "update_interval": "Aktualisierungsintervall",
           "prompt_tone": "Signalton aktivieren",
           "temp_step": "Temperaturschritte",
           "fan_speed_step": "Lüftergeschwindigkeitsschritte",
           "max_connection_lifetime": "Maximale Verbindungsdauer",
-          "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren"
+          "swing_angle_rtl": "Horizontalen Schwenkwinkel umkehren",
+          "capability_overrides": "Capability-Overrides",
+          "merge_capability_overrides": "Overrides zusammenführen"
         },
         "data_description": {
+          "update_interval": "Wie oft das Gerät für Statusaktualisierungen abgefragt wird (1-30 Sekunden)",
           "temp_step": "Schrittgröße für Temperatureinstellung",
           "fan_speed_step": "Schrittgröße für Lüftergeschwindigkeit",
-          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)"
+          "max_connection_lifetime": "Maximale Zeit in Sekunden, die eine Verbindung verwendet wird (mindestens 15 Sekunden)",
+          "capability_overrides": "Geräte-Capability-Overrides im YAML-Format",
+          "merge_capability_overrides": "Overrides mit vorhandenen Geräte-Capabilities zusammenführen"
         },
         "sections": {
           "energy_sensor": {
@@ -112,9 +118,7 @@
           "workarounds": {
             "name": "Workarounds",
             "data": {
-              "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden",
-              "show_all_presets": "Alle Voreinstellungen anzeigen",
-              "additional_operation_modes": "Zusätzliche Betriebsmodi"
+              "use_fan_only_workaround": "Nur-Lüfter-Workaround verwenden"
             },
             "data_description": {
               "additional_operation_modes": "Zusätzliche Betriebsmodi angeben"
@@ -122,6 +126,10 @@
           }
         }
       }
+    },
+    "error": {
+      "override_yaml_parse_error": "YAML konnte nicht geparst werden.",
+      "override_yaml_format_error": "Overrides müssen ein Dictionary sein."
     }
   },
   "selector": {
@@ -189,11 +197,22 @@
       },
       "self_clean": {
         "name": "Selbstreinigung"
+      },
+      "defrost": {
+        "name": "Abtauen"
+      },
+      "water_pump": {
+        "name": "Wasserpumpe"
       }
     },
     "button": {
       "self_clean": {
         "name": "Selbstreinigung starten"
+      }
+    },
+    "fan": {
+      "fresh_air": {
+        "name": "Frischluft"
       }
     },
     "number": {
@@ -282,8 +301,29 @@
       }
     },
     "sensor": {
+      "compressor_current": {
+        "name": "Kompressorstrom"
+      },
+      "compressor_frequency": {
+        "name": "Kompressorfrequenz"
+      },
+      "compressor_voltage": {
+        "name": "Kompressorspannung"
+      },
       "current_energy_usage": {
         "name": "Aktueller Energieverbrauch"
+      },
+      "discharge_pipe_temperature": {
+        "name": "Druckrohrtemperatur"
+      },
+      "horizontal_louvers_angle": {
+        "name": "Horizontaler Lamellenwinkel"
+      },
+      "indoor_coil_temperature": {
+        "name": "Temperatur Wärmetauscher Innengerät"
+      },
+      "indoor_fan_speed": {
+        "name": "Lüfterdrehzahl Innengerät"
       },
       "indoor_humidity": {
         "name": "Luftfeuchtigkeit innen"
@@ -291,14 +331,32 @@
       "indoor_temperature": {
         "name": "Innentemperatur"
       },
+      "outdoor_coil_temperature": {
+        "name": "Temperatur Wärmetauscher Außengerät"
+      },
+      "outdoor_fan_speed": {
+        "name": "Lüfterdrehzahl Außengerät"
+      },
       "outdoor_temperature": {
         "name": "Außentemperatur"
+      },
+      "outdoor_unit_power": {
+        "name": "Leistung Außengerät"
       },
       "real_time_power_usage": {
         "name": "Leistungsaufnahme"
       },
+      "target_compressor_frequency": {
+        "name": "Ziel-Kompressorfrequenz"
+      },
+      "target_indoor_fan_speed": {
+        "name": "Ziel-Lüfterdrehzahl Innengerät"
+      },
       "total_energy_usage": {
         "name": "Gesamtenergieverbrauch"
+      },
+      "vertical_louvers_angle": {
+        "name": "Vertikaler Lamellenwinkel"
       }
     },
     "switch": {
