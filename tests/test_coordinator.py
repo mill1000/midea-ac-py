@@ -12,7 +12,8 @@ from msmart.lan import _LanProtocol
 
 from custom_components.midea_ac.binary_sensor import (MideaGroup2BinarySensor,
                                                       MideaGroup5BinarySensor)
-from custom_components.midea_ac.coordinator import MideaDeviceUpdateCoordinator
+from custom_components.midea_ac.coordinator import (
+    MideaCoordinatorEntity, MideaDeviceUpdateCoordinator)
 from custom_components.midea_ac.sensor import (MideaGroup1Sensor,
                                                MideaGroup2Sensor,
                                                MideaGroup5Sensor,
@@ -239,6 +240,34 @@ async def test_group5_entity_request_enable(
     await entities[1].async_will_remove_from_hass()
     assert coordinator._group5_entities == 0
     assert device.enable_group5_data_requests == False
+
+    await coordinator.async_shutdown()
+
+
+async def test_entity_availability(
+    hass: HomeAssistant
+) -> None:
+    """Test entity availability depends on both the device and the coordinator refresh."""
+
+    # Create a mock device so online can be controlled directly
+    mock_device = MagicMock()
+    mock_device.online = True
+
+    coordinator = MideaDeviceUpdateCoordinator(hass, mock_device)
+    entity = MideaCoordinatorEntity(coordinator)
+
+    # Online device with a successful refresh is available
+    coordinator.last_update_success = True
+    assert entity.available == True
+
+    # Online device with a failed refresh is not available
+    coordinator.last_update_success = False
+    assert entity.available == False
+
+    # Offline device is not available, even after a successful refresh
+    mock_device.online = False
+    coordinator.last_update_success = True
+    assert entity.available == False
 
     await coordinator.async_shutdown()
 

@@ -44,6 +44,7 @@ async def test_fresh_air_fan(
     coordinator = MagicMock(spec=MideaDeviceUpdateCoordinator)
     coordinator.device = mock_device
     coordinator.apply = AsyncMock()
+    coordinator.last_update_success = True
 
     # Store coordinator in global data
     hass.data.setdefault(DOMAIN, {})[mock_config_entry.entry_id] = coordinator

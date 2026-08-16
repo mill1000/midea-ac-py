@@ -180,7 +180,7 @@ class MideaCoordinatorEntity(CoordinatorEntity[MideaDeviceUpdateCoordinator], Ge
     @property
     def available(self) -> bool:
         """Check device availability."""
-        return self._device.online
+        return super().available and self._device.online
 
 
 class MideaGroup5Entity(MideaCoordinatorEntity):
