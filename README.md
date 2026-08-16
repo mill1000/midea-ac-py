@@ -36,6 +36,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
 * Switch for device display<sup>1</sup>.
 * Device error codes as an attribute.
 * Selectable data format and scale for energy and power sensors.<sup>2</sup>
+* Advanced indoor/outdoor unit sensors.<sup>2</sup>
 * Advanced controls (when supported by the device):
   * Purifier (Ionizer/UV/Sterilizer)
   * Device filter alert
@@ -57,7 +58,7 @@ _However_, for newer "V3" devices, the Midea Cloud is used to acquire a token & 
 <small>
 
 1. Device dependent. Some devices only support display control via IR.
-2. Sensors must be manually enabled on the device page. A device may not support all energy sensors.
+2. Sensors must be manually enabled on the device page. A device may not support all sensors.
 3. Experimental. "Follow Me" requires the IR remote to transmit temperature data. More info [here](https://github.com/mill1000/midea-msmart/pull/91).
 </small>
 
@@ -152,6 +153,7 @@ Additional options are available to tweak integration behavior per device. The a
 ---
 Name | Default | Device Type | Description 
 :--- | :--- | :--- | :--- 
+**Update Interval** | 15 | All | Device polling interval in seconds.
 **Reverse Horizontal Swing Angle** | False | All | Reverse the order of horizontal swing angles from left-to-right to right-to-left.
 **Temperature Step** | 1.0 | All | Step size for temperature set point.
 **Maximum Connection Lifetime** | Empty | All | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
