@@ -200,6 +200,9 @@
       },
       "defrost": {
         "name": "Defrost"
+      },
+      "water_pump": {
+        "name": "Water pump"
       }
     },
     "button": {
@@ -298,8 +301,29 @@
       }
     },
     "sensor": {
+      "compressor_current": {
+        "name": "Compressor current"
+      },
+      "compressor_frequency": {
+        "name": "Compressor frequency"
+      },
+      "compressor_voltage": {
+        "name": "Compressor voltage"
+      },
       "current_energy_usage": {
         "name": "Current energy"
+      },
+      "discharge_pipe_temperature": {
+        "name": "Discharge pipe temperature"
+      },
+      "horizontal_louvers_angle": {
+        "name": "Horizontal louvers angle"
+      },
+      "indoor_coil_temperature": {
+        "name": "Indoor coil temperature"
+      },
+      "indoor_fan_speed": {
+        "name": "Indoor fan speed"
       },
       "indoor_humidity": {
         "name": "Indoor humidity"
@@ -307,17 +331,32 @@
       "indoor_temperature": {
         "name": "Indoor temperature"
       },
+      "outdoor_coil_temperature": {
+        "name": "Outdoor coil temperature"
+      },
       "outdoor_fan_speed": {
         "name": "Outdoor fan speed"
       },
       "outdoor_temperature": {
         "name": "Outdoor temperature"
       },
+      "outdoor_unit_power": {
+        "name": "Outdoor unit power"
+      },
       "real_time_power_usage": {
         "name": "Power"
       },
+      "target_compressor_frequency": {
+        "name": "Target compressor frequency"
+      },
+      "target_indoor_fan_speed": {
+        "name": "Target indoor fan speed"
+      },
       "total_energy_usage": {
         "name": "Total energy"
+      },
+      "vertical_louvers_angle": {
+        "name": "Vertical louvers angle"
       }
     },
     "switch": {
