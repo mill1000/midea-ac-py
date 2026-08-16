@@ -16,14 +16,7 @@ from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.midea_ac.const import (CONF_BEEP,
-                                              CONF_CLOUD_COUNTRY_CODES,
-                                              CONF_DEFAULT_CLOUD_COUNTRY,
-                                              CONF_DEVICE_TYPE,
-                                              CONF_ENERGY_SENSOR,
-                                              CONF_FAN_SPEED_STEP, CONF_KEY,
-                                              CONF_POWER_SENSOR,
-                                              CONF_WORKAROUNDS, DOMAIN)
+from custom_components.midea_ac.const import *
 
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
@@ -706,7 +699,8 @@ async def test_options_flow_init(
         result = await hass.config_entries.options.async_configure(
             result["flow_id"],
             user_input={
-                CONF_BEEP: False
+                CONF_BEEP: False,
+                CONF_UPDATE_INTERVAL: 20,
             },
         )
         await hass.async_block_till_done()
@@ -714,6 +708,7 @@ async def test_options_flow_init(
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert mock_config_entry.options == {
         CONF_BEEP: False,
+        CONF_UPDATE_INTERVAL: 20,
     }
     assert len(mock_setup_entry.mock_calls) == 1
 

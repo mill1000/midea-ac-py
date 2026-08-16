@@ -6,6 +6,7 @@ from msmart.device import CommercialAirConditioner as CC
 
 DOMAIN = "midea_ac"
 UPDATE_INTERVAL = 15
+CONF_UPDATE_INTERVAL = "update_interval"
 
 CONF_KEY = "k1"
 CONF_BEEP = "prompt_tone"

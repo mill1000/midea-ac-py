@@ -19,12 +19,13 @@ _LOGGER = logging.getLogger(__name__)
 class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
     """Device update coordinator for Midea Smart AC."""
 
-    def __init__(self, hass: HomeAssistant, device: MideaDevice) -> None:
+    def __init__(self, hass: HomeAssistant, device: MideaDevice,
+                 update_interval: int = UPDATE_INTERVAL) -> None:
         super().__init__(
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=datetime.timedelta(seconds=UPDATE_INTERVAL),
+            update_interval=datetime.timedelta(seconds=update_interval),
             request_refresh_debouncer=Debouncer(
                 hass,
                 _LOGGER,
