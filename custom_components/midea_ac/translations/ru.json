@@ -12,10 +12,10 @@
         "description": "Оставьте поле «хост» пустым, чтобы искать устройство автоматически.",
         "data": {
           "host": "Хост",
-          "country_code": "Cloud Region"
+          "country_code": "Регион облака"
         },
         "data_description": {
-          "country_code": "Select closest country to your location."
+          "country_code": "Выберите ближайшую к вашему местоположению страну."
         }
       },
       "manual": {
@@ -58,9 +58,9 @@
       "already_configured": "Устройство уже настроено.",
       "already_configured_devices_found": "Новые устройства в сети не найдены.\n\nУже настроено в этой сети:\n{devices}",
       "cannot_connect": "Не удалось установить соединение.",
-      "cloud_connection_failed": "Cloud connection could not be made.",
+      "cloud_connection_failed": "Не удалось установить соединение с облаком.",
       "no_devices_found": "Поддерживаемые устройства не найдены.",
-      "reconfigure_successful": "Device successfully reconfigured."
+      "reconfigure_successful": "Устройство успешно перенастроено."
     },
     "error": {
       "cannot_connect": "Не удалось установить соединение с этими настройками.",
@@ -72,44 +72,48 @@
   "options": {
     "step": {
       "init": {
-        "description": "Advanced integration settings.",
+        "description": "Расширенные настройки интеграции.",
         "data": {
           "prompt_tone": "Включить звуковые сигналы",
           "temp_step": "Шаг температуры",
-          "fan_speed_step": "Fan Speed Step",
+          "fan_speed_step": "Шаг изменения скорости вентилятора",
           "max_connection_lifetime": "Время подключения",
-          "swing_angle_rtl": "Reverse Horizontal Swing Angle"
+          "swing_angle_rtl": "Reverse Horizontal Swing Angle",
+          "capability_overrides": "Переопределение возможностей",
+          "merge_capability_overrides": "Объединение переопределения"
         },
         "data_description": {
           "temp_step": "Размер шага для установки значения температуры",
-          "fan_speed_step": "Step size for custom fan speeds",
-          "max_connection_lifetime": "Максимальное время в секундах, в течение которого будет использоваться соединение (минимум 15 секунд)"
+          "fan_speed_step": "Шаг изменения скорости вращения вентилятора",
+          "max_connection_lifetime": "Максимальное время в секундах, в течение которого будет использоваться соединение (минимум 15 секунд)",
+          "capability_overrides": "Переопределения возможностей устройств в формате YAML",
+          "merge_capability_overrides": "Объединение переопределения с существующими возможностями устройства"
         },
         "sections": {
           "energy_sensor": {
-            "name": "Energy Sensor Format",
-            "description": "Customize energy sensor format",
+            "name": "Формат датчика энергии",
+            "description": "Настройки формата датчика энергии",
             "data": {
-              "energy_data_format": "Data Format",
-              "energy_data_scale": "Scale"
+              "energy_data_format": "Формат данных",
+              "energy_data_scale": "Масштаб"
             },
             "data_description": {
-              "energy_data_scale": "Factor to scale reported energy usage"
+              "energy_data_scale": "Коэффициент масштабирования заявленного энергопотребления"
             }
           },
           "power_sensor": {
-            "name": "Power Sensor Format",
-            "description": "Customize power sensor format",
+            "name": "Формат датчика мощности",
+            "description": "Настройки формата датчика мощности",
             "data": {
-              "energy_data_format": "Data Format",
-              "energy_data_scale": "Scale"
+              "energy_data_format": "Формат данных",
+              "energy_data_scale": "Масштаб"
             },
             "data_description": {
-              "energy_data_scale": "Factor to scale reported power usage"
+              "energy_data_scale": "Коэффициент масштабирования заявленной мощности"
             }
           },
           "workarounds": {
-            "name": "Workarounds",
+            "name": "Обходные решения",
             "data": {
               "use_fan_only_workaround": "Хак для режима «только вентилятор»",
               "show_all_presets": "Показать все предустановки",
@@ -127,7 +131,7 @@
     "energy_data_format": {
       "options": {
         "bcd": "BCD",
-        "binary": "Binary"
+        "binary": "Бинарный"
       }
     }
   },
@@ -257,11 +261,20 @@
       }
     },
     "sensor": {
-      "current_energy_usage": {
-        "name": "Current energy"
+      "compressor_voltage": {
+       	"name": "Напряжение компрессора"
       },
+      "indoor_fan_speed": {
+        "name": "Скорость вентилятора в помещении"
+	    },
+      "indoor_coil_temperature": {
+        "name": "Температура внутреннего теплообменника"
+	    },
+      "current_energy_usage": {
+        "name": "Текущее потребление"
+	    },
       "indoor_humidity": {
-        "name": "Indoor humidity"
+        "name": "Влажность в помещении"
       },
       "indoor_temperature": {
         "name": "Температура внутреннего блока"
@@ -270,10 +283,10 @@
         "name": "Температура наружного блока"
       },
       "real_time_power_usage": {
-        "name": "Power"
+        "name": "Мощность"
       },
       "total_energy_usage": {
-        "name": "Total energy"
+        "name": "Общее потребление"
       }
     },
     "switch": {
