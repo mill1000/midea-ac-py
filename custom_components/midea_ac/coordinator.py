@@ -53,8 +53,8 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         async with self._lock:
             await self._proxy.apply()
 
-        # Update state
-        await self.async_request_refresh()
+        # Update state immediately without polling
+        self.async_set_updated_data(None)
 
     @property
     def device(self) -> MideaDeviceProxy[MideaDevice]:
