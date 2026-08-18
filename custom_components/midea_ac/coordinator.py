@@ -56,6 +56,9 @@ class MideaDeviceUpdateCoordinator(DataUpdateCoordinator, Generic[MideaDevice]):
         # Update state immediately without polling
         self.async_set_updated_data(None)
 
+        # Trigger a background refresh to catch any side effects
+        self.hass.async_create_task(self.async_request_refresh())
+
     @property
     def device(self) -> MideaDeviceProxy[MideaDevice]:
         """Return the device proxy."""
