@@ -61,10 +61,17 @@ async def async_setup_entry(
                                         options=supported_aux_modes
                                         ))
 
-    if hasattr(device, "cascade") and getattr(device, "supports_cascade", False):
+    if hasattr(device, "cascade_mode") and getattr(device, "supports_cascade", False):
         entities.append(MideaEnumSelect(coordinator,
-                                        "cascade",
-                                        device.CascadeMode
+                                        "cascade_mode",
+                                        device.CascadeMode,
+                                        translation_key="cascade"
+                                        ))
+
+    if hasattr(device, "breeze_away_direction") and getattr(device, "supports_breeze_away_direction", False):
+        entities.append(MideaEnumSelect(coordinator,
+                                        "breeze_away_direction",
+                                        device.BreezeAwayDirection
                                         ))
 
     # Add select for purifier with 3 or more modes
