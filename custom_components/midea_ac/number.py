@@ -104,7 +104,8 @@ class MideaFanSpeedNumber(MideaCoordinatorEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Set a new fan speed value."""
 
-        self._device.fan_speed = value
+        # Number services pass floats, but custom fan speeds must be integers.
+        self._device.fan_speed = round(value)
 
         # Apply via the coordinator
         await self.coordinator.apply()
