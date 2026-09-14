@@ -397,7 +397,7 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         MideaClimateDevice.__init__(self, hass, coordinator, config)
 
         # Apply misc options
-        self._device.beep = options.get(CONF_BEEP, False)
+        self._device.sound = options.get(CONF_BEEP, False)
 
         self._use_fan_only_workaround = workarounds.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)

@@ -158,7 +158,7 @@ Name | Default | Device Type | Description
 **Temperature Step** | 1.0 | All | Step size for temperature set point.
 **Maximum Connection Lifetime** | Empty | All | Limit the time (in seconds) a connection to the device will be used before reconnecting. If left blank, the connection will persist indefinitely. If your device disconnects at regular intervals, set this to a value below the interval.
 **Device Capability Overrides** | Empty | All | Override or extend the device's reported capabilities. See below for more information.
-**Beep** | True | AC | Enable beep on setting changes.
+**Sound** | True | AC | Enable beep/sound on setting changes.
 **Fan Speed Step** | 1 | AC | Step size for custom fan speeds.
 **Energy Sensor Format > Data Format** | BCD | AC | Select the data format for decoding energy data from the device.
 **Energy Sensor Format > Scale** | 1.0 | AC | Select the data scale for reporting energy data from the device.
