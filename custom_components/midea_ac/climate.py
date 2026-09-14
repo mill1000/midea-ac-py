@@ -397,7 +397,7 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         MideaClimateDevice.__init__(self, hass, coordinator, config)
 
         # Apply misc options
-        self._device.beep = options.get(CONF_BEEP, False)
+        self._sound = options.get(CONF_BEEP, False)
 
         self._use_fan_only_workaround = workarounds.get(
             CONF_USE_FAN_ONLY_WORKAROUND, False)
@@ -426,6 +426,10 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         # Display on the AC should use the same unit as HA
         self._device.fahrenheit = (
             self.hass.config.units.temperature_unit == UnitOfTemperature.FAHRENHEIT)
+
+        # Ensure device sound matches configured sound
+        if self._device.sound != self._sound:
+            self._device.sound = self._sound
 
         await super()._apply()
 
