@@ -84,7 +84,6 @@ async def async_setup_entry(
                                         device.BreezeAwayDirection
                                         ))
 
-
     add_entities(entities)
 
 
