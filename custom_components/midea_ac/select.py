@@ -76,6 +76,14 @@ async def async_setup_entry(
                                         options=supported_purifier_modes
                                         ))
 
+    # Add select for breeze away direction if supported
+    if hasattr(device, "breeze_away_direction") and getattr(device, "supports_breeze_away_direction", False):
+        entities.append(MideaEnumSelect(coordinator,
+                                        "breeze_away_direction",
+                                        device.BreezeAwayDirection
+                                        ))
+
+
     add_entities(entities)
 
 
