@@ -1,5 +1,6 @@
 
 {
+  "homeassistant": "2025.8.0",
   "name": "Midea Smart AC",
   "render_readme": true
 }
