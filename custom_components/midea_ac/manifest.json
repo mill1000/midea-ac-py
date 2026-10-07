@@ -13,8 +13,7 @@
     "msmart"
   ],
   "requirements": [
-    "msmart-ng==2026.9.0",
-    "pyyaml"
+    "msmart-ng==2026.9.0"
   ],
   "version": "2026.9.0"
 }
