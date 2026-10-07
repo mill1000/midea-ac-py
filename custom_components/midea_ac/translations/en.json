@@ -231,6 +231,13 @@
           "auto": "Auto"
         }
       },
+      "breeze_away_direction": {
+        "name": "Breeze away direction",
+        "state": {
+          "up": "Up",
+          "down": "Down"
+        }
+      },
       "cascade": {
         "name": "Cascade mode",
         "state": {
