@@ -9,7 +9,8 @@ import httpx
 import voluptuous as vol
 import yaml
 from homeassistant.config_entries import (ConfigEntry, ConfigFlow,
-                                          ConfigFlowResult, OptionsFlow)
+                                          ConfigFlowResult,
+                                          OptionsFlowWithReload)
 from homeassistant.const import (CONF_COUNTRY_CODE, CONF_HOST, CONF_ID,
                                  CONF_PORT, CONF_TOKEN, DEGREE, UnitOfTime)
 from homeassistant.core import callback
@@ -443,7 +444,7 @@ class MideaConfigFlow(ConfigFlow, domain=DOMAIN):
         return MideaOptionsFlow()
 
 
-class MideaOptionsFlow(OptionsFlow):
+class MideaOptionsFlow(OptionsFlowWithReload):
     """Options flow from Midea Smart AC."""
 
     _BASE_SCHEMA = vol.Schema(
