@@ -189,7 +189,7 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         return self._supported_features
 
     @property
-    def temperature_unit(self) -> str:
+    def native_temperature_unit(self) -> str:
         """Return the unit of measurement."""
         return UnitOfTemperature.CELSIUS
 
@@ -209,12 +209,12 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         return self._max_temperature
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         """Return the current temperature."""
         return self._device.indoor_temperature
 
     @property
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
         """Return the current target temperature."""
         return self._device.target_temperature
 
@@ -332,6 +332,14 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
 
         self._device.power_state = True
         await self._apply()
+
+
+# Home Assistant 2026.11 renamed the temperature properties with a native_ prefix.
+# Alias the old names on older versions so they keep working.
+if not hasattr(ClimateEntity, "native_temperature_unit"):
+    MideaClimateDevice.temperature_unit = MideaClimateDevice.native_temperature_unit
+    MideaClimateDevice.current_temperature = MideaClimateDevice.native_current_temperature
+    MideaClimateDevice.target_temperature = MideaClimateDevice.native_target_temperature
 
 
 class MideaClimateACDevice(MideaClimateDevice[AC]):
