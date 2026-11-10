@@ -69,10 +69,10 @@ async def async_setup_entry(
     # Only add energy sensors if device supports energy requests
     if hasattr(device, "enable_energy_usage_requests"):
         def _get_energy_config(key: str) -> tuple[EnergyFormat, float]:
-            config = config_entry.options.get(key)
+            config = config_entry.options.get(key) or {}
             format = device.EnergyDataFormat.get_from_name(
-                config.get(CONF_ENERGY_DATA_FORMAT).upper())
-            scale = config.get(CONF_ENERGY_DATA_SCALE)
+                config.get(CONF_ENERGY_DATA_FORMAT, EnergyFormat.BCD).upper())
+            scale = config.get(CONF_ENERGY_DATA_SCALE, 1.0)
             return format, scale
 
         # Configure energy format
