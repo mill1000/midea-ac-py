@@ -195,29 +195,39 @@ async def test_fan_speed_config(
 
 
 @pytest.mark.parametrize(
-    ("device_class", "config_modes"),
+    ("device_class", "operational_mode", "support", "capability", "preset"),
     [
-        (AC, (True, None, PRESET_NONE)),  # Always supported
-        (AC, (True, None, PRESET_SLEEP)),  # Always supported
-        (AC, (False, AC.Capability.ECO, PRESET_ECO)),  # Defaults to supported
-        (AC, (True, AC.Capability.IECO, PRESET_IECO)),
-        (CC, (True, None, PRESET_NONE)),  # Always supported
-        (CC, (False, CC.Capability.ECO, PRESET_ECO)),  # Defaults to supported
-        (CC, (False, CC.Capability.SLEEP, PRESET_SLEEP)),  # Defaults to supported
-
+        (AC, None, True, None, PRESET_NONE),  # Always supported
+        (AC, None, True, None, PRESET_SLEEP),  # Always supported
+        (AC, None, False, AC.Capability.ECO, PRESET_ECO),  # Defaults to supported
+        (AC, AC.OperationalMode.HEAT, True, AC.Capability.TURBO_HEAT, PRESET_BOOST),
+        (AC, AC.OperationalMode.COOL, True, AC.Capability.TURBO_COOL, PRESET_BOOST),
+        (AC, AC.OperationalMode.HEAT, True, AC.Capability.IECO_HEAT, PRESET_IECO),
+        (AC, AC.OperationalMode.COOL, True, AC.Capability.IECO_COOL, PRESET_IECO),
+        (CC, None, True, None, PRESET_NONE),  # Always supported
+        (CC, None, True, CC.Capability.ECO, PRESET_ECO),  # Defaults to supported
+        (CC, None, True, CC.Capability.SLEEP,
+         PRESET_SLEEP),  # Defaults to supporte
+        (CC, None, True, CC.Capability.SILENT,
+         PRESET_SILENT)  # Defaults to supported
     ],
 )
 async def test_preset_modes(
     hass: HomeAssistant,
     device_class: type[AC | CC],
-    config_modes: tuple[bool, Flag, str],
+    operational_mode: Enum | None,
+    support: bool,
+    capability: Flag | None,
+    preset: str,
 ):
-    """Test preset modes are properly configured"""
+    """Test preset modes are gated by operational mode and capability."""
 
-    support, capability, preset = config_modes
-
-    # Mock the device & it's capbilities
+    # Mock the device & its capabilities
     mock_device = device_class("0.0.0.0", 0, 0)
+
+    if operational_mode:
+        mock_device.operational_mode = operational_mode
+
     if capability:
         mock_device._capabilities.set(capability, support)
 

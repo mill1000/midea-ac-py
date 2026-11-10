@@ -547,15 +547,14 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             # Sleep always supported
             presets.append(PRESET_SLEEP)
 
-            # Auto may run as cool or heat, so accept either family
             if self._device.supports_eco:
                 presets.append(PRESET_ECO)
 
-            if self._device.supports_ieco:
-                presets.append(PRESET_IECO)
-
             if self._device.supports_turbo:
                 presets.append(PRESET_BOOST)
+
+            if self._device.supports_ieco:
+                presets.append(PRESET_IECO)
 
         return presets
 
