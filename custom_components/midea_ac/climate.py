@@ -368,16 +368,14 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
         # Get workarounds
         workarounds = options.get(CONF_WORKAROUNDS, {})
 
-        # Get supported preset list
+        # All preset modes
         preset_modes = [
-            p for p, cond in [
-                (PRESET_NONE, True),  # Always supported
-                (PRESET_SLEEP, True),  # Always supported
-                (PRESET_AWAY, device.supports_freeze_protection),
-                (PRESET_ECO, device.supports_eco),
-                (PRESET_BOOST, device.supports_turbo),
-                (PRESET_IECO, device.supports_ieco),
-            ] if cond
+            PRESET_NONE,
+            PRESET_SLEEP,
+            PRESET_AWAY,
+            PRESET_ECO,
+            PRESET_IECO,
+            PRESET_BOOST
         ]
 
         # Get supported operational modes without smart dry
@@ -516,34 +514,49 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
     @property
     def preset_modes(self) -> list[str]:
         """Return the supported preset modes for the current operation mode."""
-        modes = [PRESET_NONE]
+        mode = self._device.operational_mode
+        presets = [PRESET_NONE]
 
-        # Add away preset in heat if supported
-        if self._device.operational_mode == AC.OperationalMode.HEAT:
-            if PRESET_AWAY in self._preset_modes:
-                modes.append(PRESET_AWAY)
+        if mode == AC.OperationalMode.HEAT:
+            # Sleep always supported
+            presets.append(PRESET_SLEEP)
 
-        # Add eco & ieco preset in cool, dry and auto if supported
-        if self._device.operational_mode in [AC.OperationalMode.AUTO,
-                                             AC.OperationalMode.COOL,
-                                             AC.OperationalMode.DRY]:
-            if PRESET_ECO in self._preset_modes:
-                modes.append(PRESET_ECO)
+            if self._device.supports_freeze_protection:
+                presets.append(PRESET_AWAY)
 
-            if PRESET_IECO in self._preset_modes:
-                modes.append(PRESET_IECO)
+            if self._device.supports_turbo_heat:
+                presets.append(PRESET_BOOST)
 
-        # Add sleep and/or turbo preset in heat, cool or auto
-        if self._device.operational_mode in [AC.OperationalMode.AUTO,
-                                             AC.OperationalMode.COOL,
-                                             AC.OperationalMode.HEAT]:
-            modes.append(PRESET_SLEEP)
+            if self._device.supports_ieco_heat:
+                presets.append(PRESET_IECO)
 
-            # Add turbo/boost if supported by the device
-            if PRESET_BOOST in self._preset_modes:
-                modes.append(PRESET_BOOST)
+        elif mode in (AC.OperationalMode.COOL, AC.OperationalMode.DRY):
+            # Sleep always supported
+            presets.append(PRESET_SLEEP)
 
-        return modes
+            if self._device.supports_eco:
+                presets.append(PRESET_ECO)
+
+            if self._device.supports_turbo_cool:
+                presets.append(PRESET_BOOST)
+
+            if self._device.supports_ieco_cool:
+                presets.append(PRESET_IECO)
+
+        elif mode == AC.OperationalMode.AUTO:
+            # Sleep always supported
+            presets.append(PRESET_SLEEP)
+
+            if self._device.supports_eco:
+                presets.append(PRESET_ECO)
+
+            if self._device.supports_turbo:
+                presets.append(PRESET_BOOST)
+
+            if self._device.supports_ieco:
+                presets.append(PRESET_IECO)
+
+        return presets
 
     @property
     def preset_mode(self) -> str:
