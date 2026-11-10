@@ -1,7 +1,7 @@
 """Tests for the climate platform."""
 
 import logging
-from enum import Flag
+from enum import Enum, Flag
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
