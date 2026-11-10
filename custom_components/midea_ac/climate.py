@@ -334,14 +334,6 @@ class MideaClimateDevice(MideaCoordinatorEntity[MideaDevice], ClimateEntity, Gen
         await self._apply()
 
 
-# Home Assistant 2026.11 renamed the temperature properties with a native_ prefix.
-# Alias the old names on older versions so they keep working.
-if not hasattr(ClimateEntity, "native_temperature_unit"):
-    MideaClimateDevice.temperature_unit = MideaClimateDevice.native_temperature_unit
-    MideaClimateDevice.current_temperature = MideaClimateDevice.native_current_temperature
-    MideaClimateDevice.target_temperature = MideaClimateDevice.native_target_temperature
-
-
 class MideaClimateACDevice(MideaClimateDevice[AC]):
     """Climate entity for Midea AC device."""
 
