@@ -145,6 +145,16 @@
           "description": "Должна ли быть включена функция «Следуй за мной»."
         }
       }
+    },
+    "send_follow_me_temperature": {
+      "name": "Send follow me temperature",
+      "description": "Send an external follow me temperature.",
+      "fields": {
+        "temperature": {
+          "name": "Temperature",
+          "description": "Temperature to use for follow me function."
+        }
+      }
     }
   },
   "entity": {
@@ -262,17 +272,17 @@
     },
     "sensor": {
       "compressor_voltage": {
-       	"name": "Напряжение компрессора"
+        "name": "Напряжение компрессора"
       },
       "indoor_fan_speed": {
         "name": "Скорость вентилятора в помещении"
-	    },
+      },
       "indoor_coil_temperature": {
         "name": "Температура внутреннего теплообменника"
-	    },
+      },
       "current_energy_usage": {
         "name": "Текущее потребление"
-	    },
+      },
       "indoor_humidity": {
         "name": "Влажность в помещении"
       },
@@ -308,6 +318,11 @@
       "purifier": {
         "name": "Очистка воздуха"
       }
+    }
+  },
+  "exceptions": {
+    "invalid_follow_me_temperature": {
+      "message": "Invalid follow me temperature {temperature} °C. Temperature must be within {min_temperature} to {max_temperature} °C."
     }
   }
 }

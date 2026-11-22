@@ -150,6 +150,16 @@
           "description": "Ob Follow Me aktiviert werden soll."
         }
       }
+    },
+    "send_follow_me_temperature": {
+      "name": "Send follow me temperature",
+      "description": "Send an external follow me temperature.",
+      "fields": {
+        "temperature": {
+          "name": "Temperature",
+          "description": "Temperature to use for follow me function."
+        }
+      }
     }
   },
   "entity": {
@@ -381,6 +391,11 @@
       "purifier": {
         "name": "Luftreiniger"
       }
+    }
+  },
+  "exceptions": {
+    "invalid_follow_me_temperature": {
+      "message": "Invalid follow me temperature {temperature} °C. Temperature must be within {min_temperature} to {max_temperature} °C."
     }
   }
 }
