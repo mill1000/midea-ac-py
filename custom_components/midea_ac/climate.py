@@ -12,11 +12,13 @@ from homeassistant.components.climate.const import (ATTR_HVAC_MODE,
                                                     PRESET_ECO, PRESET_NONE,
                                                     PRESET_SLEEP,
                                                     ClimateEntityFeature,
+                                                    ClimateServiceArgument,
                                                     HVACMode)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (ATTR_TEMPERATURE, CONF_ENABLED,
                                  UnitOfTemperature)
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -51,14 +53,24 @@ async def async_setup_entry(
         entities.append(
             MideaClimateACDevice(hass, coordinator, config_entry.options))
 
-        # Add a service to control 'follow me' function
         platform = entity_platform.async_get_current_platform()
+
+        # Add a service to control 'follow me' function
         platform.async_register_entity_service(
             "set_follow_me",
             {
                 vol.Required(CONF_ENABLED): cv.boolean,
             },
             "async_set_follow_me",
+        )
+
+        # Add service to send external 'follow me' temperature
+        platform.async_register_entity_service(
+            "send_follow_me_temperature",
+            {
+                vol.Required(ClimateServiceArgument.TEMPERATURE): float,
+            },
+            "async_send_follow_me_temperature",
         )
 
     elif device.type == DeviceType.COMMERCIAL_AC:
@@ -430,6 +442,21 @@ class MideaClimateACDevice(MideaClimateDevice[AC]):
             self._device.sound = self._sound
 
         await super()._apply()
+
+    async def async_send_follow_me_temperature(self, temperature: float) -> None:
+        """Send an external 'follow me' temperature."""
+        if temperature < 0 or temperature > 37:
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_follow_me_temperature",
+                translation_placeholders={
+                    "temperature": str(temperature),
+                    "min_temperature": str(0),
+                    "max_temperature": str(37)
+                },
+            )
+
+        await self._device.send_follow_me_temperature(temperature)
 
     async def async_set_follow_me(self, enabled: bool) -> None:
         """Set 'follow me' mode."""

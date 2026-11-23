@@ -8,3 +8,19 @@ set_follow_me:
       required: true
       selector:
         boolean:
+send_follow_me_temperature:
+  target:
+    entity:
+      integration: midea_ac
+      domain: climate
+  fields:
+    temperature:
+      example: 25
+      required: true
+      selector:
+        number:
+          mode: box
+          min: 0
+          max: 37
+          step: 0.5
+          unit_of_measurement: °C
