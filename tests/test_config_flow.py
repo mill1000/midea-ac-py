@@ -14,7 +14,7 @@ from msmart.cloud import CloudError, NetHomePlusCloud
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
 from msmart.lan import AuthenticationError
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.midea_ac.const import *
 

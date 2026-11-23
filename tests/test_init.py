@@ -8,7 +8,7 @@ import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from msmart.const import DeviceType
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.midea_ac.const import (CONF_ADDITIONAL_OPERATION_MODES,
                                               CONF_CAPABILITY_OVERRIDES,
