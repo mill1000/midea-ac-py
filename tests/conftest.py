@@ -6,14 +6,9 @@ from homeassistant.const import CONF_HOST, CONF_ID, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant
 from msmart.const import DeviceType
 from msmart.device import AirConditioner as AC
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.midea_ac.const import CONF_DEVICE_TYPE, CONF_KEY, DOMAIN
-
-
-@pytest.fixture(autouse=True)
-def auto_enable_custom_integrations(enable_custom_integrations):
-    yield
 
 
 @pytest.fixture
