@@ -1,6 +1,9 @@
 {
   "domain": "midea_ac",
   "name": "Midea Smart AC",
+  "categories": [
+    "climate"
+  ],
   "codeowners": [
     "@mill1000"
   ],
