@@ -1,6 +1,9 @@
 {
   "domain": "midea_ac",
   "name": "Midea Smart AC",
+  "categories": [
+    "climate"
+  ],
   "codeowners": [
     "@mill1000"
   ],
@@ -9,9 +12,6 @@
   "documentation": "https://github.com/mill1000/midea-ac-py",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/mill1000/midea-ac-py/issues",
-  "categories": [
-    "climate"
-  ],
   "loggers": [
     "msmart"
   ],
